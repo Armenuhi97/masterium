@@ -1,0 +1,22 @@
+.label {
+    border-bottom: 1px solid #c7c7c7;
+    padding: 10px 10px 10px 0;
+}
+
+p{
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.trash{
+    color: #ff4d4f;
+    font-size: 20px;
+}
+
+.edit{
+    cursor: pointer;
+    font-size: 20px;
+    color: #001529;
+    margin:0 10px 0 auto;
+}

@@ -1,0 +1,32 @@
+.jumbotron{
+  padding: 15px 10px;
+}
+
+.disput-details {
+  margin-top: 10px;
+  width: 49%;
+}
+
+.disput-image {
+  margin: 10px;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 4px;
+}
+
+.description-details .ant-descriptions-item-label::after {
+  content: '';
+}
+
+.action-buttons {
+  margin-top: 60px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+

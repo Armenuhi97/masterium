@@ -1,0 +1,47 @@
+<div class="title-container">
+  <app-section-title title="Заказчики"></app-section-title>
+  <button class="add-essence" nz-button nzType="primary" (click)="addClient()">
+    Добавить заказчика
+  </button>
+</div>
+
+<nz-table nzBordered (nzPageIndexChange)="nzPageIndexChange($event)" [nzTotal]="total" [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex" [nzFrontPagination]="false" #userTable [nzData]="clients">
+  <thead>
+    <tr>
+      <th>N</th>
+      <th>Имя</th>
+      <th>Номер телефона</th>
+      <th>Тип</th>
+      <th>Кол. заказов</th>
+      <th>Сумма заказов</th>
+      <th>Статус</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of userTable.data; let ind = index">
+      <td style="width:10px">{{ ind + 1 }}</td>
+      <td style="width: 300px">
+        {{ data.first_name }} {{ data.last_name }} <br />
+        {{ data.email }}
+      </td>
+      <td style="width: 250px">{{ data.phone_number }}</td>
+      <td style="width:130px">{{ data.is_cooperative_user ? 'Юр. лицо' : 'Физ. лицо'}}</td>
+      <td>{{ data.orderCount || '0'}}</td>
+      <td>{{ data.ordersSum || '0'}}</td>
+      <td>
+        <nz-switch [(ngModel)]="data.is_blocked" (ngModelChange)="changeStatus(data)" [nzCheckedChildren]="checkedTemplate"
+          [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+      </td>
+      <td (click)="editClient(data.user)" class="action-button edit" style="width: 10px">
+        <i nz-icon nzType="edit"></i>
+      </td>
+      <td (click)="chatWithUser(data)" class="icon icon-message">
+        <i nz-icon nzType="wechat" nzTheme="outline"></i>
+     </td>
+    </tr>
+  </tbody>
+</nz-table>
+

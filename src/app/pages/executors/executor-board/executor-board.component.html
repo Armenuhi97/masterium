@@ -1,0 +1,86 @@
+<div class="title-container">
+    <button class="add-essence" nz-button nzType="primary" (click)="showModal()">
+        Добавить
+    </button>
+</div>
+<nz-table (nzPageIndexChange)="nzPageIndexChange($event)" [nzTotal]="total" [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex" [nzFrontPagination]="false" nzBordered #orderStoryTable [nzData]="executeBoardSpareParts">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>Фото</th>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of executeBoardSpareParts; let ind = index">
+            <td style="width:10px">{{ ind + 1 }}</td>
+            <td class="img-column"><img [src]="data?.product?.product_images[0].image_url" alt=""> </td>
+            <td>{{ data.product.name[0].value}}</td>
+            <td>{{ data.product?.price }}</td>
+            <td>{{data.quantity}}</td>
+            <td (click)="onChangeProductCount(ind)" class="action-button plus" style="width:10px"><i nz-icon
+                    nzType="plus-circle" nzTheme="outline"></i></td>
+            <td (click)="onEdit(ind)" class="action-button edit" style="width:10px"><i nz-icon nzType="edit"></i></td>
+        </tr>
+    </tbody>
+</nz-table>
+<nz-modal nzWidth="400px" [(nzVisible)]="showChangeProductModal" nzTitle="Изменить каличество"
+    (nzOnCancel)="closeModal()" (nzOnOk)="changeProductCount()">
+    <nz-form-label class="inline-labels" nzRequired>Количество</nz-form-label>
+    <nz-form-item>
+        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input [formControl]="changeCountControl" type="number" placeholder="" />
+        </nz-form-control>
+    </nz-form-item>
+</nz-modal>
+
+<nz-modal nzWidth="600px" [(nzVisible)]="isVisible" nzTitle="Добавить запчасть" (nzOnCancel)="handleCancel()"
+    (nzOnOk)="onSubmit()">
+    <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+        <nz-form-item>
+            <nz-form-label nzRequired>Название</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="name" type="text" placeholder="Введите название" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>Стоимость</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="price" type="number" placeholder="" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="!isEditing">
+            <nz-form-label nzRequired>Количество</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="quantity" type="number" placeholder="" />
+            </nz-form-control>
+        </nz-form-item>
+        <!-- <div class="d-flex flex-wrap">
+            <div class="d-flex width-fit align-items-center flex-wrap" *ngFor="let img of images">
+                <img class="photo" [src]="img.image_url" alt="">
+            </div>
+        </div> -->
+    </form>
+    <!-- <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleImageChange($event)"
+        [nzHeaders]="{ authorization: 'authorization-text' }">
+        <button nz-button><i nz-icon nzType="upload"></i></button>
+    </nz-upload> -->
+    <div class="clearfix mt-3">
+        <nz-upload nzListType="picture" [nzRemove]="handleRemove" [(nzFileList)]="imagesList"
+          [nzCustomRequest]="customImageRequest">
+          <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+        </nz-upload>
+      </div>
+</nz-modal>
+
+
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>

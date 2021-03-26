@@ -1,0 +1,15 @@
+.vertical-divider {
+    height: initial;
+}
+.statistic-card .ant-card-body {
+    padding: 10px;
+}
+.penalty {
+    color: #ff4d4f;
+}
+.salary {
+    color: rgb(63, 134, 0);
+}
+.ant-form-inline .ant-form-item {
+    flex: 1;
+}

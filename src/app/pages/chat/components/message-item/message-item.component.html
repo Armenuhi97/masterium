@@ -1,0 +1,13 @@
+<div class="media message-width mb-3" [class.ml-auto]="isIncoming">
+    <!-- <img *ngIf="!isIncoming" [src]="message?.sender?.image" alt="user"
+        width="50" > -->
+    <nz-avatar class="rounded-circle" *ngIf="!isIncoming" nzIcon="user" [nzSize]="40" [nzSrc]="message?.sender?.image">
+    </nz-avatar>
+
+    <div class="media-body" [class.ml-3]="!isIncoming">
+        <div class="rounded py-2 px-3 mb-2" [class.bg-primary]="isIncoming" [class.bg-light]="!isIncoming">
+            <p class="text-small mb-0" [class.text-white]="isIncoming">{{message.text}}</p>
+        </div>
+        <p class="small text-muted">{{message.created_at | date: 'short'}}</p>
+    </div>
+</div>

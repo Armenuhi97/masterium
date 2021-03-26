@@ -1,0 +1,33 @@
+.action-buttons {
+    display: flex;
+    align-items: center;
+    button {
+        background: transparent;
+        border-color: transparent;
+        display: block;
+        i {
+            font-size: 14px;
+        }
+        &.delete {
+            color: #ff5252;
+        }
+        &.edit {
+            color: #ffad40;
+        }
+    }
+}
+.service-item {
+    padding: 5px 10px;
+    box-shadow: 0 1px 4px 0 rgba(21, 27, 38, 0.08);
+    background: white;
+    border: 1px solid #e8ecee;
+    border-radius: 6px;
+    cursor: pointer;
+    &.active {
+      border-color: #ef0505;
+    }
+}
+
+p {
+    margin: 0;
+}

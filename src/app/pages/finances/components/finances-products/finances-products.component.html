@@ -1,0 +1,21 @@
+<nz-table (nzPageIndexChange)="pageIndexChange($event)" #productsTable [nzData]="products$ | async"
+    [nzTotal]="totalCount" [nzPageIndex]="pageIndex" [nzFrontPagination]="false" class="table">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>Название</th>
+            <th>Себестоимость</th>
+            <th>Цена</th>
+            <th>НДС</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of productsTable.data;let ind=index">
+            <td style="width: 50px">{{ ind + 1 }}</td>
+            <td>{{ data.name[0]?.value }}</td>
+            <td>{{ data.product.cost_price }}</td>
+            <td>{{ data.product.price }}</td>
+            <td>{{ data.product.vat }}</td>
+        </tr>
+    </tbody>
+</nz-table>

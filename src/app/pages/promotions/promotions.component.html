@@ -1,0 +1,120 @@
+<div class="title-container">
+  <app-section-title title="Акции"></app-section-title>
+  <button class="add-essence" nz-button nzType="primary" (click)="openAddPromotion()">Добавить</button>
+</div>
+
+<nz-table (nzPageIndexChange)="nzPageIndexChange($event)" #addTable [nzData]="promotions" class="table">
+  <thead>
+    <tr>
+      <th>N</th>
+      <th>Название</th>
+      <th>Дата (интервал)</th>
+      <th>Скидка</th>
+      <th>Подкатегория</th>
+      <!-- <th>Категории продуктов</th> -->
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of addTable.data;let ind=index">
+      <td style="width:50px">{{ind + 1}}</td>
+      <td style="width:200px">{{ data.sale.name }}</td>
+      <td style="width: 250px">От {{data.sale.start_date | date:'yyyy-MM-dd' }} до {{data.sale.end_date |
+        date:'yyyy-MM-dd' }}</td>
+      <td style="width:200px">{{ data.discount[0]?.percent }}</td>
+      <td style="width:200px">{{ getSubcategoryName(data.discount[0]?.subcategory.id) }}</td>
+      <!-- <td style="width:200px">{{ getProductSubcategoryName() }}</td> -->
+
+      <td (click)="onEditPromotion(ind)" class="action-button edit" style="width:10px"><i nz-icon nzType="edit"></i>
+      </td>
+      <td class="action-button delete" style="width:10px">
+        <a nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="deletePromotion(data,ind)">
+          <i class="trash" nz-icon nzType="delete"></i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+
+<nz-modal nzWidth="600px" [(nzVisible)]="isVisible" nzTitle="Добавить рекламу" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="onSubmit()">
+  <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+    <nz-form-item>
+      <nz-form-label nzRequired>Название</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="name" type="text" placeholder="Введите название" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Дата (интервал)</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <nz-range-picker [nzDisabledDate]="disabledStartDate" formControlName="date"></nz-range-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Категории</nz-form-label>
+      <nz-select class="subcategories-type" [nzMaxTagCount]="4" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+        nzPlaceHolder="Подкотегории" [(ngModel)]="listOfSelectedValue" (ngModelChange)="addOrDeleteItem($event)"
+        [ngModelOptions]="{standalone: true}">
+        <nz-option *ngFor="let subcategory of subCategories" [nzLabel]="subcategory.title[0].value"
+          [nzValue]="subcategory.subcategory.id"></nz-option>
+      </nz-select>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Категории продуктов</nz-form-label>
+      <nz-select class="subcategories-type" [nzMaxTagCount]="4" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+        nzPlaceHolder="Категории продуктов" formControlName="productSubcategories">
+        <nz-option *ngFor="let subcategory of productSubCategories" [nzLabel]="subcategory.title[0]?.value"
+          [nzValue]="subcategory.subcategory.id"></nz-option>
+      </nz-select>
+    </nz-form-item>
+
+    <nz-divider nzPlain nzText="Категории" *ngIf="validateForm.get('items')['controls']?.length > 0"></nz-divider>
+
+    <div formArrayName="items" class="item" *ngFor="let item of validateForm.get('items')['controls']; let i = index;">
+      <div [formGroupName]="i">
+        <h5>{{validateForm.get('items').controls[i].value.name}}</h5>
+        <nz-form-label class="inline-labels" nzRequired>Процент</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input min="0" max="100" nz-input formControlName="percent" type="number" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <nz-divider></nz-divider>
+    </div>
+
+    <nz-divider nzPlain nzText="Категории продуктов" *ngIf="validateForm.get('productItems')['controls']?.length > 0">
+    </nz-divider>
+
+    <div formArrayName="productItems" class="item"
+      *ngFor="let item of validateForm.get('productItems')['controls']; let i = index;">
+      <div [formGroupName]="i">
+        <h5>{{validateForm.get('productItems').controls[i].value.name}}</h5>
+        <nz-form-label class="inline-labels" nzRequired>Процент</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input min="0" max="100" nz-input formControlName="percent" type="number" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <nz-divider></nz-divider>
+    </div>
+  </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+  <ng-container *ngIf="control.hasError('min')">
+    Минимум 0
+  </ng-container>
+  <ng-container *ngIf="control.hasError('max')">
+    Максимум 100
+  </ng-container>
+</ng-template>
+<ng-template #tagPlaceHolder let-selectedList> + {{ selectedList.length }}</ng-template>

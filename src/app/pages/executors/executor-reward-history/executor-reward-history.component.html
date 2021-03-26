@@ -1,0 +1,241 @@
+<h5>Статистика</h5>
+<div nz-row>
+  <div nz-col nzSpan="10">
+    <form nz-form [formGroup]="rewardPeriodForm">
+      <nz-form-item>
+        <nz-form-control nzHasFeedback>
+          <nz-range-picker formControlName="range"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <nz-row *ngIf="executorReward" [nzGutter]="24">
+      <nz-col [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(executorReward.suborders_sum | number: '1.0-2')!"
+            [nzTitle]="'Премии и поощрения'"
+            [nzPrefix]="prefixTplOne"
+            [nzSuffix]="'₾'"
+            [nzValueStyle]="{ color: '#3F8600' }"
+          >
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      <nz-col [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(executorReward.penalty_sum | number: '1.0-2')!"
+            [nzTitle]="'Штрафы'"
+            [nzPrefix]="prefixTplTwo"
+            [nzSuffix]="'₾'"
+            [nzValueStyle]="{ color: '#CF1322' }"
+          >
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      <nz-col class="mt-2" [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(executorReward.suborders_sum | number: '1.0-2')!"
+            [nzTitle]="'Всего заработано'"
+            [nzPrefix]="prefixTplThree"
+            [nzSuffix]="'₾'"
+            [nzValueStyle]="{ color: '#7C7C7C' }"
+          >
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      <nz-col class="mt-2" [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(10000 | number: '1.0-2')!"
+            [nzTitle]="'Должен компании'"
+            [nzPrefix]="prefixTplTwo"
+            [nzSuffix]="'₾'"
+            [nzValueStyle]="{ color: '#CF1322' }"
+          >
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      <nz-col class="mt-2" [nzSpan]="24">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(executorReward.total_sum | number: '1.0-2')!"
+            [nzTitle]="'Сумма к оплате'"
+            [nzPrefix]="prefixTplTwo"
+            [nzSuffix]="'₾'"
+            [nzValueStyle]="{ color: '#7C7C7C' }"
+          >
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </div>
+  <nz-divider class="vertical-divider" nzType="vertical"></nz-divider>
+  <div nz-col nzSpan="12">
+    <h5>Зарплата</h5>
+
+    <form
+      nz-form
+      [formGroup]="salaryForm"
+      (ngSubmit)="submitSalary()"
+      [nzLayout]="'inline'"
+      class="flex-nowrap"
+    >
+      <nz-form-item>
+        <!-- <nz-form-label class="inline-labels">Зарплата</nz-form-label>-->
+        <nz-form-control nzHasFeedback>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            formControlName="count"
+            placeholder="Зарплата"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <!--<nz-form-label class="inline-labels">Комментарий</nz-form-label>-->
+        <nz-form-control>
+          <textarea
+            formControlName="comment"
+            nz-input
+            rows="3"
+            placeholder="Комментарий"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button
+            nz-button
+            class="w-100"
+            nzType="primary"
+            [disabled]="!salaryForm.valid"
+          >
+            Оплатить
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <h5 class="mt-2">Платежи наличними</h5>
+    <form
+      nz-form
+      [formGroup]="cashSalaryForm"
+     
+      [nzLayout]="'inline'"
+      class="flex-nowrap"
+    >
+      <nz-form-item>
+        <nz-form-control nzHasFeedback>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            formControlName="count"
+            placeholder="Зарплата"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <textarea
+            formControlName="comment"
+            nz-input
+            rows="3"
+            placeholder="Комментарий"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button
+            nz-button
+            class="w-100"
+            nzType="primary"
+            [disabled]="!cashSalaryForm.valid"
+          >
+            Принять
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <h5 class="mt-2">Штраф</h5>
+    <form
+      nz-form
+      [formGroup]="fineForm"
+      (ngSubmit)="submitFine()"
+      [nzLayout]="'inline'"
+      class="flex-nowrap"
+    >
+      <nz-form-item>
+        <!--<nz-form-label class="inline-labels">Штраф</nz-form-label>-->
+        <nz-form-control nzHasFeedback>
+          <nz-input-group>
+            <input
+              nz-input
+              type="number"
+              min="0"
+              placeholder="Штраф"
+              formControlName="count"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <!--<nz-form-label class="inline-labels">Комментарий</nz-form-label>-->
+        <nz-form-control>
+          <nz-input-group>
+            <textarea
+              formControlName="comment"
+              placeholder="Комментарий"
+              nz-input
+              rows="3"
+            ></textarea>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button
+            class="w-100"
+            nz-button
+            nzType="danger"
+            [disabled]="!fineForm.valid"
+          >
+            Оштрафовать
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>
+<nz-divider nzType="horizontal"></nz-divider>
+<nz-table
+  #penalty
+  [nzData]="executorDeals"
+  class="table"
+>
+  <thead>
+    <tr>
+      <th>N</th>
+      <th>Дата</th>
+      <th>Комментарий</th>
+      <th>Сумма</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of penalty.data; let ind = index">
+      <td style="width: 50px">{{ ind + 1 }}</td>
+      <td>{{ data.created_at | date: "short" }}</td>
+      <td>{{ data.comment || data.text }}</td>
+      <td [ngClass]="data.text ? 'penalty': 'salary'">{{ data.point }} <i nz-icon [nzType]="data.text ? 'arrow-down' : 'arrow-up'"></i> </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #prefixTplThree><i nz-icon nzType="info"></i></ng-template>
+<ng-template #prefixTplTwo><i nz-icon nzType="arrow-down"></i></ng-template>
+<ng-template #prefixTplOne><i nz-icon nzType="arrow-up"></i></ng-template>

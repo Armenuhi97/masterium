@@ -1,0 +1,15 @@
+$break-medium: 900px;
+.essence-list {
+    margin: 20px 0;
+    .essence-list-item {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: $break-medium) {
+    .essence-list {
+        .essence-list-item {
+            width: 100%;
+        }
+    }
+}

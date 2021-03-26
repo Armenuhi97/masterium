@@ -1,0 +1,201 @@
+<div class="d-flex align-items-center justify-content-between mb-2">
+  <nz-tabset class="main-tab">
+    <nz-tab [nzTitle]="'Склад'">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <nz-tabset (nzSelectChange)="activeTabChange($event)">
+          <nz-tab *ngFor="let categorie of categories" [nzTitle]="categorie.title[0]?.value">
+          </nz-tab>
+        </nz-tabset>
+        <div class="statistics d-flex align-items-center">
+          <nz-statistic class="mr-4 red-statistics" [nzValue]="(redsCount | number)!" nzTitle="Красные"></nz-statistic>
+          <nz-statistic class="mr-4" [nzValue]="(whiteCounts | number)!" nzTitle="Белые">
+          </nz-statistic>
+          <nz-statistic [nzValue]="(total | number)!" nzTitle="Все"></nz-statistic>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-between">
+        <nz-select [nzPlaceHolder]="'Фильтр по категориям'" [formControl]="subCategoriesControl"
+          class="subservice-filter">
+          <nz-option nzValue="all" nzLabel="Все"> </nz-option>
+          <nz-option *ngFor="let subcategory of subCategories" [nzValue]="subcategory.subcategory.id"
+            [nzLabel]="subcategory.title[0]?.value">
+          </nz-option>
+        </nz-select>
+        <nz-select [nzPlaceHolder]="'Фильтр'" [formControl]="listFilterControl" class="list-filter">
+          <nz-option nzValue="all" nzLabel="Все"></nz-option>
+          <nz-option nzValue="red" nzLabel="Показать только красные"></nz-option>
+          <nz-option nzValue="white" nzLabel="Показать только белые"></nz-option>
+        </nz-select>
+      </div>
+
+      <nz-table (nzPageIndexChange)="nzPageIndexChange($event)" #marketTable [nzData]="listOfData" [nzTotal]="total"
+        [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzFrontPagination]="false" class="table">
+        <thead>
+          <tr>
+            <th>N</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Мин.кол.</th>
+            <th>Мин.кол. на борту</th>
+            <th>В наличии</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr [ngClass]="{
+              'warning': +data.quantity < +data.minimal_count
+            }" *ngFor="
+              let data of marketTable.data; let ind = index
+            ">
+            <td style="width: 50px">{{ (ind + 1)+((pageIndex-1)*10) }}</td>
+            <td style="width: 300px">{{data.name[0][0]?.value}}</td>
+            <td style="width: 350px">{{ data.description[0]?.value }}</td>
+            <td>{{ data.price }}</td>
+            <td>{{ data.minimal_count }}</td>
+            <td>{{ data.minimum_count_for_order }}</td>
+            <td>{{ data.quantity?data.quantity:0 }} </td>
+            <td (click)="onChangeProductCount(ind)" class="action-button plus" style="width: 10px">
+              <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+            </td>
+            <td (click)="onEditMarketProduct(data, ind)" class="action-button edit" style="width: 10px">
+              <i nz-icon nzType="edit"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+
+      <nz-modal nzClassName="product-modal" nzWidth="800px" [(nzVisible)]="isVisible" nzTitle="Изменить продукт"
+        (nzOnCancel)="closeModal()" (nzOnOk)="onSubmit()">
+        <nz-tabset [nzSelectedIndex]="tabInex" (nzSelectChange)="transactionTabChange($event)">
+          <nz-tab [nzTitle]="'Продукт'">
+            <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+              <h3>Характеристики</h3>
+              <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="12">
+                  <nz-form-label class="inline-labels" nzRequired>Мин. количество</nz-form-label>
+                  <nz-form-item>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                      <input nz-input formControlName="minimalCount" type="number" placeholder="Введите каличество" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="12">
+                  <nz-form-label class="inline-labels" nzRequired>Мин. количество на борту</nz-form-label>
+                  <nz-form-item>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                      <input nz-input formControlName="minimalCountForBoard" type="number"
+                        placeholder="Введите количество на борту" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+              <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="12">
+                  <nz-form-label class="inline-labels" nzRequired>Мин. количество для заказа</nz-form-label>
+                  <nz-form-item>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                      <input nz-input formControlName="minimumCountForOrder" type="number"
+                        placeholder="Введите каличество" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="12">
+                  <nz-form-label class="inline-labels" nzRequired>Макс. количество для заказа</nz-form-label>
+                  <nz-form-item>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                      <input nz-input formControlName="maximumCountForOrder" type="number"
+                        placeholder="Введите каличество" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+            </form>
+          </nz-tab>
+          <nz-tab *ngIf="isEditing" [nzTitle]="'История '">
+            <nz-list nzItemLayout="horizontal" [nzLoading]="loadingTransactions">
+              <nz-list-item *ngFor="let transaction of transactions" [ngClass]="
+                  transaction.quantity > 0
+                    ? 'positive-list-item'
+                    : 'negative-list-item'
+                ">
+                <nz-list-item-meta>
+                  <nz-list-item-meta-title>
+                    <a>
+                      <span class="product-transaction-date">{{ transaction?.date | date }}
+                      </span>
+                      <span *ngIf="!transaction?.user && !transaction?.suborder"> Из администрации</span>
+                      <span *ngIf="transaction?.suborder">
+                        <a [routerLink]="'/dashboard/orders/' + transaction?.suborder?.order?.id + '/'">{{transaction?.suborder?.order?.order_number}}</a></span>
+                      <span class="quantity-count">{{
+                        transaction?.quantity
+                        }}</span>
+                    </a>
+                  </nz-list-item-meta-title>
+                </nz-list-item-meta>
+              </nz-list-item>
+              <nz-list-empty *ngIf="transactions.length === 0"></nz-list-empty>
+            </nz-list>
+          </nz-tab>
+        </nz-tabset>
+      </nz-modal>
+      <nz-modal nzWidth="400px" [(nzVisible)]="showChangeProductModal" nzTitle="Изменить каличество"
+        (nzOnCancel)="closeModal()" (nzOnOk)="changeProductCount()">
+        <nz-form-label class="inline-labels" nzRequired>Количество</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input [formControl]="changeCountControl" type="number" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-modal>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Склад на борту'">
+      <nz-table (nzPageIndexChange)="boardWarehousePageIndexChange($event)" [nzData]="warehouseBoards" class="table">
+        <thead>
+          <tr>
+            <th>N</th>
+            <th>Исполнитель</th>
+            <th>Название</th>
+            <th>Мин. количество</th>
+            <th>Количество на борту</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of warehouseBoards; let i = index">
+            <td style="width: 50px">{{ i + 1 }}</td>
+            <td>{{ data.user.first_name + ' ' + data.user.last_name }}</td>
+            <td>{{ data.name[0]?.value }}</td>
+            <td>{{ data.minimal_count_for_board }}</td>
+            <td>{{ data.quantity }}</td>
+            <td (click)="onAddProductToExecutor(data)" class="action-button edit" style="width: 10px">
+              <i nz-icon nzType="edit"></i>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </nz-tabset>
+</div>
+
+<nz-modal nzWidth="400px" [(nzVisible)]="showAddProductToExecutorModal" nzTitle="Добавить продукт"
+  (nzOnCancel)="toggleAddProductToExecutor()" (nzOnOk)="addProductToExecutor()">
+  <form nz-form [formGroup]="addProductToExecutorForm" [nzLayout]="'vertical'">
+    <nz-form-label class="inline-labels" nzRequired>Количество</nz-form-label>
+    <nz-form-item>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="quantity" type="number" placeholder="Введите количество" />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+</ng-template>

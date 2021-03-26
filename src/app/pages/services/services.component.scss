@@ -1,0 +1,30 @@
+.services-container {
+  width: 100%;
+}
+.action-section {
+  padding: 10px 0;
+  p {
+    margin: 0;
+    color: #001529;
+    font-size: 18px;
+  }
+}
+
+.cascade-link-item {
+  margin: 10px 0;
+}
+
+.categories-container,
+.subcategories-container,
+.product-container {
+  border-radius: 6px;
+  padding: 0 5px;
+  margin: 0 5px;
+  width: 350px;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(232, 236, 238, 0.7) 0%, rgba(232, 236, 238, 0) 100%);
+  &.hide {
+    visibility: hidden;
+  }
+}

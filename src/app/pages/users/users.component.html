@@ -1,0 +1,152 @@
+<div class="title-container">
+  <app-section-title
+    [title]="userTypeId == 1 ? 'Заказчики' : 'Исполнители'"
+  ></app-section-title>
+    <button  class="add-essence" nz-button nzType="primary" (click)="showModal()">
+    Добавить исполнителя
+  </button>
+</div>
+
+<div [ngSwitch]="userTypeId">
+  <nz-table
+    [nzScroll]="{ y: '240px' }"
+    nzBordered
+    *ngSwitchCase="1"
+    #userTable
+    [nzData]="listOfData"
+    class="table"
+  >
+    <thead>
+      <tr>
+        <th>N</th>
+        <th>Фото</th>
+        <th>Имя</th>
+        <th>Город</th>
+        <th>Кредитная карта</th>
+        <th>Адрес</th>
+        <th>Кол. заказов</th>
+        <th>Сумма заказов</th>
+        <th>Статус</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of userTable.data; let ind = index">
+        <td>{{ ind + 1 }}</td>
+        <td>
+          <img class="user-photo" [src]="data.image" />
+        </td>
+        <td>
+          {{ data.firstName }} {{ data.lastName }} <br />
+          {{ data.phone }}
+        </td>
+        <td>Gyumri</td>
+        <td>{{ data.creditCard }}</td>
+        <td>{{ data.address }}</td>
+        <td>{{ data.orderCount }}</td>
+        <td>{{ data.ordersSum }}</td>
+        <td>
+          <nz-switch
+            [(ngModel)]="data.status"
+            [nzCheckedChildren]="checkedTemplate"
+            [nzUnCheckedChildren]="unCheckedTemplate"
+          ></nz-switch>
+        </td>
+        <td class="action-button delete" style="width: 10px">
+          <a
+            nz-popconfirm
+            nzPopconfirmTitle="Вы действительно хотите удалить?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="deleteUser(data)"
+          >
+            <i class="trash" nz-icon nzType="delete"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <nz-table
+    *ngSwitchCase="2"
+    #userTable
+    nzBordered
+    [nzData]="listOfData"
+    class="table"
+  >
+    <thead>
+      <tr>
+        <th>N</th>
+        <th>Фото</th>
+        <th>Имя<br /></th>
+        <!-- <th>Образование</th> -->
+        <th>Рейтинг</th>
+        <th>Специализация</th>
+        <th>Область работы</th>
+        <th>Заработано</th>
+        <th>Долг</th>
+        <th>Премии</th>
+        <th>Штрафы</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of userTable.data; let ind = index">
+        <td>{{ ind + 1 }}</td>
+        <td>
+          <img class="user-photo" [src]="data.image" />
+        </td>
+        <td>
+          {{ data.firstName }} {{ data.lastName }} <br />
+          {{ data.phone }}
+        </td>
+        <td style="width: 10px">{{ data.rate }}</td>
+         <td>
+          <ng-container
+            *ngFor="let specialization of data.showSpecialization; let last = last"
+          >
+            {{ specialization.title }}
+            <ng-container *ngIf="!last">,<br/> </ng-container>
+          </ng-container>
+        </td>
+
+        <td style="width: 10px">{{ data.workArea }}</td>
+        <td style="width: 10px">{{ data.totalEarned }}</td>
+        <td style="width: 10px">{{ data.debt }}</td>
+        <td style="width: 10px">{{ data.award }}</td>
+        <td style="width: 10px">{{ data.penaltie }}</td>
+        <td style="width: 10px">
+          <nz-switch
+            [(ngModel)]="data.status"
+            [nzCheckedChildren]="checkedTemplate"
+            [nzUnCheckedChildren]="unCheckedTemplate"
+          ></nz-switch>
+        </td>
+        <td
+          (click)="onEditUser(data, ind)"
+          class="action-button edit"
+          style="width: 10px"
+        >
+          <i nz-icon nzType="edit"></i>
+        </td>
+
+        <td class="action-button delete" style="width: 10px">
+          <a
+            nz-popconfirm
+            nzPopconfirmTitle="Вы действительно хотите удалить?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="deleteUser(data)"
+          >
+            <i class="trash" nz-icon nzType="delete"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+<ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Добавить исполнителя" (nzOnCancel)="handleCancel()" (nzOnOk)="onUserSave()"  >
+   <app-edit-user *ngIf="isVisible" [isEditing]="isEditing" [user]="initialValues" (valueChanged)="handleUserChange($event)"></app-edit-user>
+</nz-modal>
+

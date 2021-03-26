@@ -1,0 +1,18 @@
+<div class="title-container">
+    <app-section-title title="Настройки"></app-section-title>
+</div>
+
+<div class="essence-list d-flex justify-content-between flex-wrap">
+    <div class="essence-list-item p-2" *ngFor="let essence of essenceList" >
+        <app-essence-list-item
+          (edit)="editEssenceItem($event)"
+          (delete)="deleteEssenceItem($event)"
+          (add)="addEssenceItem($event)"
+          [itemsList]="essence.itemsList"
+          [buttonLabel]="essence.buttonLabel"
+          [inputLabel]="essence.inputLabel"
+          [essenceLabel]="essence.essenceLabel"
+          [type]="essence.type">
+        </app-essence-list-item>
+    </div>
+</div>

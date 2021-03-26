@@ -1,0 +1,33 @@
+.unread-message{
+
+   position:absolute;
+    margin-left: 5px;
+    top: -1px;
+    right: 2px;
+}
+.margin-top-7{
+    margin-top:7px
+}
+.last-message{
+    word-break: break-word;
+    min-height: 20px;
+    max-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.active{
+    color: white !important;
+}
+.client-color{
+    color: rgb(179, 243, 179);
+}
+.executor-color{
+    color: #f1ca96;
+
+}
+.list-group-item{
+    padding: 4px 10px;
+}

@@ -1,0 +1,99 @@
+<nz-modal [nzVisible]="true" nzWidth="700px" [nzTitle]="isEdit ? 'Изменить категорию' : 'Добавить категорию'"
+  (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+  <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Угол градиента</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="gradient_degree" type="number" placeholder="Угол градиента" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Первый цвет градиента</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="color_one" type="text" placeholder="Первый цвет градиента" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Второй цвет градиента</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="color_two" type="text" placeholder="Первый цвет градиента" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на русском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="russian" type="text" placeholder="Название на русском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на английском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="english" type="text" placeholder="Название на английском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на грузинском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="georgian" type="text" placeholder="Название на грузинском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на русском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="russianDescription" type="text" placeholder="Описание на русском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на английском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="englishDescription" type="text" placeholder="Описание на английском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на грузинском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="georgianDescription" type="text" placeholder="Описание на грузинском" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div class="clearfix">
+      <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+        [nzHeaders]="{ authorization: 'authorization-text' }">
+        <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+      </nz-upload>
+    </div>
+
+  </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+</ng-template>

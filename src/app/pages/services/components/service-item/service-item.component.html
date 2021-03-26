@@ -1,0 +1,19 @@
+<div class="service-item" (click)="cardClicked.emit()" [ngClass]="{'active':active}">
+    <div class="d-flex position-relative align-items-center service-card">
+        <p>{{title}} </p>
+        <div class="ml-auto d-flex align-items-center">
+            <div *ngIf="!hideActions" class="action-buttons">
+                <button class="edit" nz-button nzType="default" (click)="onEdit();$event.stopPropagation()"><i nz-icon nzType="edit"
+                        nzTheme="outline"></i></button>
+                <a (click)="$event.stopPropagation()"  nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
+                    (nzOnConfirm)="onDelete()">
+                    <button class="delete" nz-button nzType="default"><i nz-icon nzType="delete"
+                            nzTheme="outline"></i></button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <p class="description">{{ description }}</p>
+
+</div>

@@ -1,0 +1,25 @@
+<div class="d-flex position-relative align-items-center justify-content-between service-card" (click)="onCardClicked()"
+  [style.background]="'linear-gradient(' + gradientDegree + 'deg, ' + colorOne + ', ' + colorTwo + ')'"
+  [ngClass]="{'white-background':!specialistsCount,'active':active}">
+  <div class="d-flex align-items-center">
+    <img [src]="img">
+    <div>
+      <p>{{title}}</p>
+      <small>{{description}}</small>
+    </div>
+  </div>
+  <!-- <div>
+    <p *ngIf="specialistsCount" class="stat-text">{{specialistsCount}} специалиста</p>
+    <p *ngIf="workloadPercent" class="stat-text">Загруженность {{workloadPercent}} %</p>
+  </div> -->
+  <div class="action-buttons position-absolute">
+    <button class="edit" nz-button nzType="default" (click)="onEdit();$event.stopPropagation()">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+    </button>
+    <a (click)="$event.stopPropagation()" nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?"
+      nzPopconfirmPlacement="bottom" (nzOnConfirm)="onDelete()">
+      <button class="delete" nz-button nzType="default"><i nz-icon nzType="delete" nzTheme="outline"></i>
+      </button>
+    </a>
+  </div>
+</div>

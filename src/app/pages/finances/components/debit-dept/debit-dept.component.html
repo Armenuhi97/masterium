@@ -1,0 +1,20 @@
+<nz-radio-group [(ngModel)]="type" (ngModelChange)="changeType($event)">
+    <label nz-radio nzValue="executor">Задолженность работника</label>
+    <label nz-radio nzValue="client">Задолженность корпоративных клиентов</label>
+</nz-radio-group>
+<nz-table nzBordered #debitDeptList [nzData]="showingDebets" class="mt-3">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>Имя</th>
+            <th>Задолженность</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of debitDeptList.data; let ind = index">
+            <td style="width:10px">{{ ind + 1 }}</td>
+            <td>{{ data.first_name + ' ' + data.last_name }}</td>
+            <td>{{ data.debet }}</td>
+        </tr>
+    </tbody>
+</nz-table>

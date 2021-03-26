@@ -1,0 +1,51 @@
+<div class="title-container">
+   <app-section-title title="Исполнители"></app-section-title>
+   <button class="add-essence" nz-button nzType="primary" (click)="addExecutor()">
+      Добавить исполнителя
+   </button>
+</div>
+<nz-table [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzFrontPagination]="false"
+   (nzPageIndexChange)="nzPageIndexChange($event)" nzBordered #userTable [nzData]="executors">
+   <thead>
+      <tr>
+         <th>N</th>
+         <th>Имя</th>
+         <th>Номер телефона</th>
+         <th>Тип</th>
+         <th>Рейтинг</th>
+         <th>Кол. заказов</th>
+         <th>Сумма заказов</th>
+         <th>Статус</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr *ngFor="let data of userTable.data; let ind = index">
+         <td style="width:10px">{{ ind + 1 }}</td>
+         <td style="width: 150px">
+            {{ data.user?.first_name }} {{ data.user?.last_name }} <br />
+            {{ data.user?.email }}
+         </td>
+         <td style="width: 130px">{{ data.user?.phone_number }}</td>
+         <td style="width:130px">{{ data.user?.is_registered_executor ? 'Штатный' : 'Контрактор'}}</td>
+         <td>{{ data.rating || '0' }}</td>
+         <td>{{ data.orderCount || '0'}}</td>
+         <td>{{ data.ordersSum || '0'}}</td>
+         <td>
+            <!-- [nzCheckedChildren]="checkedTemplate"
+               [nzUnCheckedChildren]="unCheckedTemplate" -->
+            <nz-switch [nzCheckedChildren]="checkedTemplate"
+            [nzUnCheckedChildren]="unCheckedTemplate" (ngModelChange)="changeStatus(data)" [(ngModel)]="data.user.is_blocked" ></nz-switch>
+         </td>
+         <td (click)="editExecutor(data.user.user)" class="action-button edit" style="width: 10px">
+            <a [routerLink]="['/dashboard/executors/' + data.user.user]">
+               <i nz-icon nzType="edit"></i>
+            </a>
+         </td>
+         <td (click)="chatWithUser(data)" class="icon icon-message">
+            <i nz-icon nzType="wechat" nzTheme="outline"></i>
+         </td>
+      </tr>
+   </tbody>
+</nz-table>

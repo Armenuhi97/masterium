@@ -1,0 +1,24 @@
+@import "../../../../../assets/scss/styles/variables";
+
+.login-form {
+    max-width: 300px;
+    margin: 40px auto;
+}
+
+.login-form-margin {
+    margin-bottom: 16px;
+}
+
+.login-form-forgot {
+    float: right;
+}
+
+.login-form-button {
+    width: 100%;
+    //background: $base-color;
+    //border-color: $base-color;
+}
+
+.form-title {
+    text-align: center;
+}

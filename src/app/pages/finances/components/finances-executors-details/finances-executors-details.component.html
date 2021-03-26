@@ -1,0 +1,86 @@
+<!-- <h5 nz-typography>Штраф</h5> -->
+<nz-divider nzPlain nzText="Статистика (Количество)"></nz-divider>
+
+<nz-table nzBordered>
+    <thead>
+        <tr>
+            <th>Выполненные задачи</th>
+            <th>Кэш</th>
+            <th>Банковская карта</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ executorDetails?.all_count }}</td>
+            <td>{{ executorDetails?.payed_by_cache_count }}</td>
+            <td>{{ executorDetails?.e_payment }}</td>
+
+        </tr>
+    </tbody>
+</nz-table>
+<nz-divider nzPlain nzText="Статистика (Сумма)"></nz-divider>
+
+<nz-table nzBordered>
+    <thead>
+        <tr>
+            <th>Кэш</th>
+            <th>Банковская карта</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ executorDetails?.payed_by_cache_money }}</td>
+            <td>{{ executorDetails?.e_payment_money }}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<nz-divider nzPlain nzText="Статистика (По категориям)" *ngIf="executorDetails?.subcategories?.length > 0"></nz-divider>
+
+<nz-table nzBordered #executorsStatisticDetailsTable [nzData]="executorDetails?.subcategories">
+    <thead>
+        <tr>
+            <th>Категория</th>
+            <th>Количество</th>
+            <!-- <th>Сумма</th>
+            <th>Наличними</th>
+            <th>Банковская карта</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of executorsStatisticDetailsTable.data; let ind = index">
+            <td>{{ data.subcategory_name[0].value }}</td>
+            <td>{{ data?.count }}</td>
+            <!-- <td>500</td>
+            <td>123</td>
+            <td>321</td> -->
+        </tr>
+    </tbody>
+</nz-table>
+
+<nz-divider nzPlain nzText="Штраф"></nz-divider>
+
+<form nz-form [formGroup]="fineForm" (ngSubmit)="submitFine()" [nzLayout]="'vertical'">
+    <nz-form-item>
+        <nz-form-label class="inline-labels">Штраф</nz-form-label>
+        <nz-form-control nzHasFeedback>
+            <nz-input-group>
+                <input nz-input type="number" min="0" placeholder="Штраф" formControlName="point" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label class="inline-labels">Комментарий</nz-form-label>
+        <nz-form-control>
+            <nz-input-group>
+                <textarea formControlName="text" placeholder="Комментарий" nz-input rows="3"></textarea>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <button class="w-100" nz-button nzType="danger" [disabled]="!fineForm.valid">
+                Оштрафовать
+            </button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

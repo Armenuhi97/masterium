@@ -1,0 +1,11 @@
+<nz-input-group [nzSuffix]="suffixIcon">
+  <input [placeholder]="placeholder" nz-input [formControl]="searchControl" [nzAutocomplete]="auto" />
+</nz-input-group>
+<nz-autocomplete #auto>
+  <nz-auto-option (selectionChange)="optionSelected($event, option)" *ngFor="let option of showSearchResult" [nzValue]="option" [nzLabel]="option.label">
+    {{ option.label }}
+  </nz-auto-option>
+</nz-autocomplete>
+<ng-template #suffixIcon>
+  <nz-spin class="autocomplete-spinner" *ngIf="loading" nzSimple></nz-spin>
+</ng-template>

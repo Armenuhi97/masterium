@@ -1,0 +1,254 @@
+<ng-container *ngIf="order && subgroups?.length > 0">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="order-heading d-flex align-items-center justify-content-between">
+        <div>
+          <div class="d-flex align-items-center justify-content-between">
+            <h1 class="m-0">Заказ N {{order.order.order_number}}</h1>
+            <a *ngIf="order.status.status_code === 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+              nzPopconfirmPlacement="bottom" (nzOnConfirm)="setPendingOrder()">
+              <button nz-button nzType="primary" nzPrimary>Принять в обработку</button>
+            </a>
+            <a *ngIf="order.status.status_code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+              nzPopconfirmPlacement="bottom" (nzOnConfirm)="cancelOrder()">
+              <button nz-button nzType="danger" nzPrimary>Отменить заказ</button>
+            </a>
+          </div>
+          <nz-divider></nz-divider>
+          <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
+            <nz-descriptions-item nzTitle="Статус заказа"><span
+                class="status-primary">{{order.status.status_name[0].value
+                }}</span></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Адрес">{{order.order.address?.address }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Заказчик"> <a
+                [routerLink]="['/dashboard/clients/' + order.order.user.user]">{{order.order.user?.first_name + ' ' +
+                order.order.user.last_name }}</a>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Телефон">{{order.order.user?.phone_number}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Время">{{order.order.start_date | date: 'short' }}</nz-descriptions-item>
+          </nz-descriptions>
+          <nz-descriptions class="description-details" nzTitle="Описание" [nzColumn]="2">
+            <nz-descriptions-item nzTitle="">{{order.order.description}}</nz-descriptions-item>
+          </nz-descriptions>
+        </div>
+        <!--        <h5>Статус - {{order.status[0].value}}</h5>-->
+        <div class="order-state">
+          <!-- <nz-form-item>-->
+          <!--            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">-->
+          <!--              <nz-form-label nzRequired>Состояние заказа</nz-form-label>-->
+          <!--              <nz-select [formControl]="orderStateControl">-->
+          <!--                <nz-option nzValue="accepted" nzLabel="Принят"></nz-option>-->
+          <!--                <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>-->
+          <!--                <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>-->
+          <!--              </nz-select>-->
+          <!--            </nz-form-control>-->
+          <!--          </nz-form-item> -->
+        </div>
+      </div>
+      <!--      <div class="d-flex align-items-center">-->
+      <!--        <nz-statistic class="mr-5" [nzValue]="(40 | number)!" [nzTitle]="'Сервисы'" [nzPrefix]="servicePrefixTpl"></nz-statistic>-->
+      <!--        <nz-statistic [nzValue]="(order.product?.length | number)!" [nzTitle]="'Продукты'" [nzPrefix]="productPrefixTpl"></nz-statistic>-->
+      <!--      </div>-->
+      <ng-template #servicePrefixTpl><i nz-icon nzType="control"></i></ng-template>
+      <ng-template #productPrefixTpl><i nz-icon nzType="bulb"></i></ng-template>
+    </div>
+  </div>
+  <div class="container">
+    <div class="order-ordering d-flex justify-content-between">
+      <nz-tabset>
+        <nz-tab nzTitle="Сервисы">
+          <!-- <app-category-autocomplete placeholder="" (search)=""
+            [searchResult]="" [loading]="isSearching">
+          </app-category-autocomplete> -->
+
+          <app-app-nz-autocomplete (selected)="addServiceItem($event)" (search)="searchForServices($event)"
+            (selected)="addProductItem($event)" [loading]="isSearching" placeholder="Добавить сервис"
+            [searchResult]="serviceSearchResult">
+          </app-app-nz-autocomplete>
+
+          <div cdkDropList id="{{subgroups[0].id}}" [cdkDropListData]="subgroups[0].groupItemList"
+            [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
+            class="drag-list fixed" (cdkDropListDropped)="drop($event, subgroups[0])">
+            <div class="drag-box" *ngFor="let subgroupItem of subgroups[0].groupItemList; let i = index" cdkDrag>
+              <div>
+                <p class="m-0">{{subgroupItem.name}}</p>
+                <small>{{subgroupItem.subservice}}</small>
+              </div>
+              <nz-form-item class="price-control">
+                <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                  <input min="0" nz-input [(ngModel)]="subgroups[0].groupItemList[i].currentPrice" type="number"
+                    placeholder="Цена" />
+                </nz-form-control>
+              </nz-form-item>
+              <!--            <i class="edit-drag" nz-icon nzType="edit" nzTheme="outline" (click)="editSubgroupItem(subgroups[0], i)"></i>-->
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Продукты">
+          <app-app-nz-autocomplete (search)="searchForProducts($event)" (selected)="addProductItem($event)"
+            [loading]="isSearching" placeholder="Поиск по продуктам" [searchResult]="productSearchResult">
+          </app-app-nz-autocomplete>
+          <div cdkDropList id="{{subgroups[1].id}}" [cdkDropListData]="subgroups[1].groupItemList"
+            [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
+            class="drag-list fixed" (cdkDropListDropped)="drop($event, subgroups[1])">
+            <div class="drag-box justif-content-start"
+              *ngFor="let subgroupItem of subgroups[1].groupItemList; let i = index" cdkDrag>
+              <p class="m-0">{{subgroupItem.name}}</p>
+              <nz-form-item class="ml-auto mr-1 price-control">
+                <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                  <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].quantity" type="number"
+                    placeholder="Количество" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item class="price-control">
+                <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                  <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].currentPrice" type="number"
+                    placeholder="Цена" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Картинки">
+          <div cdkDropList id="{{subgroups[2].id}}" [cdkDropListData]="subgroups[2].groupItemList"
+            [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
+            class="drag-list fixed images-container d-flex" (cdkDropListDropped)="drop($event, subgroups[2])">
+            <div class="drag-box d-flex" *ngFor="let subgroupItem of subgroups[2].groupItemList" cdkDrag>
+              <img nz-image class="m-auto order-image" [nzSrc]="subgroupItem.url" />
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+      <!-- && order.status.status_code !== 'ACC' -->
+      <div>
+        <button nz-button class="ml-auto mb-2 d-flex" nzType="primary" [disabled]="!isAddSubgroupVisible || order.status.status_code == 'ACC'"
+          (click)="addGroup(true)">Новый
+          заказ</button>
+        <div *ngFor="let subgroup of subgroups | slice:3; let i = index">
+          <div class="list-container" *ngIf="subgroup.isEditing">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h2 class="m-0 suborder-title">{{subgroup.name}}</h2>
+                <nz-descriptions class="order-details order-price" nzTitle="" [nzColumn]="1">
+                  <nz-descriptions-item nzTitle="Общая сумма">{{getGroupPrice(subgroup)}}</nz-descriptions-item>
+                </nz-descriptions>
+              </div>
+              <div class="d-flex align-items-start">
+                <div class="d-flex align-items-center">
+                  <i class="d-block edit-group" nz-icon nzType="edit" nzTheme="outline" (click)="editGroup(i + 3)"></i>
+                  <a nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
+                    (nzOnConfirm)="deleteGroup(i + 3)">
+                    <i class="d-block trash delete-group" nz-icon nzType="delete"></i>
+                  </a>
+                </div>
+                <div class="drag-filter ml-3">
+
+                  <nz-form-item>
+                    <nz-form-control>
+                      <nz-select class="filter-drug-list" [formControl]="dragListsFilter.controls[i]">
+                        <nz-option nzValue="all" nzLabel="Все"></nz-option>
+                        <nz-option nzValue="service" nzLabel="Сервисы"></nz-option>
+                        <nz-option nzValue="product" nzLabel="Продукты"></nz-option>
+                        <nz-option nzValue="picture" nzLabel="Картинки"></nz-option>
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+            </div>
+            <div cdkDropList id="{{subgroup.id}}" [cdkDropListData]="subgroup.groupItemList"
+              [cdkDropListConnectedTo]="connectedTo" class="drag-list" (cdkDropListDropped)="drop($event, subgroup)">
+              <div class="drag-box"
+                *ngFor="let subgroupItem of subgroup.groupItemList | orderGroupFilter: dragListsFilter.controls[i].value; let ind = index"
+                cdkDrag>
+                <div>
+                  <p class="m-0">{{subgroupItem.name}}</p>
+                  <small>{{subgroupItem.subservice}}</small>
+                </div>
+                <span *ngIf="!subgroupItem.url"></span>
+                <img *ngIf="subgroupItem.url" class="m-auto order-image right" [src]="subgroupItem.url" />
+                <div class="d-flex align-items-center">
+                  <ng-template #quantitySuffix>кол.</ng-template>
+                  <ng-template #countSuffix>цена</ng-template>
+                  <nz-input-group class="no-border" *ngIf="subgroupItem.type === 'product'" [nzPrefix]="quantitySuffix">
+                    <nz-form-item style="margin: 0 15px 0 0" class="price-control mr-1 ml-auto">
+                      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                        <input min="0" nz-input [(ngModel)]="subgroupItem.quantity" type="number"
+                          placeholder="Количество" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-input-group>
+                  <nz-input-group class="no-border" *ngIf="!subgroupItem.url" [nzPrefix]="countSuffix">
+                    <nz-form-item style="margin: 0 3px 0 0" class="price-control">
+                      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                        <input min="0" nz-input [(ngModel)]="subgroupItem.currentPrice" type="number"
+                          placeholder="Цена" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-input-group>
+                  <i class="delete-drag" nz-icon nzType="minus-circle" nzTheme="outline"
+                    (click)="deleteDragItemFromGroup(subgroup, subgroupItem, ind)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-cener justify-content-end action-buttons">
+      <button (click)="onSaveOrder()" class="mr-3" nz-button nzType="primary" [nzLoading]="loading"><i nz-icon
+          nzType="poweroff"></i>Сохранить</button>
+    </div>
+
+    <div class="mt-5">
+      <app-suborders-list (editSuborder)="handleEditSuborder($event)" [suborders]="subgroups"></app-suborders-list>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isEditGroupVisible">
+    <nz-modal [(nzVisible)]="isEditGroupVisible" nzTitle="Добавить подзаказ" (nzOnCancel)="handleEditGroupCancel()"
+      nzWidth="400px" (nzOnOk)="onEditGroupSave()">
+      <form nz-form [formGroup]="editGroupForm" [nzLayout]="'vertical'">
+        <nz-form-item>
+          <nz-form-label nzRequired>Дата</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <nz-date-picker [nzDisabledSeconds]="true" [nzShowTime]="timePickerProps" nzFormat="yyyy-MM-dd HH:mm"
+              [nzDisabledDate]="disabledStartDate" formControlName="date" nzPlaceHolder="Выберите дату">
+            </nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label>Исполнители</nz-form-label>
+          <nz-form-control>
+            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+              nzPlaceHolder="Выберите исполнителей" [(ngModel)]="selectedExecutors"
+              (ngModelChange)="executorsChange($event)" [ngModelOptions]="{standalone: true}">
+              <nz-option *ngFor="let item of executors" [nzLabel]="item.user.first_name + ' ' + item.user.last_name "
+                [nzValue]="item.user.user">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-form-label nzRequired>Главный исполнитель</nz-form-label>
+            <nz-select formControlName="mainExecutor">
+              <nz-option *ngFor="let executor of selectedExecutors" [nzValue]="executor"
+                [nzLabel]="getExecutorNameById(executor)">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-modal>
+  </ng-container>
+  <ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+      Это обязательное поле
+    </ng-container>
+    <ng-container *ngIf="control.hasError('min')">
+      Минимум 0
+    </ng-container>
+  </ng-template>
+  <ng-template #tagPlaceHolder let-selectedList> + {{ selectedList.length }} </ng-template>

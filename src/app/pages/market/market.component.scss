@@ -1,0 +1,73 @@
+app-market {
+  .table {
+    margin: 20px 0;
+  }
+
+  .red-statistics {
+    .ant-statistic-content-value,
+    .ant-statistic-title {
+      color: #ff5252;
+    }
+  }
+  .main-tab {
+    width: 100%;
+  }
+  :host ::ng-deep .upload-list-inline .ant-upload-list-item {
+    float: left;
+    width: 200px;
+    margin-right: 8px;
+  }
+
+  :host ::ng-deep .upload-list-inline [class*="-upload-list-rtl"] .ant-upload-list-item {
+    float: right;
+  }
+
+  :host ::ng-deep .upload-list-inline .ant-upload-animate-enter {
+    animation-name: uploadAnimateInlineIn;
+  }
+
+  :host ::ng-deep .upload-list-inline .ant-upload-animate-leave {
+    animation-name: uploadAnimateInlineOut;
+  }
+
+  .subservice-filter {
+    width: 200px;
+  }
+
+  .list-filter {
+    width: 170px;
+  }
+
+  .warning {
+    td {
+      border-bottom-color: #ff5252;
+      color: #ff5252;
+    }
+  }
+  .ant-table-tbody > tr.warning.ant-table-row:hover > td {
+    //background: #ff5252;
+  }
+
+  textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #f5f5f5;
+  }
+  
+  .ant-table-thead > tr > th {
+    white-space: nowrap;
+  }
+  
+  textarea::-webkit-scrollbar {
+    width: 5px;
+    background-color: #ffad40;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+    background-color: #ffad40;
+    border: 2px solid #ffad40;
+  }
+
+  textarea {
+    resize: none;
+  }
+}

@@ -1,0 +1,107 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a routerLink="/dashboard/statistics">
+        <img src="assets/images/logo.png" alt="logo" />
+        <h1>Мастериум</h1>
+      </a>
+    </div>
+
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <!--  -->
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Основная страничка">
+        <i nz-icon nzType="apartment"></i>
+        <span><a >Основная страничка</a></span>
+      </li>
+
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Заказы">
+        <nz-badge [nzCount]="metrics?.new_order_count" *ngIf="!isCollapsed">
+          <i nz-icon nzType="barcode"></i>
+        </nz-badge>
+        <i nz-icon nzType="barcode" *ngIf="isCollapsed"></i>
+        <span><a  routerLink="/dashboard/orders">Заказы </a></span>
+      </li>
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Сервисы">
+        <i nz-icon nzType="apartment"></i>
+        <span><a  routerLink="/dashboard/services">Сервисы</a></span>
+      </li>
+      <!--  -->
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Маркет">
+        <i nz-icon nzType="shop"></i>
+        <span><a  routerLink="/dashboard/markets">Маркет</a></span>
+      </li>
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Маркет">
+        <i nz-icon nzType="shop"></i>
+        <span><a  routerLink="/dashboard/market">Склад</a></span>
+      </li>
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Заказчики">
+        <i nz-icon nzType="dingtalk"></i>
+        <span><a  routerLink="/dashboard/clients">Заказчики</a></span>
+      </li>
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Исполнители">
+        <i nz-icon nzType="dingtalk"></i>
+        <span><a  routerLink="/dashboard/executors">Исполнители</a></span>
+      </li>
+
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Настройки">
+        <i nz-icon nzType="setting"></i>
+        <span><a  routerLink="/dashboard/settings">Настройки</a></span>
+      </li>
+
+      <!--<li
+        nz-menu-item
+        nz-tooltip
+        nzTooltipPlacement="right"
+        nzTooltipTitle="Акция"
+      >
+        <i nz-icon nzType="stock"></i>
+        <span><a routerLink="/dashboard/admins">Акция</a></span>
+      </li> -->
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Реклама">
+        <i nz-icon nzType="dollar-circle"></i>
+        <span><a  routerLink="/dashboard/promotion">Акции </a></span>
+      </li>
+      <li  routerLinkActive="active-item"nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Реклама">
+        <i nz-icon nzType="dollar-circle"></i>
+        <span><a  routerLink="/dashboard/advertisement">Баннеры</a></span>
+      </li>
+
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Диспуты">
+        <nz-badge [nzCount]="metrics?.new_disput_count" *ngIf="!isCollapsed">
+          <i nz-icon nzType="dollar-circle"></i>
+        </nz-badge>
+        <i nz-icon nzType="dollar-circle" *ngIf="isCollapsed"></i>
+        <span><a  routerLink="/dashboard/disput">Диспуты </a></span>
+      </li>
+
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Чат">
+        <nz-badge [nzCount]="metrics?.new_room_count" *ngIf="!isCollapsed">
+          <i nz-icon nzType="wechat"></i>
+        </nz-badge>
+        <i nz-icon nzType="wechat" *ngIf="isCollapsed"></i>
+        <span><a  routerLink="/dashboard/chat">Чат</a></span>
+      </li>
+
+      <!--  -->
+      <li routerLinkActive="active-item" nz-menu-item nz-tooltip nzTooltipPlacement="right" nzTooltipTitle="Финансы">
+        <i nz-icon nzType="money-collect"></i>
+        <span><a  routerLink="/dashboard/finances">Финансы</a></span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

@@ -1,0 +1,26 @@
+.action-button{
+    cursor: pointer;
+    font-size: 15px;
+    &.delete{
+        color: #ff4d4f;
+    }
+    &.edit{
+        color: #001529;
+    }
+}
+.user-photo{
+    width: 60px;
+    height: 60px !important;
+    border-radius: 50%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+}
+.ant-table-tbody > tr > td{
+    padding: 8px;
+    text-align: center;
+}
+.ant-table-thead > tr > th {
+    text-align: center;
+    white-space: nowrap;
+}

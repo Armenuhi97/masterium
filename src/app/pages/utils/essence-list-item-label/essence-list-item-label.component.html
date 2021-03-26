@@ -1,0 +1,12 @@
+<div class="label d-flex justify-content-between align-items-center">
+    <p>{{index}}. {{label}}</p>
+    <i (click)="edit()" class="edit" nz-icon nzType="edit"></i> 
+    <a
+      nz-popconfirm
+      nzPopconfirmTitle="Вы действительно хотите удалить?"
+      nzPopconfirmPlacement="bottom"
+      (nzOnConfirm)="confirm()"
+      >
+        <i class="trash" nz-icon nzType="delete"></i> 
+     </a>
+</div>

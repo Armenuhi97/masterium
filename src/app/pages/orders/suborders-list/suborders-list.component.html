@@ -1,0 +1,36 @@
+<nz-table nzBordered #userTable [nzData]="showSuborders">
+  <thead>
+    <tr>
+      <th>N</th>
+      <th>Номер заказа</th>
+      <th>Общая сумма</th>
+      <th>Дата начала</th>
+      <th>Статус</th>
+      <th></th>
+      <th></th>
+      <th>Статус оплаты</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of userTable.data; let ind = index">
+      <td style="width:10px">{{ ind + 1 }}</td>
+      <td>{{data.name}}</td>  
+      <td>{{data.suborderMain.price}}</td>
+      <td>{{data.suborderMain.start_date | date:'yyyy-MM-dd'}}</td>
+      <td>{{data.status}}</td>
+      <td (click)="onEditSuborder(data)" class="action-button edit" style="width: 10px">
+        <i nz-icon nzType="edit"></i>
+      </td>
+      <td (click)="openPaymentControlModal(data)" class="action-button edit" style="width: 10px">
+        <i nz-icon nzType="eye"></i>
+      </td>
+      <td>
+        <nz-switch [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isPaymentControlPanelVisible" nzTitle="Подробно о оплате" (nzOnCancel)="closePaymentControlModal()" (nzOnOk)="closePaymentControlModal()">
+    <app-orders-payment-control-panel></app-orders-payment-control-panel>
+</nz-modal>

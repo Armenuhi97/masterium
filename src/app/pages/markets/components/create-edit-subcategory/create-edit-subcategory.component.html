@@ -1,0 +1,37 @@
+<nz-modal [nzVisible]="true" [nzTitle]="isEdit ? 'Изменить подкатегорию' : 'Добавить подкатегорию'"
+  (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+  <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+    <nz-form-item>
+      <nz-form-label nzRequired>RU</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="russian" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzRequired>EN</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="english" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzRequired>GE</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="georgian" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+    <div class="clearfix">
+      <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+        [nzHeaders]="{ authorization: 'authorization-text' }">
+        <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+      </nz-upload>
+    </div>
+  </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+</ng-template>

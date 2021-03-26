@@ -1,0 +1,93 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "./assets/scss/styles/variables";
+body {
+  font-family: "Oswald", sans-serif !important;
+  font-weight: 400;
+}
+.cursor-loader {
+  cursor: wait;
+  * {
+    cursor: wait !important;
+  }
+}
+.add-admin {
+  background: $base-color;
+  border-color: $base-color;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-button {
+  cursor: pointer;
+  font-size: 15px;
+  &.delete {
+    color: #ff4d4f;
+  }
+  &.edit {
+    color: #001529;
+  }
+  &.plus {
+    color: #52c41a;
+  }
+}
+.product-transaction-date {
+  margin-right: 10px;
+}
+
+.negative-list-item {
+  .quantity-count {
+    color: #ff5252;
+    margin-left: 10px;
+  }
+}
+
+.positive-list-item {
+  .quantity-count {
+    color: #52c41a;
+    margin-left: 10px;
+  }
+}
+
+.product-modal {
+  .ant-modal-body {
+    padding-top: 0;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px ffad40;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: #ffad40;
+}
+  .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected,.ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
+      background-color: inherit ;
+  }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

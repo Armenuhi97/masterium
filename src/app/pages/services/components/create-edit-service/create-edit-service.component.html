@@ -1,0 +1,77 @@
+<nz-modal nzWidth="800px" [nzVisible]="true" [nzTitle]="isEdit ? 'Изменить сервис' : 'Добавить сервис'"
+  (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+  <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+    <h3>Наименование</h3>
+
+
+
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на русском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="russian" type="text" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на английском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="english" type="text" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Название на грузинском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="georgian" type="text" placeholder="" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на русском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <textarea formControlName="russianDescription" nz-input rows="3" placeholder=""></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на английском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <textarea formControlName="englishDescription" nz-input rows="3" placeholder=""></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-label class="inline-labels" nzRequired>Описание на грузинском</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <textarea formControlName="georgianDescription" nz-input rows="3" placeholder=""></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div class="clearfix">
+      <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+        [nzHeaders]="{ authorization: 'authorization-text' }">
+        <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+      </nz-upload>
+      <img *ngIf="validateForm.get('showingImage').value" class="img-fluid preview-image"
+        [src]="validateForm.get('showingImage').value" alt="" />
+    </div>
+  </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+</ng-template>

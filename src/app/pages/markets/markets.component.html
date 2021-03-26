@@ -1,0 +1,220 @@
+<div class="category-container d-flex flex-wrap">
+  <div class="categories-container">
+    <div class="action-section d-flex align-items-center justify-content-between w-100">
+      <p>Категории</p>
+      <button (click)="onAddCategory()" nz-button nzType="default" nzShape="circle">
+        <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+    <ng-container *ngIf="categories?.length > 0">
+      <div class="cascade-link-item" *ngFor="let category of categories; let i = index">
+        <app-service-list-card (cardClicked)="getSubCategoriesByCategory(category, i)" (edit)="onEditCategory(i)"
+          [active]="activeCategory?.category.id === category.category.id" [workloadPercent]="category.workload_percent"
+          [specialistsCount]="category.specialists_count" [description]="category.description[0]?.value"
+          [title]="category.title[0]?.value" [img]="category.category.icon"
+          [gradientDegree]="category.category.gradient_degree" [colorOne]="category.category.color_one"
+          [colorTwo]="category.category.color_two" (delete)="deleteCategory(category.category.id, i)">
+        </app-service-list-card>
+      </div>
+    </ng-container>
+  </div>
+  <div class="subcategories-container" *ngIf="activeCategory">
+    <div class="action-section d-flex align-items-center justify-content-between w-100">
+      <p>Подкатегории</p>
+      <button (click)="onAddSubcategory()" nz-button nzType="default" nzShape="circle">
+        <i nz-icon nzType="plus"></i>
+      </button>
+    </div>
+    <ng-container *ngIf="subCategories?.length > 0">
+      <div class="cascade-link-item" *ngFor="let subcategory of subCategories; let i = index">
+        <app-service-list-card (cardClicked)="getProductsBySubcategory(subcategory, i,true)"
+          (delete)="deleteSubcategory(subcategory.subcategory.id, i)" (edit)="onEditSubcategory(i)"
+          [title]="subcategory.title[0]?.value" [img]="subcategory.subcategory.icon" [active]="
+            activeSubcategory?.subcategory.id === subcategory.subcategory.id
+          "></app-service-list-card>
+      </div>
+    </ng-container>
+  </div>
+  <div class="product-container" [class.hide]="activeSubcategory == undefined">
+    <div class="title-container">
+      <app-section-title title="Продукты"></app-section-title>
+      <button class="add-essence" nz-button nzType="primary" (click)="openMarketProductActionModal()">
+        Добавить продукт
+      </button>
+    </div>
+
+    <nz-table (nzPageIndexChange)="pageIndexChange($event)" [nzTotal]="totalCount" [nzPageIndex]="pageIndex"
+      [nzFrontPagination]="false" #marketTable [nzData]="listOfData" class="table">
+      <thead>
+        <tr>
+          <th>N</th>
+          <th>Название</th>
+          <th>Описание</th>
+          <th>Цена</th>
+          <th>Код продукта</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of listOfData; let ind = index">
+          <td style="width: 50px">{{ (ind + 1)+((pageIndex-1)*10)}}</td>
+          <td style="width: 300px">{{ data.title[0]?.value }}</td>
+          <td style="width: 350px">{{ data.description[0]?.value }}</td>
+          <td>{{ data.product.price }}</td>
+          <td>{{ data.product.product_code }}</td>
+
+          <td (click)="onEditMarketProduct(data, ind)" class="action-button edit" style="width: 10px">
+            <i nz-icon nzType="edit"></i>
+          </td>
+          <td class="action-button delete" style="width: 10px">
+            <a nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="deleteMarketProduct(data, ind)">
+              <i class="trash" nz-icon nzType="delete"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <nz-modal nzClassName="product-modal" nzWidth="800px" [(nzVisible)]="isVisible" nzTitle="Добавить продукт"
+      (nzOnCancel)="closeModal()" (nzOnOk)="onSubmit()">
+      <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Название на русском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="nameInRussian" type="text" placeholder="" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Название на английском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="nameInEnglish" type="text" placeholder="" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Название на грузинском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="nameInGeorgian" type="text" placeholder="" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Описание на русском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <textarea formControlName="descriptionInRussian" nz-input rows="3" placeholder=""></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Описание на английском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <textarea formControlName="descriptionInEnglish" nz-input rows="3" placeholder=""></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Описание на грузинском</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <textarea formControlName="descriptionInGeorgian" nz-input rows="3" placeholder=""></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <nz-divider></nz-divider>
+        <h3>Характеристики</h3>
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Цена</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="price" type="number" placeholder="Введите цену" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Единица измерения</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <nz-select nzPlaceHolder="Единица измерения" formControlName="measurementType">
+                  <nz-option *ngFor="let m of measurementTypes" [nzValue]="m.measurement_type.id"
+                    [nzLabel]="m.title[0]?.value">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-form-label class="inline-labels" nzRequired>Код продукта</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="productCode" type="text" placeholder="Введите код продукта" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="12">
+            <nz-form-label class="inline-labels" nzRequired>НДС</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="vat" type="number" placeholder="Введите НДС" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-form-label class="inline-labels" nzRequired>Себестоимость</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="costPrice" type="number" placeholder="Введите себестоимость" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <!-- <label nz-checkbox formControlName="showInMarket">Показать в магазине</label> -->
+        <div>
+          <nz-upload nzListType="picture" [nzRemove]="handleRemove" [(nzFileList)]="imagesList"
+            [nzCustomRequest]="customImageRequest">
+            <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+          </nz-upload>
+        </div>
+      </form>
+    </nz-modal>
+    <nz-modal nzWidth="400px" [(nzVisible)]="showChangeProductModal" nzTitle="Изменить каличество"
+      (nzOnCancel)="closeModal()" (nzOnOk)="changeProductCount()">
+      <nz-form-label class="inline-labels" nzRequired>Количество</nz-form-label>
+      <nz-form-item>
+        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+          <input nz-input [formControl]="changeCountControl" type="number" placeholder="" />
+        </nz-form-control>
+      </nz-form-item>
+    </nz-modal>
+
+    <ng-template #userErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+      </ng-container>
+    </ng-template>
+  </div>
+</div>
+
+<ng-container *ngIf="showCategoryActions">
+  <app-create-edit-product-category [activeCategory]="activeCategory" [isEdit]="isEditing"
+    (close)="hideCategoryActions()" (save)="handleCategoryChange($event)"></app-create-edit-product-category>
+</ng-container>
+<ng-container *ngIf="showSubcategoryActions">
+  <app-create-edit-product-subcategory [activeSubcategory]="activeSubcategory" [isEdit]="isEditing"
+    (close)="hideCategoryActions()" (save)="handleSubcategoryChange($event)"></app-create-edit-product-subcategory>
+</ng-container>

@@ -1,0 +1,31 @@
+<nz-range-picker [(ngModel)]="range" (ngModelChange)="onRangeChange($event)"></nz-range-picker>
+<nz-table [nzTotal]="totalCount" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzFrontPagination]="false"
+    (nzPageIndexChange)="pageIndexChange($event)" nzBordered #executorsStatisticTable
+    [nzData]="executorStatistics$ | async" class="mt-3">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>Имя</th>
+            <th>Процентная ставка</th>
+            <th>Премии</th>
+            <th>Заработал</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of executorsStatisticTable.data; let ind = index">
+            <td style="width:10px">{{ ind + 1 }}</td>
+            <td>{{ data.executor_details.first_name + ' ' + data.executor_details.last_name }}</td>
+            <td>{{ data.tarif + '%' }}</td>
+            <td>{{ data.tips }}</td>
+            <td>{{ data.total_sum }}</td>
+            <td style="width: 10px" (click)="openExecutorsDetails(data)"><i nz-icon nzType="edit"></i></td>
+        </tr>
+    </tbody>
+</nz-table>
+
+
+<nz-modal nzWidth="800px" [(nzVisible)]="isExecutorDetailVisible" nzTitle="Подробно о исполнителе" (nzOnCancel)="closeDetailsView()" (nzOnOk)="closeDetailsView()">
+    <app-finances-executors-details [executorDetails]="executorDetails" [id]="activeExecutorStatistics?.executor_details.user">
+    </app-finances-executors-details>
+</nz-modal>

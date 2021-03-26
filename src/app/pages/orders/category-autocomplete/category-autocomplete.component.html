@@ -1,0 +1,19 @@
+<div class="example-input">
+  <nz-input-group nzSize="large" [nzSuffix]="suffixIcon">
+    <input [placeholder]="placeholder" nz-input (input)="searchFor($event)" [nzAutocomplete]="auto" />
+  </nz-input-group>
+  <ng-template #suffixIcon>
+    <nz-spin nzSimple class="autocomplete-group-spinner" *ngIf="loading"></nz-spin>
+  </ng-template>
+  <nz-autocomplete #auto >
+    <nz-auto-optgroup *ngFor="let result of showSearchResult" [nzLabel]="groupTitle">
+      <ng-template #groupTitle>
+            <p class="category-title">{{ result.title }}</p>
+      </ng-template>
+      <nz-auto-option (selectionChange)="optionSelected($event, option, result)" *ngFor="let option of result.children" [nzLabel]="option.title" [nzValue]="option.title">
+        {{ option.title }}
+        <span class="certain-search-item-count">Цена - {{ option.discountPrice }}</span>
+      </nz-auto-option>
+    </nz-auto-optgroup>
+  </nz-autocomplete>
+</div>

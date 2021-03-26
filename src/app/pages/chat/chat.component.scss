@@ -1,0 +1,83 @@
+.container {
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+        width: 5px;
+        background: #f5f5f5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        width: 1em;
+        background-color: #ddd;
+        outline: 1px solid slategrey;
+        border-radius: 1rem;
+    }
+
+    .checkbox-item {
+        margin: 10px 0 10px -15px;
+    }
+
+    .mesage-item {
+        width: 100%;
+    }
+
+    .text-small {
+        font-size: 0.9rem;
+    }
+
+    .messages-box {
+        height: 510px;
+        overflow-y: scroll;
+    }
+    .chat-box {
+        height: 480px;
+        overflow-y: scroll;
+    }
+
+    .rounded-lg {
+        border-radius: 0.5rem;
+    }
+
+    textarea.form-control {
+        resize: none;
+        font-size: 14px;
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        &::placeholder {
+            font-size: 0.9rem;
+            color: #999;
+        }
+    }
+
+    .bg-primary,
+    .list-group-item.active {
+        border-color: #ffad40;
+        background-color: #ffad40 !important;
+    }
+}
+.file-item{
+    .file{
+        border: 1px solid grey;
+        height: 90px;
+        width: 90px;
+        margin: 10px 0;
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    img{
+        height: 100%;
+        width: 100%;
+    }    
+    .file-name{
+        text-overflow: ellipsis;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        display: inline-block;
+    }
+}

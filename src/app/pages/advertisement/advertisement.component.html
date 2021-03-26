@@ -1,0 +1,155 @@
+<script src="advertisement.component.ts"></script>
+<div class="title-container">
+  <app-section-title title="Баннеры"></app-section-title>
+    <button  class="add-essence" nz-button nzType="primary" (click)="addAdvertisement()">Добавить</button>
+</div>
+<nz-table 
+ (nzPageIndexChange)="nzPageIndexChange($event)"
+ #addTable [nzData]="advertisements" class="table">
+    <thead>
+    <tr>
+        <th>N</th>
+        <th>Фото</th>
+        <th>Тип</th>
+        <th>Дата (интервал)</th>
+        <th>Акция</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of addTable.data;let ind=index">
+        <td style="width:50px">{{ind + 1}}</td>
+         <td>
+          <img class="add-photo" [src]="data.images[2]?.image" />
+        </td>
+        <td style="width:200px">{{ data.advertisement.advertisement_type.title }}</td>
+        <td>От {{data.advertisement.start_date | date:'yyyy-MM-dd' }} до {{data.advertisement.end_date | date:'yyyy-MM-dd' }}</td>
+        <td>{{data.advertisement.sale?.name}}</td>
+        <td (click)="onEditAdvertisement(ind)" class="action-button edit" style="width:10px"><i nz-icon nzType="edit"></i></td>
+        <td class="action-button delete" style="width:10px">
+        <a
+            nz-popconfirm
+            nzPopconfirmTitle="Вы действительно хотите удалить?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="deleteAdvertisement(data, ind)"
+        >
+        <i class="trash" nz-icon nzType="delete"></i>
+     </a>
+     </td>
+    </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Добавить рекламу" (nzOnCancel)="handleCancel()" (nzOnOk)="onSubmit()" >
+ <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+
+        <nz-form-item>
+           <nz-form-label nzRequired>Дата (интервал)</nz-form-label>
+           <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+             <nz-range-picker [nzDisabledDate]="disabledStartDate" formControlName="date"></nz-range-picker>
+           </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Тип</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+             <nz-select [nzPlaceHolder]="'Тип'" formControlName="type">
+               <nz-option *ngFor="let type of advertisementTypes" [nzValue]="type.id"
+                          [nzLabel]="type.title">
+               </nz-option>
+             </nz-select>
+           </nz-form-control>
+        </nz-form-item>
+       <nz-form-item>
+         <nz-form-label nzRequired>Акция</nz-form-label>
+         <nz-form-control nzHasFeedback>
+           <nz-select [nzPlaceHolder]="'Тип'" formControlName="sale">
+             <nz-option *ngFor="let promotion of promotions" [nzValue]="promotion.sale.id"
+                        [nzLabel]="promotion.sale.name">
+             </nz-option>
+           </nz-select>
+         </nz-form-control>
+       </nz-form-item>
+       <nz-form-item>
+          <label nz-checkbox formControlName="isMain">Показать внизу</label>
+       </nz-form-item>
+   <nz-upload
+         class="upload"
+         [nzShowUploadList]="false"
+         (nzChange)="handleChange($event, 'russianImage')"
+         [nzHeaders]="{ authorization: 'authorization-text' }"
+        >
+        <div class="d-flex align-items-center">
+          <button nz-button>
+            <i
+              *ngIf="validateForm.get('russianImage').value"
+              class="success-icon"
+              nz-icon
+              nzType="check-circle"
+            ></i>
+            <i  *ngIf="!validateForm.get('russianImage').value" nz-icon nzType="upload"></i>Выберите файл RU
+          </button>
+        </div>
+<!--        <img-->
+<!--          *ngIf="isEditing"-->
+<!--          class="img-fluid preview-image"-->
+<!--          [src]="validateForm.get('russianImage').value"-->
+<!--        />-->
+      </nz-upload>
+   <nz-upload
+     class="upload"
+     [nzShowUploadList]="false"
+     (nzChange)="handleChange($event, 'englishImage')"
+     [nzHeaders]="{ authorization: 'authorization-text' }"
+   >
+     <div class="d-flex align-items-center">
+       <button nz-button>
+         <i
+           *ngIf="validateForm.get('englishImage').value"
+           class="success-icon"
+           nz-icon
+           nzType="check-circle"
+         ></i>
+         <i *ngIf="!validateForm.get('englishImage').value" nz-icon nzType="upload"></i>Выберите файл EN
+       </button>
+
+     </div>
+<!--     <img-->
+<!--       *ngIf="isEditing"-->
+<!--       class="img-fluid preview-image"-->
+<!--       [src]="validateForm.get('englishImage').value"-->
+<!--     />-->
+   </nz-upload>
+   <nz-upload
+     class="upload"
+     [nzShowUploadList]="false"
+     (nzChange)="handleChange($event, 'georgianImage')"
+     [nzHeaders]="{ authorization: 'authorization-text' }"
+   >
+     <div class="d-flex align-items-center">
+
+       <button nz-button>
+         <i
+           *ngIf="validateForm.get('georgianImage').value"
+           class="success-icon"
+           nz-icon
+           nzType="check-circle"
+         ></i>
+         <i *ngIf="!validateForm.get('georgianImage').value" nz-icon nzType="upload"></i>Выберите файл GE
+       </button>
+
+     </div>
+<!--     <img-->
+<!--       *ngIf="isEditing"-->
+<!--       class="img-fluid preview-image"-->
+<!--       [src]="validateForm.get('georgianImage').value"-->
+<!--     />-->
+   </nz-upload>
+    </form>
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>

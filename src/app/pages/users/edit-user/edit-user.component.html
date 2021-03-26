@@ -1,0 +1,69 @@
+<form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+  <nz-form-item>
+    <nz-form-label nzRequired>Имя</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="firstName" placeholder="Введите имя" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired>Фамиля</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="lastName" placeholder="Введите фамиля" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired>Телефон</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="phone" placeholder="Введите телефон" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired>Специализация</nz-form-label>
+    <nz-select
+      [nzMaxTagCount]="3"
+      [nzMaxTagPlaceholder]="tagPlaceHolder"
+      nzMode="multiple"
+      [(ngModel)]="listOfSelectedSpecializations"
+      (ngModelChange)="emitData()"
+      [ngModelOptions]="{standalone: true}"
+      nzPlaceHolder="Выберите специализацию"
+    >
+      <nz-option
+        *ngFor="let item of specializations"
+        [nzLabel]="item.title"
+        [nzValue]="item.url"
+      ></nz-option>
+    </nz-select>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzRequired>Опыт</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="experience" placeholder="Введите опыт" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired>Учеба</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input nz-input formControlName="study" placeholder="Введите учебу" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired>Область работы</nz-form-label>
+    <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+      <input
+        nz-input
+        formControlName="workArea"
+        placeholder="Введите область работы"
+      />
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<ng-template #userErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    Это обязательное поле
+  </ng-container>
+</ng-template>
+<ng-template #tagPlaceHolder let-selectedList>
+  and {{ selectedList.length }} more selected
+</ng-template>

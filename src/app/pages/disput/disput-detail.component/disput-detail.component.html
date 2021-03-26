@@ -1,0 +1,44 @@
+<ng-container *ngIf="disput">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h1 class="m-0">Заказ N {{disput.order_number}}</h1>
+                        <a nz-button nzType="link" [routerLink]="['/dashboard/orders/' + disput.order_id]"
+                            routerLinkActive="router-link-active">Перейти к заказу</a>
+                    </div>
+                    <nz-divider></nz-divider>
+                    <nz-descriptions class="order-details" nzTitle="" [nzColumn]="1">
+                        <nz-descriptions-item nzTitle="Заказчик"><a
+                                [routerLink]="['/dashboard/clients/' + disput.customer_id]">{{disput.customer_name
+                                }}</a>
+                        </nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Исполнитель"><a
+                                [routerLink]="['/dashboard/executors/' + disput.executr_id]">{{disput.executr_name
+                                }}</a>
+                        </nz-descriptions-item>
+                    </nz-descriptions>
+                    <nz-descriptions class="description-details" nzTitle="Описание">
+                        <nz-descriptions-item nzTitle="">{{disput.description}}</nz-descriptions-item>
+                    </nz-descriptions>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <nz-image-group>
+            <img *ngFor="let image of disput.disput_images" nz-image width="200px" [nzSrc]="image.image_url" alt=""
+                class="disput-image" />
+        </nz-image-group>
+    </div>
+    <div class="container">
+        <div class="d-flex align-items-cener action-buttons">
+            <a nz-popconfirm nzPopconfirmTitle="Вы уверены ?" nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="closeDisput()">
+                <button class="mr-3" nz-button nzType="primary" [disabled]="disput.status[1].value === 'Completed'"
+                    [nzLoading]="loading">Закрыть диспут </button>
+            </a>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,307 @@
+<nz-tabset (nzSelectChange)="activeTabChange($event)">
+    <nz-tab nzTitle="Личные данные">
+        <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Имя</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="firstName" placeholder="Введите имя" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Фамилия</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="lastName" placeholder="Введите фамиля" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Тип</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control [nzErrorTip]="userErrorTpl">
+                            <nz-radio-group formControlName="executorType">
+                                <label nz-radio [nzValue]="true">Штатный</label>
+                                <label nz-radio [nzValue]="false">Контрактор</label>
+                            </nz-radio-group>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Телефон</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <nz-input-group [nzPrefix]="phoneNumberTemplate">
+                                <input nz-input maxlength="8" formControlName="phone" placeholder="Введите телефон" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Почта</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="email" placeholder="Введите почту" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Кредитная карта</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="creditCardNumber" maxlength="16"
+                                placeholder="Введите номер карты" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels">О исполнителе</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <textarea nz-input rows="3" formControlName="about" placeholder="Введите">
+                </textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels">Опыт</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <textarea nz-input rows="3" formControlName="experience" placeholder="Введите опыт">
+                </textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels">Учеба</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <textarea nz-input rows="3" formControlName="study" placeholder="Введите учебу">
+                </textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Рабочий график</nz-form-label>
+                    <nz-form-item>
+                        <div class="d-flex align-items-center">
+                            <nz-time-picker nzFormat="HH:mm" [(ngModel)]="workScheduleStart"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="validateForm.get('workScheduleStart').setValue($event)" class="mr-2"
+                                nzPlaceHolder="Начало"></nz-time-picker>
+                            <nz-time-picker nzFormat="HH:mm" [(ngModel)]="workScheduleEnd"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="validateForm.get('workScheduleEnd').setValue($event)"
+                                nzPlaceHolder="Конец">
+                            </nz-time-picker>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="4">
+                    <nz-form-label class="inline-labels" nzRequired>Ставка</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input type="number" formControlName="bet" placeholder="Введите ставку" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-label class="inline-labels" nzRequired>Область работы</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="workArea" placeholder="Введите область работы" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="12">
+                    <nz-form-label class="inline-labels" nzRequired>Сервисы</nz-form-label>
+                    <nz-form-item>
+                        <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                            nzPlaceHolder="Сервисы" [(ngModel)]="selectedSubcategories"
+                            (ngModelChange)="addOrDeleteItem($event, subcategoriesFormArray, subcategories, 'subcategoriesFormArray')"
+                            [ngModelOptions]="{standalone: true}" class="">
+                            <nz-option *ngFor="let subcategory of subcategories" [nzLabel]="subcategory.title[0]?.value"
+                                [nzValue]="subcategory.subcategory.id"></nz-option>
+                        </nz-select>
+                        <ng-container formArrayName="subcategoriesFormArray"
+                            *ngFor="let item of validateForm.get('subcategoriesFormArray')['controls']; let i = index;">
+                            <div class="specialization">
+                                <div [formGroupName]="i" class="d-flex justify-content-between align-items-baseline">
+                                    <p>{{validateForm.get('subcategoriesFormArray').controls[i].value.name}}</p>
+                                    <nz-switch [nzCheckedChildren]="checkedTemplateText"
+                                        [nzUnCheckedChildren]="unCheckedTemplateText" formControlName="isPriority">
+                                    </nz-switch>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-label class="inline-labels">Работа с инструментами</nz-form-label>
+                    <nz-form-item>
+                        <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                            nzPlaceHolder="Работа с инструментами" [(ngModel)]="selectedSpecializations"
+                            (ngModelChange)="addOrDeleteItem($event, specializationsFormArray, specializations, 'specializationsFormArray')"
+                            [ngModelOptions]="{standalone: true}" class="">
+                            <nz-option *ngFor="let specialization of specializations"
+                                [nzLabel]="specialization.title[0]?.value" [nzValue]="specialization.specialization.id">
+                            </nz-option>
+                        </nz-select>
+                        <ng-container formArrayName="specializationsFormArray"
+                            *ngFor="let item of validateForm.get('specializationsFormArray')['controls']; let i = index;">
+                            <div class="specialization">
+                                <div [formGroupName]="i" class="d-flex justify-content-between align-items-baseline">
+                                    <p>{{validateForm.get('specializationsFormArray').controls[i].value.name}}</p>
+                                    <nz-switch [nzCheckedChildren]="checkedTemplateText"
+                                        [nzUnCheckedChildren]="unCheckedTemplateText" formControlName="isPriority">
+                                    </nz-switch>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="24">
+                    <nz-form-label class="inline-labels">Документы</nz-form-label>
+                    <nz-form-item>
+                        <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                            nzPlaceHolder="Документы" [(ngModel)]="selectedUserAttachmentTypes"
+                            (ngModelChange)="addOrDeleteItem($event, documents, userAttachmentTypes, 'documents')"
+                            [ngModelOptions]="{standalone: true}" class="">
+                            <nz-option *ngFor="let userAttachmentType of userAttachmentTypes"
+                                [nzLabel]="userAttachmentType.title[0]?.value"
+                                [nzValue]="userAttachmentType.user_attachment_type.id"></nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                    <ng-container formArrayName="documents"
+                        *ngFor="let item of validateForm.get('documents')['controls']; let i = index;">
+                        <div class="document">
+                            <div [formGroupName]="i" class="d-flex justify-content-between align-items-baseline">
+                                <p>{{validateForm.get('documents').controls[i].value.name}}</p>
+                                <nz-upload nzListType="picture" [nzShowUploadList]="false"
+                                    (nzChange)="handleUserAttachmentTypeFileChange($event, validateForm.get('documents').controls[i].controls.file)"
+                                    [nzHeaders]="{ authorization: 'authorization-text' }">
+                                    <button nz-button>
+                                        <i *ngIf="validateForm.get('documents').controls[i].value.file"
+                                            class="success-icon" nz-icon nzType="check-circle"></i>
+                                        <i *ngIf="!validateForm.get('documents').controls[i].value.file" nz-icon
+                                            nzType="upload"></i>
+                                        {{
+                                        validateForm.get('documents').controls[i].value.file ?
+                                        (validateForm.get('documents').controls[i].value.file.name || 'Документ
+                                        загружен'):
+                                        'Загрузить'
+                                        }}
+                                    </button>
+                                </nz-upload>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="clearfix">
+                <nz-form-label class="inline-labels" nzRequired></nz-form-label>
+                <nz-upload nzListType="picture" [nzShowUploadList]="false"
+                    (nzChange)="handleExecutorImageChange($event)"
+                    [nzHeaders]="{ authorization: 'authorization-text' }">
+                    <button nz-button><i nz-icon nzType="upload"></i>Аватар</button>
+                </nz-upload>
+            </div>
+            <img *ngIf="validateForm.get('showingImage').value" class="img-fluid preview-image"
+                [src]="validateForm.get('showingImage').value" />
+            <div class="d-flex align-items-cener justify-content-end action-buttons">
+                <button (click)="onExecutorSave()" class="mr-3" nz-button nzType="primary"><i nz-icon
+                        nzType="save"></i>{{isEditing ? 'Сохранить' : 'Добавить'}}</button>
+            </div>
+
+        </form>
+    </nz-tab>
+    <ng-container *ngIf="isEditing">
+        <nz-tab nzTitle="История заказов">
+            <nz-table (nzPageIndexChange)="nzPageIndexChange($event)" nzBordered #orderStoryTable
+                [nzData]="executorOrdersHistory">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>Номер заказа</th>
+                        <th>Дата завершеия</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of orderStoryTable.data; let ind = index">
+                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data.order?.order_number
+                                }}</a> </td>
+                        <td>{{ data.done_at ? (data.done_at | date: 'short') : 'В процесе'}}</td>
+                        <td>{{ data.price }}</td>
+                        <td>{{data.order?.status[0].value}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="История диспутов">
+            <nz-table (nzPageIndexChange)="nzPageIndexChange($event)" nzBordered #orderDisputTable
+                [nzData]="executorDisputOrdersHistory">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>Номер заказа</th>
+                        <th>Дата завершеия</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of orderDisputTable.data; let ind = index">
+                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data.order?.order_number
+                                }}</a> </td>
+                        <td>{{ data.done_at ? (data.done_at | date: 'short') : 'В процесе'}}</td>
+                        <td>{{ data.price }}</td>
+                        <td>{{data.order?.status[0].value}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="История вознограждений">
+            <ng-container *ngIf="isRewardHistoryVisible">
+                <app-executor-reward-history [userId]="id">
+                </app-executor-reward-history>
+            </ng-container>
+        </nz-tab>
+        <nz-tab nzTitle="Запчасти на борту">
+            <ng-container *ngIf="isVisibleBoard">
+                <app-executor-board-history [userId]="id"></app-executor-board-history>
+                <!-- <app-execute-board [userId]="editingExecutor?.user_details?.user"></app-execute-board> -->
+            </ng-container>
+        </nz-tab>
+    </ng-container>
+</nz-tabset>
+
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>
+<ng-template #tagPlaceHolder let-selectedList>
+    + {{ selectedList.length }}
+</ng-template>
+<ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+<ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+<ng-template #checkedTemplateText>В приоритете</ng-template>
+<ng-template #unCheckedTemplateText>Не в приоритете</ng-template>
+<ng-template #phoneNumberTemplate>+995</ng-template>

@@ -1,0 +1,25 @@
+.certain-search-item-count {
+  position: absolute;
+  color: #999;
+  right: 16px;
+}
+
+.more-link {
+  float: right;
+}
+
+.category-title {
+  margin: 0;
+  color: #ffad3f;
+  font-size: 15px;
+}
+
+.ant-select-item-option-content {
+  font-size: 13px;
+}
+
+.autocomplete-group-spinner {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}

@@ -1,0 +1,168 @@
+<nz-tabset (nzSelectChange)="activeTabChange($event)">
+    <nz-tab nzTitle="Личные данные">
+        <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Имя</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="firstName" placeholder="Введите имя" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Фамилия</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="lastName" placeholder="Введите фамиля" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Тип</nz-form-label>
+                    <nz-radio-group formControlName="isCooperativeUser">
+                        <label nz-radio [nzValue]="true">Юр. лицо</label>
+                        <label nz-radio [nzValue]="false">Физ. лицо</label>
+                    </nz-radio-group>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Телефон</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <nz-input-group [nzPrefix]="phoneNumberTemplate">
+                                    <input maxlength="8" nz-input formControlName="phoneNumber" placeholder="Введите телефон" />
+                                </nz-input-group> 
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels">Почта</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="email" placeholder="Введите почту" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels">Кредитная карта</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                                <input nz-input formControlName="creditCardNumber" maxlength="16" placeholder="Введите номер карты" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24" *ngIf="validateForm.get('isCooperativeUser').value === true">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>ID компании</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="companyId" placeholder="Введите ID компании" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Имя компании</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <input nz-input formControlName="companyName" placeholder="Введите имя компании" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Тип компании</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <nz-select nzPlaceHolder="Введите тип компании" formControlName="companyType">
+                                <nz-option *ngFor="let type of companyTypes" [nzValue]="type.company_type.id"
+                                    [nzLabel]="type.title[0].value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleClientImageChange($event)"
+                    [nzHeaders]="{ authorization: 'authorization-text' }">
+                    <button nz-button><i nz-icon nzType="upload"></i>Аватар</button>
+                </nz-upload>
+            </div>
+            <img *ngIf="validateForm.get('showingImage').value" class="img-fluid preview-image"
+                [src]="validateForm.get('showingImage').value" />
+            <div class="d-flex align-items-cener justify-content-end action-buttons">
+                <button (click)="onClientSave()" class="mr-3" nz-button nzType="primary"><i nz-icon
+                        nzType="save"></i>{{isEditing ? 'Сохранить' : 'Добавить'}}</button>
+            </div>
+        </form>
+    </nz-tab>
+
+    <ng-container *ngIf="isEditing">
+        <nz-tab nzTitle="История заказов">
+            <nz-table nzBordered #orderStoryTable (nzPageIndexChange)="nzHistoryPageIndexChange($event)"
+                [nzTotal]="totalHistory" [nzPageSize]="pageSize" [nzPageIndex]="historypageIndex"
+                [nzFrontPagination]="false" [nzData]="clientOrdersHistory">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>Номер заказа</th>
+                        <th>Дата завершеия</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of clientOrdersHistory; let ind = index">
+                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td> <a [routerLink]="'/dashboard/orders/' + data.order_id + '/'">{{ data.order_number }}</a>
+                        </td>
+                        <td>{{ data.date ? (data.date | date: 'short') : 'В процесе'}}</td>
+                        <td>{{ data.price }}</td>
+                        <td>{{data?.status[0].value}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="История диспутов">
+            <nz-table (nzPageIndexChange)="nzDisputHistoryPageIndexChange($event)" [nzTotal]="disputTotal"
+                [nzPageSize]="pageSize" [nzPageIndex]="disputPageIndex" [nzFrontPagination]="false" nzBordered
+                #orderDisputTable [nzData]="clientDisputHistory">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>Номер заказа</th>
+                        <th>Дата завершеия</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of clientDisputHistory; let ind = index">
+                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data.order?.order_number
+                                }}</a> </td>
+                        <td>{{ data.done_at ? (data.done_at | date: 'short') : 'В процесе'}}</td>
+                        <td>{{ data.price }}</td>
+                        <td>{{data.order?.status[0].value}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <!-- <nz-tab nzTitle="История вознограждений">
+         <ng-container *ngIf="isRewardHistoryVisible">
+            <app-executor-reward-history [userId]="editingExecutor?.user_details?.user"></app-executor-reward-history>
+         </ng-container>
+      </nz-tab> -->
+    </ng-container>
+</nz-tabset>
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>
+<ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+<ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+<ng-template #phoneNumberTemplate>+995</ng-template>
