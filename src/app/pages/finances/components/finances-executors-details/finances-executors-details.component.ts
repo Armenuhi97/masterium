@@ -42,6 +42,7 @@ export class FinancesExecutorsDetailsComponent implements OnInit, OnDestroy {
       point,
       text,
       user_id: this.id,
+      suborder_id: null
     };
     this._financesService
       .fineExecutor(sendingData)

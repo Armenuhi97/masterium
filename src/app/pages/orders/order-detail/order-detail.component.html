@@ -57,14 +57,14 @@
     <div class="order-ordering d-flex justify-content-between">
       <nz-tabset>
         <nz-tab nzTitle="Сервисы">
-          <!-- <app-category-autocomplete placeholder="" (search)=""
-            [searchResult]="" [loading]="isSearching">
-          </app-category-autocomplete> -->
+          <app-category-autocomplete placeholder="Добавить сервис" (search)="searchForServices($event)"
+          (selected)="addServiceItem($event)"    [searchResult]="serviceSearchResult" [loading]="isSearching">
+          </app-category-autocomplete>
 <!-- (selected)="addServiceItem($event)" -->
-          <app-app-nz-autocomplete  (search)="searchForServices($event)"
+          <!-- <app-app-nz-autocomplete  (search)="searchForServices($event)"
             (selected)="addServiceItem($event)" [loading]="isSearching" placeholder="Добавить сервис"
             [searchResult]="serviceSearchResult">
-          </app-app-nz-autocomplete>
+          </app-app-nz-autocomplete> -->
 
           <div cdkDropList id="{{subgroups[0].id}}" [cdkDropListData]="subgroups[0].groupItemList"
             [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"

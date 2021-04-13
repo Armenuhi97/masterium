@@ -15,8 +15,6 @@ export class AppNzAutocompleteComponent implements OnInit {
   @Input() loading: boolean;
   @Input() placeholder: string;
   @Input() set searchResult(value) {
-    console.log(value);
-
     if (value) {
       if (value.children || value[0] && value[0].childen) {
         this.showSearchResult = value.children;
