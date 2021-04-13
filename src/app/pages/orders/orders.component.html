@@ -1,11 +1,35 @@
-<div class="title-container d-flex align-items-center justify-content-between">
+<div class="title-container d-flex align-items-center justify-content-between flex-wrap">
   <app-section-title title="Заказы"></app-section-title>
-  <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusFilterControl" class="status-filter">
-    <nz-option nzValue="" nzLabel="Все"> </nz-option>
-    <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.order_status.code"
-      [nzLabel]="status.title[0]?.value">
-    </nz-option>
-  </nz-select>
+  <div class="m-left-5">
+    <nz-form-label class="inline-labels">Фильтр по статусу подзаказов</nz-form-label>
+    <nz-form-item>
+      <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusSubOrderFilterControl" class="status-filter">
+        <nz-option nzValue="" nzLabel="Все"> </nz-option>
+        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.order_status.id"
+          [nzLabel]="status.title[0]?.value">
+        </nz-option>
+      </nz-select>
+    </nz-form-item>
+  </div>
+
+  <div>
+    <nz-form-item>
+      <label nz-checkbox [formControl]="isOrderWithDisputControl">Заказ с диспутами</label>
+    </nz-form-item>
+  </div>
+
+  <div>
+    <nz-form-label class="inline-labels">Фильтр по статусу заказов</nz-form-label>
+    <nz-form-item>
+      <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusFilterControl" class="status-filter">
+        <nz-option nzValue="" nzLabel="Все"> </nz-option>
+        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.order_status.id"
+          [nzLabel]="status.title[0]?.value">
+        </nz-option>
+      </nz-select>
+    </nz-form-item>
+  </div>
+
 </div>
 <nz-table nzBordered (nzPageIndexChange)="nzPageIndexChange($event)" #userTable [nzData]="orders" [nzTotal]="total"
   [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzFrontPagination]="false">

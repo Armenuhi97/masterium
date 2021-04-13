@@ -88,6 +88,10 @@ export class ExecutorComponent implements OnInit {
       },
       { validator: dateLessThan('workScheduleStart', 'workScheduleEnd') }
     );
+    this.validateForm.valueChanges.subscribe(() => {
+      console.log(this.validateForm);
+
+    })
     this.validateForm.valueChanges.subscribe((res) => {
       if (this.validateForm.hasError('wrongDate')) {
         this._nzMessages.error(Messages.wrongTimeRange);
@@ -163,7 +167,6 @@ export class ExecutorComponent implements OnInit {
       return;
     }
     const formValue = this.validateForm.value;
-    // @ts-ignore
     const sendingData: ExecutorRequest = {
       user_details: {
         about: formValue.about,

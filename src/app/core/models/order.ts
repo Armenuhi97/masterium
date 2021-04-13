@@ -21,6 +21,8 @@ interface Suborder {
     status: number;
     suborder_name: number;
     subservice: any;
+    comment?: string;
+    guarantee_period: number;
   };
   suborder_real_price: number;
   disput: [];
@@ -78,6 +80,7 @@ export interface OrderSubgroupDragItem {
   groupItemList: any[];
   status?: string;
   suborderMain?: {
+    debet?: number;
     current_price: number;
     description_image: number[];
     done_at: string;
@@ -88,10 +91,14 @@ export interface OrderSubgroupDragItem {
     status: number;
     suborder_name: number;
     subservice: any;
+    payed?: boolean;
+    comment?: string;
+    guarantee_period: number;
   };
   isEditing: boolean;
   suborder?: any;
   executors?: SuborderExecutor[];
+  disput?: []
 }
 
 export enum DragItemTypes {
@@ -143,6 +150,8 @@ export interface SuborderItem {
     suborder_id: number;
     products_price: number;
     services_price: number;
+    guarantee_period: number;
+    comment: string;
   };
   order_subservices: SuborderService[];
   executor: SuborderExecutor[];

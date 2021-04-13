@@ -68,12 +68,23 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getExecutors();
+  
   }
 
   initEditGroupForm(index: number): void {
-    this.selectedExecutors = this.subgroups[index].executors?.map(ex => ex.user.user);
-    const mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.user.user;
+    let mainExecutor;
+    if(this.subgroups[index].suborderMain?.id) {
+      this.selectedExecutors = this.subgroups[index].executors?.map(ex => ex.user.user);
+      mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.user.user
+    } else {
+      this.selectedExecutors = this.subgroups[index].executors?.map(ex => ex.id);
+      mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.id
+    }
+
+    
     this.editGroupForm = this.formBuilder.group({
+      guarantee_period: [this.subgroups[index]?.suborderMain?.guarantee_period],
+      comment: [this.subgroups[index]?.suborderMain?.comment || this.order.order.description, [Validators.required]],
       date: [
         this.subgroups[index]?.suborderMain?.start_date,
         [Validators.required],
@@ -144,8 +155,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             isEditing: false
           },
         ];
-        order.suborder.forEach((sub) => {
-          this.addGroup(false);
+        order.suborder.forEach((sub) => {          
+          this.addGroup(false,order);
           sub.products.forEach((product: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Product,
@@ -174,9 +185,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               url: image.image_url,
             });
           });
+
           this.subgroups[this.subgroups.length - 1].suborderMain = sub.suborder;
           this.subgroups[this.subgroups.length - 1].executors = sub.executor;
           this.subgroups[this.subgroups.length - 1].status = sub.status[0].value;
+          this.subgroups[this.subgroups.length - 1].disput = sub.disput;
           this.subgroups.map(o => o.isEditing = false);
         });
         this.order = order;
@@ -192,8 +205,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.subgroups[formValue.index].suborderMain = {
       ...this.subgroups[formValue.index].suborderMain,
       start_date: formValue.date,
+      comment: formValue.comment,
+      guarantee_period: formValue.guarantee_period
     };
-    console.log(this.selectedExecutors);
     if (this.selectedExecutors) {
       this.subgroups[formValue.index].executors = this.selectedExecutors.map(
         (executor) => {
@@ -234,12 +248,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.editingGroupIndex = index;
   }
 
-  addGroup(isEditing: boolean): void {
-    console.log(this.subgroups);
+  addGroup(isEditing: boolean,order?): void {    
     this.subgroups.map(order => order.isEditing = false);
     const newItem: OrderSubgroupDragItem = {
       id: `group-${this.subgroups.length + 1}`,
-      name: `Заказ N${this.id}/${this.subgroups.slice(3).length + 1}`,
+      name: `Заказ N ${this.order?this.order.order.order_number:order.order.order_number}/${this.subgroups.slice(3).length + 1}`,
       groupItemList: [],
       suborderMain: null,
       isEditing,
@@ -319,7 +332,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.subgroups[index].groupItemList.unshift(subgroupItem);
   }
 
-  searchForServices(term: string): void {    
+  searchForServices(term: string): void {
     if (term === '') {
       term = ' ';
     }
@@ -348,8 +361,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   searchForProducts(term: string): void {
-    console.log(term);
-    
+
     if (term === '') {
       term = ' ';
     }
@@ -380,8 +392,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       this.nzMessagesService.error('Пожалуйста назначьте дату начала заказа');
       return;
     }
-    console.log(this.subgroups.slice(3));
-
     const sendingData: OrderRequest = {
       order_id: this.id,
       removed_suborders: this.removedSuborders.map((id) => {
@@ -400,7 +410,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }),
           executor: suborder.executors.map((executor) => {
             return {
-              executor_id: executor.id,
+              executor_id: executor.user ? executor.user.user : executor.id,
               is_overman: executor.is_overman
             };
           }),
@@ -425,8 +435,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }),
           suborder: {
             // this.subgroups[index] 
+            comment: suborder.suborderMain.comment,
+            guarantee_period: suborder.suborderMain.guarantee_period,
             start_date: suborder.suborderMain?.start_date,
-            suborder_name:'',
+            suborder_name: '',
             suborder_id: suborder.suborderMain?.id || null,
             products_price: suborder.groupItemList
               .filter((item) => item.type === DragItemTypes.Product)
@@ -445,8 +457,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         };
       }),
     };
-    console.log(sendingData);
-
     this.loading = true;
     this.ordersService
       .editSuborder(sendingData)
@@ -484,14 +494,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     const executor = this.executors.filter(
       ex => ex.user.user === id
     )[0];
-
     return executor?.user.first_name + ' ' + executor?.user.last_name;
   }
 
   deleteGroup(index: number): void {
     const group = this.subgroups[index];
     if (group?.suborderMain?.id) {
-      this.removedSuborders.push(group.suborderMain.id);
+      // this.removedSuborders.push(group.suborderMain.id);
     }
     this.subgroups.splice(index, 1);
   }

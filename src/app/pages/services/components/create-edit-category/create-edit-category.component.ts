@@ -24,9 +24,9 @@ export class CreateEditCategoryComponent implements OnInit {
 
   initForm(): void {
     this.validateForm = this.formBuilder.group({
-      gradient_degree: ['', [Validators.required]],
-      color_one: ['', [Validators.required]],
-      color_two: ['', [Validators.required]],
+      // gradient_degree: ['', [Validators.required]],
+      color: ['', [Validators.required]],
+      // color_two: ['', [Validators.required]],
       icon: ['', [Validators.required]],
       russian: ['', Validators.required],
       english: ['', Validators.required],
@@ -38,9 +38,7 @@ export class CreateEditCategoryComponent implements OnInit {
 
     if (this.isEdit) {
       this.validateForm.patchValue({
-        gradient_degree: this.activeCategory.category.gradient_degree,
-        color_one: this.activeCategory.category.color_one,
-        color_two: this.activeCategory.category.color_two,
+        color: this.activeCategory.category.color,
         icon: this.activeCategory.category.icon,
         russian: this.activeCategory?.title[0]?.value,
         english: this.activeCategory?.title[1]?.value,
@@ -55,7 +53,9 @@ export class CreateEditCategoryComponent implements OnInit {
   closeModal(): void {
     this.close.emit();
   }
-
+  public changeColorPicker(controlName: string, event): void {
+    this.validateForm.get(controlName).setValue(event)
+  }
   // tslint:disable-next-line:typedef
   handleChange(info: NzUploadChangeParam) {
     this.validateForm.get('icon').setValue(info.file.originFileObj);

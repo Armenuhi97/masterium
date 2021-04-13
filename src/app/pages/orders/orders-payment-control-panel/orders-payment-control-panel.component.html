@@ -1,4 +1,4 @@
-<nz-radio-group [(ngModel)]="debit">
+<nz-radio-group [(ngModel)]="debit" (ngModelChange)="debitChanged($event)">
     <label nz-radio [nzValue]="1">Задолженность работника</label>
     <label nz-radio [nzValue]="2">Задолженность корпоративных клиентов</label>
 </nz-radio-group>

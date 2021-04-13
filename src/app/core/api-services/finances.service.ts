@@ -12,10 +12,10 @@ import { ExecutorFineRequest, ExecutorSumResponse } from '../models/user';
 export class FinancesService {
     constructor(private _httpClient: HttpClient) { }
 
-    public getProducts(pageIndex: number): Observable<ServerResponce<MarketProduct[]>> {
+    public getProducts(pageIndex: number): Observable<ServerResponce<MarketProduct>> {
         let params = new HttpParams();
         params = params.append('page', pageIndex.toString());
-        return this._httpClient.get<ServerResponce<MarketProduct[]>>('products/product/', { params });
+        return this._httpClient.get<ServerResponce<MarketProduct>>('products/product/', { params });
     }
 
     public getExecutorsStatistic(page: number, range: string[]): Observable<ServerResponce<ExecutorSumResponse[]>> {

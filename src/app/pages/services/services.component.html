@@ -13,9 +13,7 @@
           [description]="category.description[0]?.value"
           [title]="category.title[0]?.value"
           [img]="category.category.icon"
-          [gradientDegree]="category.category.gradient_degree"
-          [colorOne]="category.category.color_one"
-          [colorTwo]="category.category.color_two"
+          [colorOne]="category.category.color"
           (delete)="deleteCategory(category.category.id, i)"
           ></app-service-list-card>
       </div>

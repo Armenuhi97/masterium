@@ -9,10 +9,10 @@
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="setPendingOrder()">
               <button nz-button nzType="primary" nzPrimary>Принять в обработку</button>
             </a>
-            <a *ngIf="order.status.status_code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+            <!-- <a *ngIf="order.status.status_code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="cancelOrder()">
               <button nz-button nzType="danger" nzPrimary>Отменить заказ</button>
-            </a>
+            </a> -->
           </div>
           <nz-divider></nz-divider>
           <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
@@ -53,7 +53,7 @@
       <ng-template #productPrefixTpl><i nz-icon nzType="bulb"></i></ng-template>
     </div>
   </div>
-  <div class="container">
+  <div class="container" *ngIf="order.status.status_code !== 'ACC'">
     <div class="order-ordering d-flex justify-content-between">
       <nz-tabset>
         <nz-tab nzTitle="Сервисы">
@@ -121,8 +121,8 @@
       </nz-tabset>
       <!-- && order.status.status_code !== 'ACC' -->
       <div>
-        <button nz-button class="ml-auto mb-2 d-flex" nzType="primary" [disabled]="!isAddSubgroupVisible || order.status.status_code == 'ACC'"
-          (click)="addGroup(true)">Новый
+        <button nz-button class="ml-auto mb-2 d-flex" nzType="primary"
+          [disabled]="!isAddSubgroupVisible || order.status.status_code == 'ACC'" (click)="addGroup(true)">Новый
           заказ</button>
         <div *ngFor="let subgroup of subgroups | slice:3; let i = index">
           <div class="list-container" *ngIf="subgroup.isEditing">
@@ -136,8 +136,8 @@
               <div class="d-flex align-items-start">
                 <div class="d-flex align-items-center">
                   <i class="d-block edit-group" nz-icon nzType="edit" nzTheme="outline" (click)="editGroup(i + 3)"></i>
-                  <a nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
-                    (nzOnConfirm)="deleteGroup(i + 3)">
+                  <a *ngIf="!subgroup.suborderMain?.id" nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?"
+                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteGroup(i + 3)">
                     <i class="d-block trash delete-group" nz-icon nzType="delete"></i>
                   </a>
                 </div>
@@ -208,36 +208,63 @@
 
   <ng-container *ngIf="isEditGroupVisible">
     <nz-modal [(nzVisible)]="isEditGroupVisible" nzTitle="Добавить подзаказ" (nzOnCancel)="handleEditGroupCancel()"
-      nzWidth="400px" (nzOnOk)="onEditGroupSave()">
+      nzWidth="600px" (nzOnOk)="onEditGroupSave()">
       <form nz-form [formGroup]="editGroupForm" [nzLayout]="'vertical'">
+
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label>Исполнители</nz-form-label>
+              <nz-form-control>
+                <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                  nzPlaceHolder="Выберите исполнителей" [(ngModel)]="selectedExecutors"
+                  (ngModelChange)="executorsChange($event)" [ngModelOptions]="{standalone: true}">
+                  <nz-option *ngFor="let item of executors"
+                    [nzLabel]="item.user.first_name + ' ' + item.user.last_name " [nzValue]="item.user.user">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-control>
+                <nz-form-label nzRequired>Главный исполнитель</nz-form-label>
+                <nz-select nzPlaceHolder="Выберите главного исполнителя " formControlName="mainExecutor">
+                  <nz-option *ngFor="let executor of selectedExecutors" [nzValue]="executor"
+                    [nzLabel]="getExecutorNameById(executor)">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzRequired>Дата начала заказа </nz-form-label>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <nz-date-picker [nzDisabledSeconds]="true" [nzShowTime]="timePickerProps" nzFormat="yyyy-MM-dd HH:mm"
+                  [nzDisabledDate]="disabledStartDate" formControlName="date" nzPlaceHolder="Выберите дату начала заказа">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzFor="guarantee_period" nzRequired>Гарантия в днях</nz-form-label>
+              <nz-form-control>
+                <input nz-input type="number" placeholder="Гарантия в днях" formControlName="guarantee_period"
+                  id="guarantee_period" name="guarantee_period">
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
         <nz-form-item>
-          <nz-form-label nzRequired>Дата</nz-form-label>
-          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
-            <nz-date-picker [nzDisabledSeconds]="true" [nzShowTime]="timePickerProps" nzFormat="yyyy-MM-dd HH:mm"
-              [nzDisabledDate]="disabledStartDate" formControlName="date" nzPlaceHolder="Выберите дату">
-            </nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label>Исполнители</nz-form-label>
+          <nz-form-label nzFor="commment">Коментарий</nz-form-label>
           <nz-form-control>
-            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-              nzPlaceHolder="Выберите исполнителей" [(ngModel)]="selectedExecutors"
-              (ngModelChange)="executorsChange($event)" [ngModelOptions]="{standalone: true}">
-              <nz-option *ngFor="let item of executors" [nzLabel]="item.user.first_name + ' ' + item.user.last_name "
-                [nzValue]="item.user.user">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label nzRequired>Главный исполнитель</nz-form-label>
-            <nz-select formControlName="mainExecutor">
-              <nz-option *ngFor="let executor of selectedExecutors" [nzValue]="executor"
-                [nzLabel]="getExecutorNameById(executor)">
-              </nz-option>
-            </nz-select>
+            <textarea placeholder="Коментарий" [nzAutosize]="{ minRows: 3, maxRows: 6 }" nz-input
+              formControlName="comment" name="commment" id="commment"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>

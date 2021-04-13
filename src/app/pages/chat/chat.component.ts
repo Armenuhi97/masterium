@@ -19,6 +19,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+  private _isScrollToUp: boolean = false
 
   private _unsubscribe$: Subject<void> = new Subject<void>();
   public roomsList: RoomList[];
@@ -64,14 +65,18 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
   scrollToBottom(): void {
     try {
-        this.myScrollContainer.nativeElement.scrollTop = 480
-        // this.myScrollContainer.nativeElement.scrollHeight;
-        console.log( this.myScrollContainer.nativeElement.scrollTop);
-        console.log(this.myScrollContainer.nativeElement.scrollHeight);
-        
-        
-    } catch(err) { }                 
-}
+      this.myScrollContainer.nativeElement.scrollTop = 480
+      // this.myScrollContainer.nativeElement.scrollHeight;
+      console.log(this.myScrollContainer.nativeElement.scrollTop);
+      console.log(this.myScrollContainer.nativeElement.scrollHeight);
+
+
+    } catch (err) { }
+  }
+  scrollToTop(top) {    
+    if (!this._isScrollToUp)
+      return top
+  }
   // SEND MESSAGE
   public sendMessage(): void {
     const message: MessageRequest = {
@@ -120,6 +125,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         if (res.message.room === this.activeRoom.room.id) {
           this.messages.push(res.message);
+          this._isScrollToUp = false;
         } else {
           const room = this.roomsList.find(r => r.room.id === res.message.room);
           room.room.last_message = res.message.text;
@@ -132,13 +138,12 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.name = null
       });
   }
-
   // ROOM MESSAGES
   private _getActiveRoomMessages(): void {
     this._chatService.getRoomMessages(this.activeRoom.room.id, this.messages.length);
   }
   onScrollUp() {
-    console.log('scroll');
+    this._isScrollToUp = true;
     this._getActiveRoomMessages()
   }
   private _subscribeToActiveRoomMessages(): void {
@@ -150,6 +155,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!this.messages.length) {
 
           this.messages = res;
+          this._isScrollToUp = false;
           // let element = (document.getElementById('scrollMe'));
           // console.log(element.scrollHeight);
 
@@ -162,8 +168,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         } else {
           for (let message of res) {
             // console.log(message);
-
-            this.messages.unshift(message)
+            this.messages.unshift(message);           
             // console.log(this.messages, 'current');
 
           }

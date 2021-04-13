@@ -23,6 +23,8 @@ export interface MarketsProduct {
   description: TranslationItem[];
   images: MarketProductImage[];
 }
+
+
 export interface MarketProduct {
   all_count: number
   red_count: number

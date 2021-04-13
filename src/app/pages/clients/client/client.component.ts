@@ -58,7 +58,7 @@ export class ClientComponent implements OnInit {
     this.validateForm = this._formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required, Validators.maxLength(8), Validators.minLength(8)]],
+      phoneNumber: ['', [Validators.required, Validators.maxLength(9), Validators.minLength(9)]],
       companyId: '',
       companyName: '',
       companyType: '',
@@ -68,6 +68,7 @@ export class ClientComponent implements OnInit {
       image: null,
       showingImage: null,
     });
+
     this.validateForm.get('isCooperativeUser').valueChanges.subscribe(data => {
       if (data) {
         this.validateForm.get('companyId').setValidators(Validators.required);

@@ -9,8 +9,13 @@ export class OrdersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getOrders(page: number, offset: number, status: string): Observable<ServerResponce<Order[]>> {
-    return this.httpClient.get<ServerResponce<Order[]>>(`orders/order-list/?limit=10&offset=${offset}&page=1&status__code=${status}`);
+  getOrders( offset: number, status: string, subOrderStatus: string, isHasDisput: boolean): Observable<ServerResponce<Order[]>> {
+    let url = `orders/order-list/?limit=10&offset=${offset}&status=${status}&order_suborders__status=${subOrderStatus}`;
+    if (isHasDisput) {
+      url += `&has_disput=True`
+    }
+    // http://api.masterium.ge/orders/order-list/?has_disput=True&status=4&order_suborders__status=1
+    return this.httpClient.get<ServerResponce<Order[]>>(url);
   }
 
   getOrderStatuses(): Observable<OrderStatus[]> {
@@ -23,6 +28,10 @@ export class OrdersService {
 
   editSuborder(suborder: OrderRequest): Observable<{}> {
     return this.httpClient.post<{}>(`orders/edit-suborder/`, suborder);
+  }
+
+  deleteSuborder(id: number): Observable<void> {
+    return this.httpClient.delete<void>('orders/delete-suborder/' + id + '/')
   }
 
   getOrderById(id: number): Observable<OrderDetail> {
@@ -49,5 +58,15 @@ export class OrdersService {
 
   cancelOrder(orderId: number): Observable<{}> {
     return this.httpClient.post<any>(`orders/set-suborder-status-canceled/${orderId}/`, {});
+  }
+
+  changeDebetStatus(data): Observable<void> {
+    return this.httpClient.post<void>('orders/change-debet-status/', data)
+  }
+
+  changePayedStatus(data: number) {
+    return this.httpClient.post<void>('orders/set-suborder-payed-or-not-payed/', {
+      suborder_id: data
+    })
   }
 }

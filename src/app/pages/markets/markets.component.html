@@ -12,8 +12,8 @@
           [active]="activeCategory?.category.id === category.category.id" [workloadPercent]="category.workload_percent"
           [specialistsCount]="category.specialists_count" [description]="category.description[0]?.value"
           [title]="category.title[0]?.value" [img]="category.category.icon"
-          [gradientDegree]="category.category.gradient_degree" [colorOne]="category.category.color_one"
-          [colorTwo]="category.category.color_two" (delete)="deleteCategory(category.category.id, i)">
+          [gradientDegree]="category.category.color" [colorOne]="category.category.color"
+          [colorTwo]="category.category.color" (delete)="deleteCategory(category.category.id, i)">
         </app-service-list-card>
       </div>
     </ng-container>

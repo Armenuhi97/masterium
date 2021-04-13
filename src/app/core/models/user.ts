@@ -69,7 +69,7 @@ export interface ExecutorRequest {
   };
   subcategories: ExecutorCategory[];
   user_specializations: UserSpecialization[];
-  user_attachments: UserAttachment[];
+  user_attachments?: UserAttachment[];
 }
 
 export interface UserDetail {

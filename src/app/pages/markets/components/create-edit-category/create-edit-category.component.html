@@ -2,7 +2,17 @@
   (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
   <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
     <div nz-row [nzGutter]="24">
-      <div nz-col [nzSpan]="8">
+      <div nz-col [nzSpan]="12">
+        <nz-form-label class="inline-labels" nzRequired>Цвет градиента</nz-form-label>
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input [colorPicker]="validateForm.get('color_one').value"
+              (colorPickerChange)="changeColorPicker('color_one',$event)"
+              [style.background]="validateForm.get('color_one').value" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- <div nz-col [nzSpan]="8">
         <nz-form-label class="inline-labels" nzRequired>Угол градиента</nz-form-label>
         <nz-form-item>
           <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
@@ -25,7 +35,7 @@
             <input nz-input formControlName="color_two" type="text" placeholder="Первый цвет градиента" />
           </nz-form-control>
         </nz-form-item>
-      </div>
+      </div> -->
     </div>
     <div nz-row [nzGutter]="24">
       <div nz-col [nzSpan]="8">
@@ -63,7 +73,7 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      
+
       <div nz-col [nzSpan]="8">
         <nz-form-label class="inline-labels" nzRequired>Описание на английском</nz-form-label>
         <nz-form-item>
@@ -72,7 +82,7 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-    
+
       <div nz-col [nzSpan]="8">
         <nz-form-label class="inline-labels" nzRequired>Описание на грузинском</nz-form-label>
         <nz-form-item>

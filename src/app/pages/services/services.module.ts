@@ -9,6 +9,7 @@ import { CreateEditSubcategoryComponent } from './components/create-edit-subcate
 import { ServiceItemComponent } from './components/service-item/service-item.component';
 import { CreateEditServiceComponent } from './components/create-edit-service/create-edit-service.component';
 import { CreateEditSubserviceComponent } from './components/create-edit-subservice/create-edit-subservice.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { CreateEditSubserviceComponent } from './components/create-edit-subservi
     CreateEditSubserviceComponent
   ],
   imports: [
+    ColorPickerModule,
     ServicesRoutingModule,
     SharedModule,
     CommonModule,

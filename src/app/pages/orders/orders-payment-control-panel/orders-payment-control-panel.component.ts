@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-orders-payment-control-panel',
@@ -6,10 +6,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./orders-payment-control-panel.component.css']
 })
 export class OrdersPaymentControlPanelComponent implements OnInit {
-  public debit: string;
+  @Output() onDebitChanged = new EventEmitter<number>();
+  @Input() set defaultDebet(debet) {
+    this.debit = debet;
+  }
+  public debit: number;
+
+
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.defaultDebet);
+
+    this.debit = this.defaultDebet;
   }
 
+  debitChanged(debit): void {
+    this.onDebitChanged.emit(debit)
+  }
 }

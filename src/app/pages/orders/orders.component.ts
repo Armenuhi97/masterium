@@ -22,6 +22,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
   public pageIndex = 1;
   public orderStatuses: OrderStatus[] = [];
   public statusFilterControl: FormControl = new FormControl('');
+  public isOrderWithDisputControl: FormControl = new FormControl(false);
+  public statusSubOrderFilterControl: FormControl = new FormControl('')
   constructor(
     private ordersService: OrdersService,
   ) { }
@@ -29,28 +31,47 @@ export class OrdersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     forkJoin([
       this.ordersService.getOrderStatuses(),
-      this.ordersService.getOrders(this.pageIndex, 0, this.statusFilterControl.value),
+      this.ordersService.getOrders(0, this.statusFilterControl.value, this.statusSubOrderFilterControl.value, this.isOrderWithDisputControl.value)
     ])
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((res) => {
+      .subscribe((res) => {        
         this.orderStatuses = res[0];
         this.total = res[1].count;
         this.orders = res[1].results;
       });
     this.handleOrderStatusChange();
+    this.handleSubOrderStatusChange();
+    this.handleIsDiputControlChange()
   }
 
   public handleOrderStatusChange(): void {
     this.statusFilterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
+        this.pageIndex = 1;
+        this.getOrders();
+      });
+  }
+  public handleSubOrderStatusChange(): void {
+    this.statusSubOrderFilterControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.pageIndex = 1;
+        this.getOrders();
+      });
+  }
+  public handleIsDiputControlChange(): void {
+    this.isOrderWithDisputControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.pageIndex = 1;
         this.getOrders();
       });
   }
 
   public getOrders(): void {
     const offset = (this.pageIndex - 1) * this.pageSize;
-    this.ordersService.getOrders(this.pageIndex, offset, this.statusFilterControl.value)
+    this.ordersService.getOrders(offset, this.statusFilterControl.value,this.statusSubOrderFilterControl.value, this.isOrderWithDisputControl.value)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((orders) => {
         this.total = orders.count;

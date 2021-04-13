@@ -1,8 +1,7 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import {AutocompleteItem} from '../../../models/utils';
-import {FormControl} from '@angular/forms';
-import {of} from 'rxjs';
-import {concatMap, debounceTime, delay} from 'rxjs/operators';
+import { Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { AutocompleteItem } from '../../../models/utils';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-app-nz-autocomplete',
@@ -15,9 +14,10 @@ export class AppNzAutocompleteComponent implements OnInit {
   @Output() selected = new EventEmitter<AutocompleteItem>();
   @Input() loading: boolean;
   @Input() placeholder: string;
-  @Input() set searchResult(value: AutocompleteItem[]) {
+  @Input() set searchResult(value: { children: AutocompleteItem[] }) {
     if (value) {
-      this.showSearchResult = value;
+      console.log(value);
+      this.showSearchResult = value.children;
     }
   }
   showSearchResult: AutocompleteItem[];
@@ -28,8 +28,8 @@ export class AppNzAutocompleteComponent implements OnInit {
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(debounceTime(500))
       .subscribe(data => {
-      this.search.emit(data);
-    });
+        this.search.emit(data);
+      });
   }
 
   optionSelected(event, option: AutocompleteItem): void {

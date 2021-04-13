@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FinancesService } from 'src/app/core/api-services/finances.service';
-import { MarketProduct } from 'src/app/core/models/market';
+import { MarketProduct, MarketProductItem } from 'src/app/core/models/market';
 
 @Component({
   selector: 'app-finances-products',
@@ -12,7 +12,7 @@ import { MarketProduct } from 'src/app/core/models/market';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancesProductsComponent implements OnInit {
-  public products$: Observable<MarketProduct[]>;
+  public products$: Observable<MarketProductItem[]>;
   public pageSize: number = 10;
   public totalCount: number;
   public pageIndex: number = 1;
@@ -27,7 +27,7 @@ export class FinancesProductsComponent implements OnInit {
     this.products$ = this._financesService.getProducts(this.pageIndex).pipe(
       map(products => {
         this.totalCount = products.count;
-        return products.results;
+        return products.results.products;
       })
     );
   }

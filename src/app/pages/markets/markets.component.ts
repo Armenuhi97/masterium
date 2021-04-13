@@ -157,9 +157,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
   handleCategoryChange(category: any): void {
     const sendingData: Category = {
       category: {
-        color_one: category.color_one,
-        color_two: category.color_two,
-        gradient_degree: category.gradient_degree,
+        color: category.color_one,
         icon: category.icon,
         translation_key: this.isEditing ? this.activeCategory.category.translation_key : 'cat___title___' + String(Date.now()),
         translation_key_description: this.isEditing ?

@@ -13,9 +13,9 @@
         <tr *ngFor="let data of productsTable.data;let ind=index">
             <td style="width: 50px">{{ ind + 1 }}</td>
             <td>{{ data.name[0]?.value }}</td>
-            <td>{{ data.product.cost_price }}</td>
-            <td>{{ data.product.price }}</td>
-            <td>{{ data.product.vat }}</td>
+            <td>{{ data.cost_price }}</td>
+            <td>{{ data.price }}</td>
+            <td>{{ data.vat }}</td>
         </tr>
     </tbody>
 </nz-table>

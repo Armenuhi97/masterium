@@ -8,10 +8,11 @@ import { CreateEditProductSubcategoryComponent } from './components/create-edit-
 import { MarketsRoutingModule } from './markets-routing.module';
 import { MarketsComponent } from './markets.component';
 import { MarketsService } from './markets.service';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
     declarations: [MarketsComponent, CreateEditProductCategoryComponent, CreateEditProductSubcategoryComponent],
-    imports: [MarketsRoutingModule, SharedModule, CommonModule, FormsModule, ReactiveFormsModule, IconsProviderModule],
+    imports: [MarketsRoutingModule,ColorPickerModule, SharedModule, CommonModule, FormsModule, ReactiveFormsModule, IconsProviderModule],
     providers: [MarketsService]
 })
 export class MarketsModule { }

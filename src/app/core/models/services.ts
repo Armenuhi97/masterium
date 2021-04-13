@@ -2,14 +2,11 @@ import { Measurment } from './measurment';
 import { Language, TranslationItem } from './translate';
 
 export interface CategoryDetail {
-  color_one: string;
-  color_two: string;
-  gradient_degree: number;
+  color: string;
   icon: string;
   id?: number;
   translation_key: string;
   translation_key_description: string;
-
 }
 
 export interface Category {
