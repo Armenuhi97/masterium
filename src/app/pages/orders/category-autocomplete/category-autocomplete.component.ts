@@ -15,7 +15,7 @@ export class CategoryAutocompleteComponent implements OnInit {
   @Output() selected = new EventEmitter<{service: AutocompleteOptionGroups, subservice: AutocompleteOptionGroups}>();
   @Input() placeholder: string;
   @Input() loading: boolean;
-  @Input() set searchResult(value: AutocompleteOptionGroups[]) {
+  @Input() set searchResult(value: AutocompleteOptionGroups[]) {    
     if (value) {
       this.showSearchResult = value;
     }

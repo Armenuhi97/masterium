@@ -106,6 +106,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       point: formValue.count,
       comment: formValue.comment,
       user_id: this.userId,
+      suborder_id:null
     };
     this.executorService
       .giveUserSalarys(sendingData)
@@ -127,6 +128,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       point: formValue.count,
       text: formValue.comment,
       user_id: this.userId,
+      suborder_id: null
     };
     this.executorService
       .fineUser(sendingData)

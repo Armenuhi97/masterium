@@ -6,6 +6,7 @@
       <th>Общая сумма</th>
       <th>Дата начала</th>
       <th>Статус</th>
+      <th>Заказчик</th>
       <th></th>
       <th>Статус оплаты</th>
       <th></th>
@@ -18,7 +19,10 @@
       <td>{{data.name}}</td>
       <td>{{data.suborderMain.price}}</td>
       <td>{{data.suborderMain.start_date | date:'yyyy-MM-dd'}}</td>
-      <td>{{data.status}}</td>
+      <td>{{data?.status}}</td>
+      <td>
+        {{checkExecutor(data.executors)}}
+      </td>
       <td (click)="onEditSuborder(data)" class="action-button edit" style="width: 10px">
         <i nz-icon nzType="edit"></i>
       </td>

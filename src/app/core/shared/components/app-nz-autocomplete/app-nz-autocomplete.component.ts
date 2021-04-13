@@ -14,10 +14,19 @@ export class AppNzAutocompleteComponent implements OnInit {
   @Output() selected = new EventEmitter<AutocompleteItem>();
   @Input() loading: boolean;
   @Input() placeholder: string;
-  @Input() set searchResult(value: { children: AutocompleteItem[] }) {
+  @Input() set searchResult(value) {
+    console.log(value);
+
     if (value) {
-      console.log(value);
-      this.showSearchResult = value.children;
+      if (value.children || value[0] && value[0].childen) {
+        this.showSearchResult = value.children;
+      } else {
+        if (value[0] && value[0].childen) {
+          this.showSearchResult = value[0].children;
+        } else {
+          this.showSearchResult = value;
+        }
+      }
     }
   }
   showSearchResult: AutocompleteItem[];

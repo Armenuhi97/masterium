@@ -60,9 +60,9 @@
           <!-- <app-category-autocomplete placeholder="" (search)=""
             [searchResult]="" [loading]="isSearching">
           </app-category-autocomplete> -->
-
-          <app-app-nz-autocomplete (selected)="addServiceItem($event)" (search)="searchForServices($event)"
-            (selected)="addProductItem($event)" [loading]="isSearching" placeholder="Добавить сервис"
+<!-- (selected)="addServiceItem($event)" -->
+          <app-app-nz-autocomplete  (search)="searchForServices($event)"
+            (selected)="addServiceItem($event)" [loading]="isSearching" placeholder="Добавить сервис"
             [searchResult]="serviceSearchResult">
           </app-app-nz-autocomplete>
 

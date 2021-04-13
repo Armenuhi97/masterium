@@ -13,7 +13,7 @@ export class SubordersListComponent implements OnInit, OnDestroy {
   @Output() editSuborder: EventEmitter<OrderSubgroupDragItem> = new EventEmitter<OrderSubgroupDragItem>();
   @Output() delete: EventEmitter<number> = new EventEmitter<number>();
   @Input() set suborders(subs: OrderSubgroupDragItem[]) {
-    this.showSuborders = subs.filter(order => order.suborderMain?.id);
+    this.showSuborders = subs.filter(order => order.suborderMain?.id);        
   }
   private _unsubscribe = new Subject<void>()
   public isPaymentControlPanelVisible: boolean;
@@ -29,7 +29,16 @@ export class SubordersListComponent implements OnInit, OnDestroy {
   public onEditSuborder(suborder: OrderSubgroupDragItem): void {
     this.editSuborder.emit(suborder);
   }
-
+  public checkExecutor(executor){    
+    let executors=[]
+    if (executor && executor.length) {
+      executors = executor.filter((el) => { return el.is_overman == true })
+    }
+    if(executors && executors[0]){
+      return `${executors[0].user.first_name} ${executors[0]?.user?.last_name}`
+    }
+    return 
+  }
   public openPaymentControlModal(data: OrderSubgroupDragItem): void {
     this.sub = data;
     this.isPaymentControlPanelVisible = true;

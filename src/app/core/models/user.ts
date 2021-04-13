@@ -251,12 +251,14 @@ export interface ExecutorFineRequest {
   user_id: number;
   point: number;
   text: string;
+  suborder_id: number
 }
 
 export interface ExecutorSalaryRequest {
   user_id: number;
   point: number;
   comment: string;
+  suborder_id:any
 }
 
 export interface ExecutorDeal {

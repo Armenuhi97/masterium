@@ -28,8 +28,9 @@ interface Suborder {
   disput: [];
   suborder_current_price: number;
   status: TranslationItem[];
+  status_name:TranslationItem[]
   products: [];
-  executor: [];
+  executor: any[];
   subservice: [];
 }
 

@@ -68,20 +68,21 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getExecutors();
-  
+
   }
 
   initEditGroupForm(index: number): void {
     let mainExecutor;
-    if(this.subgroups[index].suborderMain?.id) {
-      this.selectedExecutors = this.subgroups[index].executors?.map(ex => ex.user.user);
-      mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.user.user
-    } else {
-      this.selectedExecutors = this.subgroups[index].executors?.map(ex => ex.id);
-      mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.id
-    }
+    if (this.subgroups[index].executors && this.subgroups[index].executors.length)
+      if (this.subgroups[index].suborderMain?.id) {        
+        this.selectedExecutors = this.subgroups[index].executors.map(ex => ex.user.user);
+        mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.user.user
+      } else {
+        this.selectedExecutors = this.subgroups[index].executors.map(ex => ex.id);
+        mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.id
+      }
 
-    
+
     this.editGroupForm = this.formBuilder.group({
       guarantee_period: [this.subgroups[index]?.suborderMain?.guarantee_period],
       comment: [this.subgroups[index]?.suborderMain?.comment || this.order.order.description, [Validators.required]],
@@ -155,8 +156,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             isEditing: false
           },
         ];
-        order.suborder.forEach((sub) => {          
-          this.addGroup(false,order);
+        order.suborder.forEach((sub) => {
+          this.addGroup(false, order);
           sub.products.forEach((product: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Product,
@@ -185,10 +186,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               url: image.image_url,
             });
           });
-
+        
+          
           this.subgroups[this.subgroups.length - 1].suborderMain = sub.suborder;
           this.subgroups[this.subgroups.length - 1].executors = sub.executor;
-          this.subgroups[this.subgroups.length - 1].status = sub.status[0].value;
+          this.subgroups[this.subgroups.length - 1].status = sub.status_name[0].value;
           this.subgroups[this.subgroups.length - 1].disput = sub.disput;
           this.subgroups.map(o => o.isEditing = false);
         });
@@ -248,11 +250,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.editingGroupIndex = index;
   }
 
-  addGroup(isEditing: boolean,order?): void {    
+  addGroup(isEditing: boolean, order?): void {
     this.subgroups.map(order => order.isEditing = false);
     const newItem: OrderSubgroupDragItem = {
       id: `group-${this.subgroups.length + 1}`,
-      name: `Заказ N ${this.order?this.order.order.order_number:order.order.order_number}/${this.subgroups.slice(3).length + 1}`,
+      name: `Заказ N ${this.order ? this.order.order.order_number : order.order.order_number}/${this.subgroups.slice(3).length + 1}`,
       groupItemList: [],
       suborderMain: null,
       isEditing,
@@ -271,6 +273,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     service: AutocompleteOptionGroups;
     subservice: AutocompleteOptionGroups;
   }): void {
+    console.log(event);
+    
     this.subgroups[0].groupItemList.push({
       type: DragItemTypes.Service,
       name: event.service.title,
@@ -283,6 +287,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   addProductItem(item: AutocompleteItem): void {
+    console.log(item);
+    
     this.subgroups[1].groupItemList.push({
       type: DragItemTypes.Product,
       name: item.label,
@@ -333,6 +339,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   searchForServices(term: string): void {
+    console.log(term);
+    
     if (term === '') {
       term = ' ';
     }
@@ -354,6 +362,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             title: r.title[0].value,
             id: r.service.id,
           };
+          console.log(autocompleteOptionGroups);
+          
           this.isSearching = false;
           return autocompleteOptionGroups;
         });
@@ -361,7 +371,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   searchForProducts(term: string): void {
-
+    console.log(term);
+    
     if (term === '') {
       term = ' ';
     }
@@ -370,6 +381,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       .searchForProducts(term)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
+        console.log(result);
+
         this.productSearchResult = result.map((r) => {
           return {
             id: r.product.id,
