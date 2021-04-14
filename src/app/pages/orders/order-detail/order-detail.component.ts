@@ -429,7 +429,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }),
           product: suborder.groupItemList
             .filter((item) => item.type === DragItemTypes.Product)
-            .map((groupItemListItem) => {
+            .map((groupItemListItem) => {              
               return {
                 product_id: groupItemListItem.id,
                 quantity: groupItemListItem.quantity,
@@ -437,6 +437,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
                 current_price: groupItemListItem.currentPrice,
               };
             }),
+            
           suborder: {
             // this.subgroups[index] 
             comment: suborder.suborderMain.comment,
