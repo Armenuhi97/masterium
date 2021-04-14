@@ -273,7 +273,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     service: AutocompleteOptionGroups;
     subservice: AutocompleteOptionGroups;
   }): void {
-    console.log(event);
     
     this.subgroups[0].groupItemList.push({
       type: DragItemTypes.Service,
@@ -286,9 +285,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  addProductItem(item: AutocompleteItem): void {
-    console.log(item);
-    
+  addProductItem(item: AutocompleteItem): void {    
     this.subgroups[1].groupItemList.push({
       type: DragItemTypes.Product,
       name: item.label,
@@ -338,9 +335,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.subgroups[index].groupItemList.unshift(subgroupItem);
   }
 
-  searchForServices(term: string): void {
-    console.log(term);
-    
+  searchForServices(term: string): void {    
     if (term === '') {
       term = ' ';
     }
@@ -362,7 +357,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             title: r.title[0].value,
             id: r.service.id,
           };
-          console.log(autocompleteOptionGroups);
           
           this.isSearching = false;
           return autocompleteOptionGroups;
@@ -371,7 +365,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   searchForProducts(term: string): void {
-    console.log(term);
     
     if (term === '') {
       term = ' ';
@@ -381,8 +374,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       .searchForProducts(term)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
-        console.log(result);
-
         this.productSearchResult = result.map((r) => {
           return {
             id: r.product.id,

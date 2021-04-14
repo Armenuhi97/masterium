@@ -6,7 +6,7 @@
       <th>Общая сумма</th>
       <th>Дата начала</th>
       <th>Статус</th>
-      <th>Заказчик</th>
+      <th>Исполнитель</th>
       <th></th>
       <th>Статус оплаты</th>
       <th></th>
@@ -29,8 +29,8 @@
       <td style="width: 20px">
         <nz-switch [(ngModel)]="data?.suborderMain.payed" (ngModelChange)="changeStatus(data)"></nz-switch>
       </td>
-      <td (click)="openPaymentControlModal(data)" class="action-button edit" style="width: 100px">
-        <i *ngIf="data.suborderMain.debet" nz-icon nzType="eye"></i>
+      <td class="action-button edit" style="width: 100px">
+        <i  (click)="openPaymentControlModal(data)" *ngIf="data.suborderMain.debet" nz-icon nzType="eye"></i>
       </td>
       <th class="action-button delete" style="width: 10px">
         <a nz-popconfirm nzPopconfirmTitle="Вы уверены?" nzPopconfirmPlacement="bottom"
