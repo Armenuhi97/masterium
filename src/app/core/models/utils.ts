@@ -1,31 +1,44 @@
-import {TranslationItem} from './translate';
+import { TranslationItem } from './translate';
 
 export interface Specialization {
-    id?: number;
-    url?: string;
-    title?: string;
-    icon?: string;
+  id?: number;
+  url?: string;
+  title?: string;
+  icon?: string;
 }
 
 export interface SubService {
-    id?: number;
-    url?: string;
-    title: string;
-    icon: string;
-    service: string;
+  id?: number;
+  url?: string;
+  title: string;
+  icon: string;
+  service: string;
 }
 
 export interface Service {
-    id?: number;
-    url?: string;
-    title?: string;
-    icon?: string;
-    specialistsCount?: number;
-    workload?: number;
+  id?: number;
+  url?: string;
+  title?: string;
+  icon?: string;
+  specialistsCount?: number;
+  workload?: number;
 }
 
 export interface EssenceItem {
-  title: TranslationItem[];
+  title?: TranslationItem[];
+  description_ru?: string,
+  description_en?: string,
+  description_ge?: string,
+  name_ru?: string,
+  name_en?: string,
+  name_ge?: string,
+  id?: number;
+  translation_key_title?: string;
+  translation_key_description?: string;
+  code?: string;
+  translation_key?: string
+  icon?: string;
+
   help?: {
     id?: number;
     translation_key_title: string;

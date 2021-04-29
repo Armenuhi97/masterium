@@ -2,8 +2,8 @@
   <div class="card-content">
     <ng-container *ngFor="let item of itemsList; let i = index">
       <app-essence-list-item-label [index]="i + 1" (onEdit)="editEssenceItem(i)" (onDelete)="handleDelete($event)"
-        [id]="item.user_attachment_type?.id || item.help?.id || item.specialization?.id || item.measurement_type?.id || item.subservice_type?.id"
-        [label]="item?.title[0]?.value"></app-essence-list-item-label>
+        [id]="item.id"
+        [label]="item?.name_ru"></app-essence-list-item-label>
     </ng-container>
   </div>
 </nz-card>
@@ -92,7 +92,7 @@
       <i *ngIf="validateForm.get('icon').value" class="success-icon" nz-icon nzType="check-circle"></i>
     </div>
     <img *ngIf="isEditing" class="img-fluid preview-image"
-      [src]="itemsList[editingEssenceIndex]?.specialization.icon" />
+      [src]="itemsList[editingEssenceIndex]?.icon" />
   </nz-upload>
 </nz-modal>
 

@@ -31,6 +31,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
   }
 
   initEssenceList(): void {
+    
     this.essenceList = [
       {
         buttonLabel: 'Добавить помощь',
@@ -68,6 +69,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
         type: EssenceType.userAttachmentType
       },
     ];
+    
   }
 
   addEssenceItem(event: { essenceType: string, essenceValue: EssenceItem }): void {
@@ -123,7 +125,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
       this.getSpecializations(),
       this.getSubservices(),
       this.getUserAttachmentTypes(),
-    ]).pipe(takeUntil(this.unsubscribe$)).subscribe(results => {
+    ]).pipe(takeUntil(this.unsubscribe$)).subscribe(results => {      
       this.helps = results[0];
       this.measurementTypes = results[1];
       this.specializations = results[2];

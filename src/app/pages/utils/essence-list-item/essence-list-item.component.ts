@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -12,11 +12,11 @@ import {
   EssenceTypes,
 } from 'src/app/core/models/essence';
 import { Messages } from 'src/app/core/models/messages';
-import {EssenceItem} from '../../../core/models/utils';
-import {TranslationItem} from '../../../core/models/translate';
-import {MainService} from '../../../core/services/main.service';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { EssenceItem } from '../../../core/models/utils';
+import { TranslationItem } from '../../../core/models/translate';
+import { MainService } from '../../../core/services/main.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-essence-list-item',
@@ -73,12 +73,12 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
       );
     }
     if (this.type === EssenceType.help) {
-      this.validateForm.addControl( 'descriptionInRussian',  new FormControl('', Validators.required));
-      this.validateForm.addControl( 'descriptionInEnglish',  new FormControl('', Validators.required));
-      this.validateForm.addControl( 'descriptionInGeorgian',  new FormControl('', Validators.required));
+      this.validateForm.addControl('descriptionInRussian', new FormControl('', Validators.required));
+      this.validateForm.addControl('descriptionInEnglish', new FormControl('', Validators.required));
+      this.validateForm.addControl('descriptionInGeorgian', new FormControl('', Validators.required));
     }
     if (this.type === EssenceType.measurementType) {
-      this.validateForm.addControl( 'code',  new FormControl('', [Validators.required,Validators.maxLength(5)]));
+      this.validateForm.addControl('code', new FormControl('', [Validators.required, Validators.maxLength(5)]));
 
     }
   }
@@ -88,45 +88,46 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
   handleOk(): void {
     if (this.validateForm.valid) {
       let sendingData: EssenceItem;
-      const titles: TranslationItem[] = [
-        { value: this.validateForm.value.essenceTitleInRussian, language: 1 },
-        { value: this.validateForm.value.essenceTitleInEnglish, language: 2 },
-        { value: this.validateForm.value.essenceTitleInGeorgian, language: 3 }
-      ];
+      const titles = {
+        name_en: this.validateForm.value.essenceTitleInEnglish,
+        name_ru: this.validateForm.value.essenceTitleInRussian,
+        name_ge: this.validateForm.value.essenceTitleInGeorgian
+      }
       if (this.type === EssenceType.help) {
         sendingData = {
-          title: titles,
-          description: [
-            { value: this.validateForm.value.descriptionInRussian, language: 1 },
-            { value: this.validateForm.value.descriptionInEnglish, language: 2 },
-            { value: this.validateForm.value.descriptionInGeorgian, language: 3 }
-          ],
-          help : {
+          description_ge: this.validateForm.value.descriptionInGeorgian,
+          description_ru: this.validateForm.value.descriptionInRussian,
+          description_en: this.validateForm.value.descriptionInEnglish,
+
+          help: {
             translation_key_title: this.isEditing ?
-                  this.itemsList[this.editingEssenceIndex].help.translation_key_title : `help_title___${Date.now()}`,
+              this.itemsList[this.editingEssenceIndex].translation_key_title : `help_title___${Date.now()}`,
             translation_key_description: this.isEditing ?
-                  this.itemsList[this.editingEssenceIndex].help.translation_key_description : `help_description___${Date.now()}`
+              this.itemsList[this.editingEssenceIndex].translation_key_description : `help_description___${Date.now()}`
           }
         };
+        sendingData = Object.assign(sendingData, titles)
       } else if (this.type === EssenceType.measurementType) {
         sendingData = {
           measurement_type: {
             translation_key: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].measurement_type.translation_key : `measurement_type___title${Date.now()}`,
-              code:(this.validateForm.value.code).toUpperCase()
+              this.itemsList[this.editingEssenceIndex].translation_key : `measurement_type___title${Date.now()}`,
+            code: (this.validateForm.value.code).toUpperCase()
 
-            },
-          title: titles,
+          },
         };
+        sendingData = Object.assign(sendingData, titles)
+
       } else if (this.type === EssenceType.specialization) {
         sendingData = {
-          title: titles,
           specialization: {
             translation_key: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].specialization.translation_key : `specialization___title${Date.now()}`
+              this.itemsList[this.editingEssenceIndex].translation_key : `specialization___title${Date.now()}`
           }
         };
-        if (typeof this.validateForm.get('icon').value === 'string'){
+        sendingData = Object.assign(sendingData, titles)
+
+        if (typeof this.validateForm.get('icon').value === 'string') {
           sendingData.specialization.icon = this.validateForm.get('icon').value;
           this.emitValues(sendingData);
         } else {
@@ -139,30 +140,34 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
         }
       } else if (this.type === EssenceType.subserviceType) {
         sendingData = {
-          title: titles,
+          // title: titles,
           subservice_type: {
-           translation_key: this.isEditing ?
-             this.itemsList[this.editingEssenceIndex].subservice_type.translation_key : `subservice_type___title${Date.now()}`
+            translation_key: this.isEditing ?
+              this.itemsList[this.editingEssenceIndex].translation_key : `subservice_type___title${Date.now()}`
           }
         };
+        sendingData = Object.assign(sendingData, titles)
+
       } else if (this.type === EssenceType.userAttachmentType) {
         sendingData = {
-          title: titles,
+          // title: titles,
           user_attachment_type: {
-            translation_key: this.isEditing ? this.itemsList[this.editingEssenceIndex].user_attachment_type.translation_key :
-            `user_attachment_type${Date.now()}`
+            translation_key: this.isEditing ? this.itemsList[this.editingEssenceIndex].translation_key :
+              `user_attachment_type${Date.now()}`
           }
         };
+        sendingData = Object.assign(sendingData, titles)
+
       }
-      if(this.type == EssenceType.measurementType && this.validateForm.value.code){
-        let item=this.itemsList.filter((el)=>{return el.measurement_type.code == this.validateForm.value.code});
-        if(item && item.length){
+      if (this.type == EssenceType.measurementType && this.validateForm.value.code) {
+        let item = this.itemsList.filter((el) => { return el.code == this.validateForm.value.code });
+        if (item && item.length) {
           this.message.error('Уже существует такой код')
           return
         }
       }
 
-      if (this.type !== EssenceType.specialization){
+      if (this.type !== EssenceType.specialization) {
         this.emitValues(sendingData);
       }
       this.closeModal();
@@ -171,16 +176,12 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  emitValues(sendingData: EssenceItem): void{
+  emitValues(sendingData: EssenceItem): void {
     if (this.isEditing) {
       this.edit.emit({
         essenceType: this.type,
         essenceValue: sendingData,
-        id: this.itemsList[this.editingEssenceIndex].help?.id ||
-          this.itemsList[this.editingEssenceIndex].measurement_type?.id ||
-          this.itemsList[this.editingEssenceIndex].specialization?.id ||
-          this.itemsList[this.editingEssenceIndex].subservice_type?.id ||
-          this.itemsList[this.editingEssenceIndex].user_attachment_type?.id
+        id: this.itemsList[this.editingEssenceIndex]?.id 
       });
     } else {
       this.add.emit({
@@ -203,20 +204,20 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
   editEssenceItem(index: number): void {
     this.isEditing = true;
     this.editingEssenceIndex = index;
-    this.validateForm.get('essenceTitleInRussian').setValue(this.itemsList[index].title[0]?.value);
-    this.validateForm.get('essenceTitleInEnglish').setValue(this.itemsList[index].title[1]?.value);
-    this.validateForm.get('essenceTitleInGeorgian').setValue(this.itemsList[index].title[2]?.value);
+    this.validateForm.get('essenceTitleInRussian').setValue(this.itemsList[index].name_ru);
+    this.validateForm.get('essenceTitleInEnglish').setValue(this.itemsList[index].name_en);
+    this.validateForm.get('essenceTitleInGeorgian').setValue(this.itemsList[index].name_ge);
     if (this.type === EssenceType.help) {
-      this.validateForm.get('descriptionInRussian').setValue(this.itemsList[index].description[0]?.value);
-      this.validateForm.get('descriptionInEnglish').setValue(this.itemsList[index].description[1]?.value);
-      this.validateForm.get('descriptionInGeorgian').setValue(this.itemsList[index].description[2]?.value);
+      this.validateForm.get('descriptionInRussian').setValue(this.itemsList[index].description_ru);
+      this.validateForm.get('descriptionInEnglish').setValue(this.itemsList[index].description_en);
+      this.validateForm.get('descriptionInGeorgian').setValue(this.itemsList[index].description_ge);
     }
     if (this.type === EssenceType.measurementType) {
-      this.validateForm.get('code').setValue(this.itemsList[index].measurement_type.code);
+      this.validateForm.get('code').setValue(this.itemsList[index].code);
 
     }
     if (this.type === EssenceType.specialization) {
-      this.validateForm.get('icon').setValue(this.itemsList[index].specialization.icon);
+      this.validateForm.get('icon').setValue(this.itemsList[index].icon);
     }
     this.showModal();
   }
