@@ -3,7 +3,7 @@
     <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusFilterControl" class="status-filter">
         <nz-option nzValue="" nzLabel="Все"> </nz-option>
         <nz-option *ngFor="let status of disputStatuses" [nzValue]="status.disput_status.id"
-            [nzLabel]="status.title[0]?.value">
+            [nzLabel]="status.name_ru">
         </nz-option>    
     </nz-select>
 </div>

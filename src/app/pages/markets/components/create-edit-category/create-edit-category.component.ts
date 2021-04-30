@@ -35,19 +35,19 @@ export class CreateEditProductCategoryComponent implements OnInit {
       englishDescription: ['', Validators.required],
       georgianDescription: ['', Validators.required]
     });
-
+    
     if (this.isEdit) {
       this.validateForm.patchValue({
         // gradient_degree: this.activeCategory.category.gradient_degree,
-        color_one: this.activeCategory.category.color,
+        color_one: this.activeCategory.color,
         // color_two: this.activeCategory.category.color_two,
-        icon: this.activeCategory.category.icon,
-        russian: this.activeCategory?.title[0]?.value,
-        english: this.activeCategory?.title[1]?.value,
-        georgian: this.activeCategory?.title[2]?.value,
-        russianDescription: this.activeCategory?.description[0]?.value,
-        englishDescription: this.activeCategory?.description[1]?.value,
-        georgianDescription: this.activeCategory?.description[2]?.value,
+        icon: this.activeCategory.icon,
+        russian: this.activeCategory?.name_ru,
+        english: this.activeCategory?.name_en,
+        georgian: this.activeCategory?.name_ge,
+        russianDescription: this.activeCategory?.description_ru,
+        englishDescription: this.activeCategory?.description_en,
+        georgianDescription: this.activeCategory?.description_ge,
       });
     }
   }

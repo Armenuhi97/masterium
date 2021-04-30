@@ -131,7 +131,7 @@
                             nzPlaceHolder="Сервисы" [(ngModel)]="selectedSubcategories"
                             (ngModelChange)="addOrDeleteItem($event, subcategoriesFormArray, subcategories, 'subcategoriesFormArray')"
                             [ngModelOptions]="{standalone: true}" class="">
-                            <nz-option *ngFor="let subcategory of subcategories" [nzLabel]="subcategory.title[0]?.value"
+                            <nz-option *ngFor="let subcategory of subcategories" [nzLabel]="subcategory.name_ru"
                                 [nzValue]="subcategory.subcategory.id"></nz-option>
                         </nz-select>
                         <ng-container formArrayName="subcategoriesFormArray"
@@ -155,7 +155,7 @@
                             (ngModelChange)="addOrDeleteItem($event, specializationsFormArray, specializations, 'specializationsFormArray')"
                             [ngModelOptions]="{standalone: true}" class="">
                             <nz-option *ngFor="let specialization of specializations"
-                                [nzLabel]="specialization.title[0]?.value" [nzValue]="specialization.specialization.id">
+                                [nzLabel]="specialization.name_ru" [nzValue]="specialization.specialization.id">
                             </nz-option>
                         </nz-select>
                         <ng-container formArrayName="specializationsFormArray"
@@ -181,7 +181,7 @@
                             (ngModelChange)="addOrDeleteItem($event, documents, userAttachmentTypes, 'documents')"
                             [ngModelOptions]="{standalone: true}" class="">
                             <nz-option *ngFor="let userAttachmentType of userAttachmentTypes"
-                                [nzLabel]="userAttachmentType.title[0]?.value"
+                                [nzLabel]="userAttachmentType.name_ru"
                                 [nzValue]="userAttachmentType.user_attachment_type.id"></nz-option>
                         </nz-select>
                     </nz-form-item>

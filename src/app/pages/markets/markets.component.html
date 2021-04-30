@@ -9,11 +9,11 @@
     <ng-container *ngIf="categories?.length > 0">
       <div class="cascade-link-item" *ngFor="let category of categories; let i = index">
         <app-service-list-card (cardClicked)="getSubCategoriesByCategory(category, i)" (edit)="onEditCategory(i)"
-          [active]="activeCategory?.category.id === category.category.id" [workloadPercent]="category.workload_percent"
-          [specialistsCount]="category.specialists_count" [description]="category.description[0]?.value"
-          [title]="category.title[0]?.value" [img]="category.category.icon"
-          [gradientDegree]="category.category.color" [colorOne]="category.category.color"
-          [colorTwo]="category.category.color" (delete)="deleteCategory(category.category.id, i)">
+          [active]="activeCategory?.id === category.id" [workloadPercent]="category.workload_percent"
+          [specialistsCount]="category.specialists_count" [description]="category.description_ru"
+          [title]="category.name_ru" [img]="category.icon"
+          [gradientDegree]="category.color" [colorOne]="category.color"
+          [colorTwo]="category.color" (delete)="deleteCategory(category.id, i)">
         </app-service-list-card>
       </div>
     </ng-container>
@@ -28,9 +28,9 @@
     <ng-container *ngIf="subCategories?.length > 0">
       <div class="cascade-link-item" *ngFor="let subcategory of subCategories; let i = index">
         <app-service-list-card (cardClicked)="getProductsBySubcategory(subcategory, i,true)"
-          (delete)="deleteSubcategory(subcategory.subcategory.id, i)" (edit)="onEditSubcategory(i)"
-          [title]="subcategory.title[0]?.value" [img]="subcategory.subcategory.icon" [active]="
-            activeSubcategory?.subcategory.id === subcategory.subcategory.id
+          (delete)="deleteSubcategory(subcategory.id, i)" (edit)="onEditSubcategory(i)"
+          [title]="subcategory.name_ru" [img]="subcategory.icon" [active]="
+            activeSubcategory?.id === subcategory.id
           "></app-service-list-card>
       </div>
     </ng-container>
@@ -59,8 +59,8 @@
       <tbody>
         <tr *ngFor="let data of listOfData; let ind = index">
           <td style="width: 50px">{{ (ind + 1)+((pageIndex-1)*10)}}</td>
-          <td style="width: 300px">{{ data.title[0]?.value }}</td>
-          <td style="width: 350px">{{ data.description[0]?.value }}</td>
+          <td style="width: 300px">{{ data?.product?.name_ru }}</td>
+          <td style="width: 350px">{{ data?.product?.description_ru }}</td>
           <td>{{ data.product.price }}</td>
           <td>{{ data.product.product_code }}</td>
 
@@ -149,8 +149,8 @@
             <nz-form-item>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                 <nz-select nzPlaceHolder="Единица измерения" formControlName="measurementType">
-                  <nz-option *ngFor="let m of measurementTypes" [nzValue]="m.measurement_type.id"
-                    [nzLabel]="m.title[0]?.value">
+                  <nz-option *ngFor="let m of measurementTypes" [nzValue]="m.id"
+                    [nzLabel]="m.name_ru">
                   </nz-option>
                 </nz-select>
               </nz-form-control>

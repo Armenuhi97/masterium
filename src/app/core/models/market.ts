@@ -3,7 +3,7 @@ import { TranslationItem } from './translate';
 import { User } from './user';
 
 export interface MarketsProduct {
-  product: {
+  // product: {
     id: number;
     subcategory: SubcategoryDetails;
     price: number;
@@ -17,7 +17,13 @@ export interface MarketsProduct {
     product_subcategory: number;
     vat?: string;
     cost_price?: number;
-  };
+  // };
+  name_en: string;
+  name_ru: string;
+  name_ge: string,
+  description_en: string;
+  description_ru: string;
+  description_ge: string
   quantity?: number;
   title: TranslationItem[];
   description: TranslationItem[];
@@ -55,7 +61,7 @@ export interface MarketProductItem {
   images: MarketProductImage[];
 }
 export interface MarketProductRequest {
-  product: {
+  // product: {
     id: number;
     price: number;
     measurement: number;
@@ -65,16 +71,22 @@ export interface MarketProductRequest {
     minimal_count_for_board?: number;
     minimum_count_for_order?: number;
     maximum_count_for_order?: number;
-    translation_key_name: string;
-    translation_key_description: string;
+    translation_key_name?: string;
+    translation_key_description?: string;
     product_subcategory: number,
     show_in_market?: boolean | number
     vat?: string;
     cost_price?: number;
-  };
-  name: TranslationItem[];
-  description: TranslationItem[];
+  // };
+  name?: TranslationItem[];
+  description?: TranslationItem[];
   image: MarketProductRequestImage[];
+  name_en?: string,
+  name_ru?: string,
+  name_ge?: string,
+  description_en?: string,
+  description_ru?: string,
+  description_ge?: string
 }
 export interface WarehouseRequest {
   product: {

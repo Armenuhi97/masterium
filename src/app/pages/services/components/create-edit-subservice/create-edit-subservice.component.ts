@@ -45,18 +45,18 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
     if (this.isEdit) {
       this.items = this.validateForm.get('items') as FormArray;
       this.subservices.forEach(subservice => {
-        this.items = this.validateForm.get('items') as FormArray;
+        this.items = this.validateForm.get('items') as FormArray;        
         const subserviceTypeIndex =
-          this.subserviceTypes.findIndex(el => el.subservice_type.id === subservice.subservice.subservice_type.id);
-        this.listOfSelectedValue.push(subservice.subservice.subservice_type.id);
+          this.subserviceTypes.findIndex(el => el.id === subservice.id);
+        this.listOfSelectedValue.push(subservice.id);
         this.listOfSelectedValue = [...this.listOfSelectedValue];
         this.items.push(
           this.createItem(
-            subservice.subservice.subservice_type.id,
-            this.subserviceTypes[subserviceTypeIndex].title[0].value,
-            subservice.subservice.price,
-            subservice.subservice.measurement_type.id,
-            subservice.subservice.guarantee_day_count
+            subservice.id,
+            this.subserviceTypes[subserviceTypeIndex].name_en,
+            subservice.price,
+            subservice.measurement_type.id,
+            subservice.guarantee_day_count
           )
         );
       });
@@ -97,7 +97,7 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
     const oldId = selectedTypes.filter(x => existingIds.includes(x));
     if (newId[0]) {
       const index = this.subserviceTypes.findIndex(el => el.subservice_type.id === newId[0]);
-      this.items.push(this.createItem(newId[0], this.subserviceTypes[index].title[0].value));
+      this.items.push(this.createItem(newId[0], this.subserviceTypes[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
         const element = existingIds[i];

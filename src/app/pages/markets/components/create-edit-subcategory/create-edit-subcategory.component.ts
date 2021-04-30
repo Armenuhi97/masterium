@@ -34,10 +34,10 @@ export class CreateEditProductSubcategoryComponent implements OnInit {
 
     if (this.isEdit) {
       this.validateForm.patchValue({
-        icon: this.activeSubcategory.subcategory.icon,
-        russian: this.activeSubcategory.title[0]?.value,
-        english: this.activeSubcategory.title[1]?.value,
-        georgian: this.activeSubcategory.title[2]?.value,
+        icon: this.activeSubcategory.icon,
+        russian: this.activeSubcategory.name_ru,
+        english: this.activeSubcategory.name_en,
+        georgian: this.activeSubcategory.name_ge,
       });
     }
   }

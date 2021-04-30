@@ -59,7 +59,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   getSubservicesByService(service: ServiceResponse, index: number): void {
     this.activeServiceIndex = index;
-    this.servicesService.getSubservicesByService(service.service.id)
+    this.servicesService.getSubservicesByService(service.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.subservices = res;
@@ -72,7 +72,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeSubcategory = null;
     this.activeSubServiceIndex = undefined;
     this.activeServiceIndex = undefined;
-    this.servicesService.getSubCategoriesByCategory(category.category.id)
+    this.servicesService.getSubCategoriesByCategory(category.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(subcategories => {
         this.services = [];
@@ -85,7 +85,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeSubcategoryIndex = index;
     this.activeSubServiceIndex = undefined;
     this.activeServiceIndex = undefined;
-    this.servicesService.getServicesBySubcategory(subcategory.subcategory.id)
+    this.servicesService.getServicesBySubcategory(subcategory.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(services => {
         this.services = services;
@@ -146,45 +146,28 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   handleCategoryChange(category: any): void {
     const sendingData: Category = {
-      category: {
-        color: category.color,
-        icon: category.icon,
-        translation_key: this.isEditing ? this.activeCategory.category.translation_key : 'cat___title___' + String(Date.now()),
-        translation_key_description: this.isEditing ?
-          this.activeCategory.category.translation_key_description : 'cat___desc___' + String(Date.now())
-      },
-      title: [
-        {
-          value: category.russian,
-          language: 1,
-        },
-        {
-          value: category.english,
-          language: 2,
-        },
-        {
-          value: category.georgian,
-          language: 3,
-        },
-      ],
-      description: [
-        {
-          value: category.russianDescription,
-          language: 1,
-        },
-        {
-          value: category.englishDescription,
-          language: 2,
-        },
-        {
-          value: category.georgianDescription,
-          language: 3,
-        },
-      ]
+      // category: {
+      //   color: category.color,
+      //   icon: category.icon,
+      //   translation_key: this.isEditing ? this.activeCategory.translation_key : 'cat___title___' + String(Date.now()),
+      //   translation_key_description: this.isEditing ?
+      //     this.activeCategory.translation_key_description : 'cat___desc___' + String(Date.now())
+      // },
+      // category:{
+      color: category.color,
+      icon: category.icon,
+      // },
+      name_en: category.english,
+      name_ge: category.georgian,
+      name_ru: category.russian,
+      description_en: category.englishDescription,
+      description_ge: category.georgianDescription,
+      description_ru: category.russianDescription,
+
     };
     if (this.isEditing) {
       if (typeof category.icon === 'string') {
-        this.servicesService.editCategory(sendingData, this.activeCategory.category.id)
+        this.servicesService.editCategory(sendingData, this.activeCategory.id)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(res => {
             this.categories[this.activeCategoryIndex] = res;
@@ -197,8 +180,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.unsubscribe$),
             switchMap(res => {
-              sendingData.category.icon = res.url;
-              return this.servicesService.editCategory(sendingData, this.activeCategory.category.id);
+              sendingData.icon = res.url;
+              return this.servicesService.editCategory(sendingData, this.activeCategory.id);
             })
           ).subscribe(res => {
             this.categories[this.activeCategoryIndex] = res;
@@ -208,11 +191,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
           });
       }
     } else {
+
       this.mainService.uploadFile(category.icon)
         .pipe(
           takeUntil(this.unsubscribe$),
           switchMap((res) => {
-            sendingData.category.icon = res.url;
+            sendingData.icon = res.url;
             return this.servicesService.addCategory(sendingData);
           }))
         .subscribe(res => {
@@ -226,29 +210,24 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   handleSubcategoryChange(event: any): void {
     const sendingData: SubcategoryRequest = {
-      subcategory: {
-        translation_key_title: this.isEditing ? this.activeSubcategory.subcategory.translation_key_title : String(Date.now()),
-        only_for_product: 0,
-        icon: event.icon,
-        category: this.activeCategory.category.id,
-        is_popular: event.isPopular
-      },
-      title: [{
-        value: event.russian,
-        language: 1,
-      },
-      {
-        value: event.english,
-        language: 2,
-      },
-      {
-        value: event.georgian,
-        language: 3,
-      }]
+      // subcategory: {
+      //   translation_key_title: this.isEditing ? this.activeSubcategory.translation_key_title : String(Date.now()),
+      //   only_for_product: 0,
+      //   icon: event.icon,
+      //   category: this.activeCategory.id,
+      //   is_popular: event.isPopular
+      // },
+      only_for_product: 0,
+      icon: event.icon,
+      category: this.activeCategory.id,
+      is_popular: event.isPopular,
+      name_en: event.english,
+      name_ge: event.georgian,
+      name_ru: event.russian
     };
     if (this.isEditing) {
       if (typeof event.icon === 'string') {
-        this.servicesService.editSubcategory(sendingData, this.activeSubcategory.subcategory.id)
+        this.servicesService.editSubcategory(sendingData, this.activeSubcategory.id)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(res => {
             this.subCategories[this.activeSubcategoryIndex] = res;
@@ -261,8 +240,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.unsubscribe$),
             switchMap(res => {
-              sendingData.subcategory.icon = res.url;
-              return this.servicesService.editSubcategory(sendingData, this.activeSubcategory.subcategory.id);
+              sendingData.icon = res.url;
+              return this.servicesService.editSubcategory(sendingData, this.activeSubcategory.id);
             })
           ).subscribe(res => {
             this.subCategories[this.activeSubcategoryIndex] = res;
@@ -276,7 +255,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.unsubscribe$),
           switchMap((res) => {
-            sendingData.subcategory.icon = res.url;
+            sendingData.icon = res.url;
             return this.servicesService.addSubcategory(sendingData);
           }))
         .subscribe(res => {
@@ -326,36 +305,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
   handleServiceChange(event: any) {
     const sendingData: ServiceRequest = {
       service: {
-        subcategory: this.activeSubcategory.subcategory.id,
+        subcategory: this.activeSubcategory.id,
         translation_key_description: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_description : 'translation_key_description' + String(Date.now()),
         translation_key_title: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_title : 'translation_key_title' + String(Date.now()),
       },
-      title: [{
-        value: event.russian,
-        language: 1,
-      },
-      {
-        value: event.english,
-        language: 2,
-      },
-      {
-        value: event.georgian,
-        language: 3,
-      }],
-      description: [
-        {
-          value: event.russianDescription,
-          language: 1,
-        },
-        {
-          value: event.englishDescription,
-          language: 2,
-        },
-        {
-          value: event.georgianDescription,
-          language: 3,
-        }
-      ],
+      name_en: event.english,
+      name_ge: event.georgian,
+      name_ru: event.russian,
+      description_en: event.englishDescription,
+      description_ge: event.georgianDescription,
+      description_ru: event.russianDescription      
     };
     if (typeof event.icon === 'string') {
       sendingData.service.icon = event.icon;
@@ -421,8 +380,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
         this.activeServiceIndex = undefined;
       });
   }
-
-
 
   actionsAfterSuccessfullAction(): void {
     this.messagesService.success(Messages.success);

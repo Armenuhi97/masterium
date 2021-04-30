@@ -35,17 +35,17 @@ export class CreateEditCategoryComponent implements OnInit {
       englishDescription: ['', Validators.required],
       georgianDescription: ['', Validators.required]
     });
-
+    
     if (this.isEdit) {
       this.validateForm.patchValue({
-        color: this.activeCategory.category.color,
-        icon: this.activeCategory.category.icon,
-        russian: this.activeCategory?.title[0]?.value,
-        english: this.activeCategory?.title[1]?.value,
-        georgian: this.activeCategory?.title[2]?.value,
-        russianDescription: this.activeCategory?.description[0]?.value,
-        englishDescription: this.activeCategory?.description[1]?.value,
-        georgianDescription: this.activeCategory?.description[2]?.value,
+        color: this.activeCategory.color,
+        icon: this.activeCategory.icon,
+        russian: this.activeCategory?.name_ru,
+        english: this.activeCategory?.name_en,
+        georgian: this.activeCategory?.name_ge,
+        russianDescription: this.activeCategory?.description_ru,
+        englishDescription: this.activeCategory?.description_en,
+        georgianDescription: this.activeCategory?.description_ge,
       });
     }
   }
@@ -62,7 +62,7 @@ export class CreateEditCategoryComponent implements OnInit {
   }
 
 
-  onSave(): void {
+  onSave(): void {    
     if (this.validateForm.valid){
       this.save.emit(this.validateForm.value);
     } else {

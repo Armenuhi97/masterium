@@ -5,15 +5,25 @@ export interface CategoryDetail {
   color: string;
   icon: string;
   id?: number;
-  translation_key: string;
-  translation_key_description: string;
+  translation_key?: string;
+  translation_key_description?: string;
 }
 
 export interface Category {
   id?: number;
-  category: CategoryDetail;
-  title: TranslationItem[];
-  description: TranslationItem[];
+  category?: CategoryDetail;
+  color?: string;
+  icon?: string;
+  translation_key?: string;
+  translation_key_description?: string;
+  name_en?: string,
+  name_ge?: string,
+  name_ru?: string,
+  description_en?: string,
+  description_ge?: string,
+  description_ru?: string,
+  title?: TranslationItem[];
+  description?: TranslationItem[];
   specialists_count?: number;
   workload_percent?: number;
 }
@@ -25,23 +35,41 @@ export interface SubcategoryDetails {
   category?: Category;
   translation_key_title?: string;
   is_popular: boolean;
+  name_en?: string
+  name_ge?: string
+  name_ru?: string
 }
 
 export interface Subcategory {
   title: TranslationItem[];
-  subcategory: SubcategoryDetails;
+  subcategory?: SubcategoryDetails;
+  icon?: string;
+  id?: number;
+  only_for_product?: boolean;
+  translation_key_title?: string;
+  is_popular?: boolean;
   category?: any;
+  name_en: string,
+  name_ge: string,
+  name_ru: string
 }
 
 export interface SubcategoryRequest {
-  subcategory: {
-    is_popular?: boolean;
-    translation_key_title?: string;
-    icon?: string;
-    only_for_product?: number
-    category?: number;
-  };
-  title: TranslationItem[];
+  // subcategory?: {
+  //   is_popular?: boolean;
+  //   translation_key_title?: string;
+  //   icon?: string;
+  //   only_for_product?: number
+  //   category?: number;
+  // };
+  is_popular?: boolean;
+  icon?: string;
+  only_for_product?: number
+  category?: number;
+  name_en?: string;
+  name_ru?: string,
+  name_ge?: string
+  title?: TranslationItem[];
 }
 
 export interface ServiceDescription {
@@ -52,6 +80,7 @@ export interface ServiceDescription {
 }
 
 export interface ServiceResponse {
+  id?: number,
   service: {
     id: number,
     measurement_type: {
@@ -72,8 +101,15 @@ export interface ServiceResponse {
     translation_key_description: string,
     guarantee_day_count: number
   };
-  title: TranslationItem[];
-  description: ServiceDescription[];
+  title?: TranslationItem[];
+  description?: ServiceDescription[];
+  name_en: string,
+  name_ge: string,
+  name_ru: string,
+  description_en: string
+  description_ru: string
+  description_ge: string
+  icon: string
 }
 
 export interface ServiceRequest {
@@ -86,33 +122,47 @@ export interface ServiceRequest {
     icon?: string,
     subcategory: number
   };
-  title: TranslationItem[];
-  description: TranslationItem[];
+  title?: TranslationItem[];
+  description?: TranslationItem[];
+  name_en: string,
+  name_ge: string,
+  name_ru: string,
+  description_en:string,
+  description_ge: string,
+  description_ru: string
 }
 
-
 export interface SubserviceResponse {
-  subservice: {
+  // subservice: {
+  id: number,
+  measurement_type: {
     id: number,
-    measurement_type: {
-      id: number,
-      code: string,
-      translation_key: string,
-    },
-    service: {
-      id: 9,
-      subcategory: SubcategoryDetails
-      translation_key_title: string;
-      translation_key_description: string;
-    },
-    subservice_type: {
-      id: number;
-      translation_key: string;
-    },
-    price: number;
-    guarantee_day_count: number;
-  };
-  title: TranslationItem[];
+    code: string,
+    // translation_key: string,
+    name_en: string,
+    name_ge: string,
+    name_ru: string
+  },
+  service: {
+    id: number,
+    subcategory: SubcategoryDetails
+    // translation_key_title: string;
+    // translation_key_description: string;
+    name_en: string,
+    name_ge: string,
+    name_ru: string
+  },
+  subservice_type: {
+    id: number;
+    // translation_key: string;
+    name_en: string,
+    name_ge: string,
+    name_ru: string
+  },
+  price: number;
+  guarantee_day_count: number;
+  // };
+  // title: TranslationItem[];
 }
 
 export interface Subservice {
@@ -129,9 +179,14 @@ export interface SubserviceRequest {
 }
 
 export interface SubserviceType {
-  subservice_type: {
+  subservice_type?: {
     id: number;
     translation_key: string;
   };
-  title: TranslationItem[];
+  id?: number;
+  translation_key?: string;
+  title?: TranslationItem[];
+  name_en?: string;
+  name_ru?: string;
+  name_ge?: string;
 }

@@ -101,7 +101,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     const newId = selectedTypes.filter(x => !existingIds.includes(x));
     if (newId[0]) {
       const index = this.subCategories.findIndex(el => el.subcategory.id === newId[0]);
-      this.items.push(this.createItem(newId[0], this.subCategories[index].title[0].value));
+      this.items.push(this.createItem(newId[0], this.subCategories[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
         const element = existingIds[i];
@@ -119,7 +119,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     const newId = selectedTypes.filter(x => !existingIds.includes(x));
     if (newId[0]) {
       const index = this.productSubCategories.findIndex(el => el.subcategory.id === newId[0]);
-      this.productItems.push(this.createItem(newId[0], this.productSubCategories[index].title[0].value));
+      this.productItems.push(this.createItem(newId[0], this.productSubCategories[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
         const element = existingIds[i];
@@ -161,7 +161,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
         this.items.push(
           this.createItem(
             discount.subcategory.id,
-            this.subCategories[subserviceTypeIndex]?.title[0].value,
+            this.subCategories[subserviceTypeIndex]?.name_ru,
             discount.percent
           )
         );
@@ -174,7 +174,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
         this.productItems.push(
           this.createItem(
             discount.product_subcategory.id,
-            this.productSubCategories[subserviceTypeIndex]?.title[0].value,
+            this.productSubCategories[subserviceTypeIndex]?.name_ru,
             discount.percent
           )
         );
@@ -263,7 +263,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
   getSubcategoryName(id: number): string {
     const subcategory = this.subCategories.filter(sub => sub.subcategory.id === id);
-    return subcategory.length > 0 ? subcategory[0].title[0].value : '';
+    return subcategory.length > 0 ? subcategory[0].name_ru : '';
   }
 
   // getProductSubcategoryName(): string {

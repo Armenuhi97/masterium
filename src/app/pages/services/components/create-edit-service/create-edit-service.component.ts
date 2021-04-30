@@ -43,14 +43,14 @@ export class CreateEditServiceComponent implements OnInit, OnDestroy {
     });
     if (this.isEdit) {
       this.validateForm.patchValue({
-        russian: this.service.title[0]?.value,
-        english: this.service.title[1]?.value,
-        georgian: this.service.title[2]?.value,
-        russianDescription: this.service.description[0]?.value,
-        englishDescription: this.service.description[1]?.value,
-        georgianDescription: this.service.description[2]?.value,
-        icon: this.service.service.icon,
-        showingImage: this.service.service.icon
+        russian: this.service.name_ru,
+        english: this.service.name_en,
+        georgian: this.service.name_ge,
+        russianDescription: this.service.description_ru,
+        englishDescription: this.service.description_en,
+        georgianDescription: this.service.description_ge,
+        icon: this.service.icon,
+        showingImage: this.service.icon
       });
     }
   }

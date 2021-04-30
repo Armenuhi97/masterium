@@ -87,7 +87,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.activeCategoryIndex = index;
     this.activeSubcategory = null;
     this.activeServiceIndex = undefined;
-    this.marketService.getSubCategoriesByCategory(category.category.id)
+    this.marketService.getSubCategoriesByCategory(category.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(subcategories => {
         this.subCategories = subcategories;
@@ -101,7 +101,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.activeSubcategory = subcategory;
     this.activeSubcategoryIndex = index;
     this.activeServiceIndex = undefined;
-    this.marketService.getProductBySubcatery(subcategory.subcategory.id, this.pageIndex)
+    this.marketService.getProductBySubcatery(subcategory.id, this.pageIndex)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((products) => {
         this.totalCount = products.count;
@@ -152,49 +152,27 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.isEditing = false;
   }
 
-
-
   handleCategoryChange(category: any): void {
     const sendingData: Category = {
-      category: {
-        color: category.color_one,
-        icon: category.icon,
-        translation_key: this.isEditing ? this.activeCategory.category.translation_key : 'cat___title___' + String(Date.now()),
-        translation_key_description: this.isEditing ?
-          this.activeCategory.category.translation_key_description : 'cat___desc___' + String(Date.now())
-      },
-      title: [
-        {
-          value: category.russian,
-          language: 1,
-        },
-        {
-          value: category.english,
-          language: 2,
-        },
-        {
-          value: category.georgian,
-          language: 3,
-        },
-      ],
-      description: [
-        {
-          value: category.russianDescription,
-          language: 1,
-        },
-        {
-          value: category.englishDescription,
-          language: 2,
-        },
-        {
-          value: category.georgianDescription,
-          language: 3,
-        },
-      ]
+      color: category.color_one,
+      icon: category.icon,
+      // category: {
+      //   color: category.color_one,
+      //   icon: category.icon,
+      //   translation_key: this.isEditing ? this.activeCategory.translation_key : 'cat___title___' + String(Date.now()),
+      //   translation_key_description: this.isEditing ?
+      //     this.activeCategory.translation_key_description : 'cat___desc___' + String(Date.now())
+      // },
+      name_en: category.english,
+      name_ru: category.russian,
+      name_ge: category.georgian,
+      description_en: category.englishDescription,
+      description_ru: category.russianDescription,
+      description_ge: category.georgianDescription
     };
     if (this.isEditing) {
       if (typeof category.icon === 'string') {
-        this.marketService.editCategory(sendingData, this.activeCategory.category.id)
+        this.marketService.editCategory(sendingData, this.activeCategory.id)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(res => {
             this.categories[this.activeCategoryIndex] = res;
@@ -207,8 +185,8 @@ export class MarketsComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.unsubscribe$),
             switchMap(res => {
-              sendingData.category.icon = res.url;
-              return this.marketService.editCategory(sendingData, this.activeCategory.category.id);
+              sendingData.icon = res.url;
+              return this.marketService.editCategory(sendingData, this.activeCategory.id);
             })
           ).subscribe(res => {
             this.categories[this.activeCategoryIndex] = res;
@@ -222,7 +200,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.unsubscribe$),
           switchMap((res) => {
-            sendingData.category.icon = res.url;
+            sendingData.icon = res.url;
             return this.marketService.addCategory(sendingData);
           }))
         .subscribe(res => {
@@ -236,28 +214,22 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   handleSubcategoryChange(event: any): void {
     const sendingData: SubcategoryRequest = {
-      subcategory: {
-        translation_key_title: this.isEditing ? this.activeSubcategory.subcategory.translation_key_title : String(Date.now()),
-        only_for_product: 0,
-        icon: event.icon,
-        category: this.activeCategory.category.id,
-      },
-      title: [{
-        value: event.russian,
-        language: 1,
-      },
-      {
-        value: event.english,
-        language: 2,
-      },
-      {
-        value: event.georgian,
-        language: 3,
-      }]
+      // subcategory: {
+      // translation_key_title: this.isEditing ? this.activeSubcategory.translation_key_title : String(Date.now()),
+      only_for_product: 0,
+      icon: event.icon,
+      category: this.activeCategory.id,
+      // },      
+      // only_for_product: 0,
+      // icon: event.icon,
+      // category: this.activeCategory.id,
+      name_en: event.english,
+      name_ru: event.russian,
+      name_ge: event.georgian
     };
     if (this.isEditing) {
       if (typeof event.icon === 'string') {
-        this.marketService.editSubcategory(sendingData, this.activeSubcategory.subcategory.id)
+        this.marketService.editSubcategory(sendingData, this.activeSubcategory.id)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(res => {
             this.subCategories[this.activeSubcategoryIndex] = res;
@@ -270,8 +242,8 @@ export class MarketsComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.unsubscribe$),
             switchMap(res => {
-              sendingData.subcategory.icon = res.url;
-              return this.marketService.editSubcategory(sendingData, this.activeSubcategory.subcategory.id);
+              sendingData.icon = res.url;
+              return this.marketService.editSubcategory(sendingData, this.activeSubcategory.id);
             })
           ).subscribe(res => {
             this.subCategories[this.activeSubcategoryIndex] = res;
@@ -285,10 +257,13 @@ export class MarketsComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.unsubscribe$),
           switchMap((res) => {
-            sendingData.subcategory.icon = res.url;
+            sendingData.icon = res.url;
             return this.marketService.addSubcategory(sendingData);
           }))
         .subscribe(res => {
+          console.log(res);
+          console.log(this.subCategories);
+          
           this.subCategories.push(res);
           this.actionsAfterSuccessfullAction();
         }, () => {
@@ -359,56 +334,33 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
     const sendingData: MarketProductRequest = {
       image: [],
-      product: {
-        id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].product.id : undefined,
-        price: formValue.price,
-        measurement: formValue.measurementType,
-        minimal_count: 1,
-        quantity: 0,
-        minimal_count_for_board: 0,
-        minimum_count_for_order: 1,
-        maximum_count_for_order: 10000,
-        vat: formValue.vat,
-        cost_price: formValue.costPrice,
-        product_code: formValue.productCode,
-        show_in_market: true,
-        product_subcategory: this.activeSubcategory.subcategory.id,
-        translation_key_description: this.isEditing ?
-          this.listOfData[this.editingMarketProductIndex].product.translation_key_description
-          : String('translation_key_description' + Date.now()),
-        translation_key_name: this.isEditing ? this.listOfData[this.editingMarketProductIndex].product.translation_key_name
-          : String('translation_key_name' + Date.now())
-      },
-      name: [
-        {
-          value: formValue.nameInRussian,
-          language: 1,
-        },
-        {
-          value: formValue.nameInEnglish,
-          language: 2,
-        },
-        {
-          value: formValue.nameInGeorgian,
-          language: 3,
-        },
-      ],
-      description: [
-        {
-          value: formValue.descriptionInRussian,
-          language: 1,
-        },
-        {
-          value: formValue.descriptionInEnglish,
-          language: 2,
-        },
-        {
-          value: formValue.descriptionInGeorgian,
-          language: 3,
-        },
-      ]
+      // product: {
+      id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].id : undefined,
+      price: formValue.price,
+      measurement: formValue.measurementType,
+      minimal_count: 1,
+      quantity: 0,
+      minimal_count_for_board: 0,
+      minimum_count_for_order: 1,
+      maximum_count_for_order: 10000,
+      vat: formValue.vat,
+      cost_price: formValue.costPrice,
+      product_code: formValue.productCode,
+      show_in_market: true,
+      product_subcategory: this.activeSubcategory.id,
+      // translation_key_description: this.isEditing ?
+        // this.listOfData[this.editingMarketProductIndex].translation_key_description
+        // : String('translation_key_description' + Date.now()),
+      // translation_key_name: this.isEditing ? this.listOfData[this.editingMarketProductIndex].translation_key_name
+      //   : String('translation_key_name' + Date.now()),
+      // },
+      name_en: formValue.nameInEnglish,
+      name_ru: formValue.nameInRussian,
+      name_ge: formValue.nameInGeorgian,
+      description_en: formValue.descriptionInEnglish,
+      description_ru: formValue.descriptionInRussian,
+      description_ge: formValue.descriptionInGeorgian
     };
-    console.log(this.isEditing);
     if (this.isEditing) {
       this.editMarketProductWithImages(sendingData);
     } else {
@@ -435,7 +387,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
               });
             }
           });
-          return this.editMarketProduct(sendingData, sendingData.product.id);
+          return this.editMarketProduct(sendingData, sendingData.id);
         })
       )
       .subscribe(() => {
@@ -516,20 +468,20 @@ export class MarketsComponent implements OnInit, OnDestroy {
     //   this.editingMarketProductIndex = ((this.pageIndex - 1) * 10) + index;
     // }
     this.validateForm.patchValue({
-      price: marketProduct.product.price,
-      measurementType: marketProduct.product.measurement,
-      vat: marketProduct.product.vat,
-      costPrice: marketProduct.product.cost_price,
+      price: marketProduct.price,
+      measurementType: marketProduct.measurement,
+      vat: marketProduct.vat,
+      costPrice: marketProduct.cost_price,
       // quantity: marketProduct.quantity,
       // minimalCount: marketProduct.product.minimal_count,
       // showInMarket: marketProduct.product.show_in_market,
-      productCode: marketProduct.product.product_code,
-      nameInEnglish: marketProduct.title[1].value,
-      nameInRussian: marketProduct.title[0].value,
-      nameInGeorgian: marketProduct.title[2].value,
-      descriptionInEnglish: marketProduct.description[1].value,
-      descriptionInRussian: marketProduct.description[0].value,
-      descriptionInGeorgian: marketProduct.description[2].value,
+      productCode: marketProduct.product_code,
+      nameInEnglish: marketProduct.name_en,
+      nameInRussian: marketProduct.name_ru,
+      nameInGeorgian: marketProduct.name_ge,
+      descriptionInEnglish: marketProduct.description_en,
+      descriptionInRussian: marketProduct.description_ru,
+      descriptionInGeorgian: marketProduct.description_ge,
       photo: ['', []],
     });
     marketProduct.images.forEach((image, i) => {
@@ -568,7 +520,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   deleteMarketProduct(marketProduct: MarketsProduct, index: number): void {
     this.marketService
-      .deleteMarketProduct(marketProduct.product.id)
+      .deleteMarketProduct(marketProduct.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.showSuccessMessage();
@@ -583,7 +535,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
   calculateRedsCount(): void {
     this.redsCount = 0;
     this.listOfData.forEach(product => {
-      if (product.quantity < product.product.minimal_count) {
+      if (product.quantity < product.minimal_count) {
         this.redsCount += 1;
       }
     });
@@ -597,7 +549,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   changeProductCount(): void {
     this.marketService.changeProductQuantity(
-      this.listOfData[this.changingCountProductIndex].product.id,
+      this.listOfData[this.changingCountProductIndex].id,
       this.changeCountControl.value
     ).pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {

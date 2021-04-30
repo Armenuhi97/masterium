@@ -171,7 +171,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           sub.subservice.forEach((service: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Service,
-              name: service.subservice.service.title[0].value,
+              name: service.subservice.service.name_ru,
               subservice: service.subservice.subservice_type[0].value,
               currentPrice: service.current_price,
               serviceId: service.id,
@@ -354,7 +354,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
                 id: sub.subservice.id,
               };
             }),
-            title: r.title[0].value,
+            title: r.name_ru,
             id: r.service.id,
           };
           
@@ -377,7 +377,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.productSearchResult = result.map((r) => {
           return {
             id: r.product.id,
-            label: r.title[0].value,
+            label: r.name_ru,
             real_price: r.discounted_price,
             current_price: r.discounted_price,
             quantity: 1,

@@ -383,7 +383,7 @@ export class ExecutorComponent implements OnInit {
         items.push(
           this._createItem(
             sub.subcategory.subcategory.id,
-            sub.title[0].value,
+            sub.name_ru,
             true,
             sub.subcategory.is_prioritized
           )
@@ -436,7 +436,7 @@ export class ExecutorComponent implements OnInit {
       items.push(
         this._createItem(
           newId[0],
-          origin[index].title[0].value,
+          origin[index].name_ru,
           type !== 'documents'
         )
       );

@@ -3,7 +3,7 @@
     <nz-tab [nzTitle]="'Склад'">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <nz-tabset (nzSelectChange)="activeTabChange($event)">
-          <nz-tab *ngFor="let categorie of categories" [nzTitle]="categorie.title[0]?.value">
+          <nz-tab *ngFor="let categorie of categories" [nzTitle]="categorie.name_en">
           </nz-tab>
         </nz-tabset>
         <div class="statistics d-flex align-items-center">
@@ -19,7 +19,7 @@
           class="subservice-filter">
           <nz-option nzValue="all" nzLabel="Все"> </nz-option>
           <nz-option *ngFor="let subcategory of subCategories" [nzValue]="subcategory.subcategory.id"
-            [nzLabel]="subcategory.title[0]?.value">
+            [nzLabel]="subcategory.name_ru">
           </nz-option>
         </nz-select>
         <nz-select [nzPlaceHolder]="'Фильтр'" [formControl]="listFilterControl" class="list-filter">
