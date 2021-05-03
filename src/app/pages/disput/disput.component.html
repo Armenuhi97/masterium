@@ -2,7 +2,7 @@
     <app-section-title title="Диспуты"></app-section-title>
     <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusFilterControl" class="status-filter">
         <nz-option nzValue="" nzLabel="Все"> </nz-option>
-        <nz-option *ngFor="let status of disputStatuses" [nzValue]="status.disput_status.id"
+        <nz-option *ngFor="let status of disputStatuses" [nzValue]="status.id"
             [nzLabel]="status.name_ru">
         </nz-option>    
     </nz-select>
@@ -28,7 +28,7 @@
             <td style="width: 250px">{{data.order_number}}</td>
             <td style="width:200px">{{data.customer_name}}</td>
             <td style="width:200px">{{data.executr_name}}</td>
-            <td style="width:200px">{{data.status[0]?.value}}</td>
+            <td style="width:200px">{{data.status?.name_ru}}</td>
             <td [routerLink]="['/dashboard/disput', data.id]" class="action-button edit" style="width:10px"><i nz-icon
                     nzType="edit"></i>
             </td>

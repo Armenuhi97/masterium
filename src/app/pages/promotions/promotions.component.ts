@@ -100,7 +100,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     const existingIds = this.items.value.map(v => v.id);
     const newId = selectedTypes.filter(x => !existingIds.includes(x));
     if (newId[0]) {
-      const index = this.subCategories.findIndex(el => el.subcategory.id === newId[0]);
+      const index = this.subCategories.findIndex(el => el.id === newId[0]);
       this.items.push(this.createItem(newId[0], this.subCategories[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
@@ -118,7 +118,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     const existingIds = this.productItems.value.map(v => v.id);
     const newId = selectedTypes.filter(x => !existingIds.includes(x));
     if (newId[0]) {
-      const index = this.productSubCategories.findIndex(el => el.subcategory.id === newId[0]);
+      const index = this.productSubCategories.findIndex(el => el.id === newId[0]);
       this.productItems.push(this.createItem(newId[0], this.productSubCategories[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
@@ -155,12 +155,12 @@ export class PromotionsComponent implements OnInit, OnDestroy {
       if (discount.product_subcategory === null) {
         this.items = this.validateForm.get('items') as FormArray;
         const subserviceTypeIndex =
-          this.subCategories.findIndex(el => el.subcategory.id === discount.subcategory.id);
-        this.listOfSelectedValue.push(discount.subcategory.id);
+          this.subCategories.findIndex(el => el.id === discount.id);
+        this.listOfSelectedValue.push(discount.id);
         this.listOfSelectedValue = [...this.listOfSelectedValue];
         this.items.push(
           this.createItem(
-            discount.subcategory.id,
+            discount.id,
             this.subCategories[subserviceTypeIndex]?.name_ru,
             discount.percent
           )
@@ -168,7 +168,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
       } else {
         this.productItems = this.validateForm.get('productItems') as FormArray;
         const subserviceTypeIndex =
-          this.productSubCategories.findIndex(el => el.subcategory.id === discount.product_subcategory.id);
+          this.productSubCategories.findIndex(el => el.id === discount.product_subcategory.id);
         this.validateForm.get('productSubcategories')
           .setValue([...this.validateForm.get('productItems').value, discount.product_subcategory.id], { emitEvent: false });
         this.productItems.push(
@@ -262,7 +262,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
   }
 
   getSubcategoryName(id: number): string {
-    const subcategory = this.subCategories.filter(sub => sub.subcategory.id === id);
+    const subcategory = this.subCategories.filter(sub => sub.id === id);
     return subcategory.length > 0 ? subcategory[0].name_ru : '';
   }
 

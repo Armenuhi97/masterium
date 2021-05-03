@@ -121,8 +121,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           {
             groupItemList: order.subservices.map((subservice: any) => ({
               type: DragItemTypes.Service,
-              name: subservice.service_name[0]?.value,
-              subservice: subservice.subservice_name[0]?.value,
+              name: subservice.service_name_ru,
+              subservice: subservice.subservice_name_ru,
               currentPrice: subservice.current_price,
               serviceId: subservice.service_id,
               subserviceId: subservice.subserv,
@@ -135,7 +135,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           {
             groupItemList: order.product.map((product: any) => ({
               type: DragItemTypes.Product,
-              name: product.name[0]?.value,
+              name: product.name_ru,
               id: product.id,
               currentPrice: product.current_price,
               realPrice: product.real_price,

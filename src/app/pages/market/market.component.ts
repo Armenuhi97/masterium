@@ -72,7 +72,7 @@ export class MarketComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(response => {
         this.categories = response;
-        this.activeCategoryId = this.categories[0].category.id;
+        this.activeCategoryId = this.categories[0].id;
         // this.getSubcategories();
         // this.getMarketProductsByCategory();
         this.subscribeToSubserviceControlChange();
@@ -317,9 +317,9 @@ export class MarketComponent implements OnInit, OnDestroy {
       this.editingMarketProductIndex = ((this.pageIndex - 1) * 10) + index;
     }
     // if (marketProduct.product && marketProduct.product.product_category_id) {
-    //   const category = this.categories.find(element => element.category.id === marketProduct.product.product_category_id);
-    //   if (category && category.category)
-    //     this.validateForm.get('category').setValue(category.category.id);
+    //   const category = this.categories.find(element => element.id === marketProduct.product.product_category_id);
+    //   if (category && category)
+    //     this.validateForm.get('category').setValue(category.id);
     // }
     // if (marketProduct.product && marketProduct.product.product_subcategory) {
     //   const subcategory = this.subCategories.find(element => element.subcategory.id === marketProduct.product.product_subcategory);
@@ -425,7 +425,7 @@ export class MarketComponent implements OnInit, OnDestroy {
   }
 
   activeTabChange(event: NzTabChangeEvent): void {
-    this.activeCategoryId = this.categories[event.index].category.id;
+    this.activeCategoryId = this.categories[event.index].id;
     this.activeSubcategoryIndex = undefined;
     this.getSubcategories();
     this.getMarketProductsByCategory();

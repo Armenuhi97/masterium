@@ -60,7 +60,7 @@
         nzPlaceHolder="Подкотегории" [(ngModel)]="listOfSelectedValue" (ngModelChange)="addOrDeleteItem($event)"
         [ngModelOptions]="{standalone: true}">
         <nz-option *ngFor="let subcategory of subCategories" [nzLabel]="subcategory.name_ru"
-          [nzValue]="subcategory.subcategory.id"></nz-option>
+          [nzValue]="subcategory.id"></nz-option>
       </nz-select>
     </nz-form-item>
     <nz-form-item>
@@ -68,7 +68,7 @@
       <nz-select class="subcategories-type" [nzMaxTagCount]="4" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
         nzPlaceHolder="Категории продуктов" formControlName="productSubcategories">
         <nz-option *ngFor="let subcategory of productSubCategories" [nzLabel]="subcategory.name_ru"
-          [nzValue]="subcategory.subcategory.id"></nz-option>
+          [nzValue]="subcategory.id"></nz-option>
       </nz-select>
     </nz-form-item>
 

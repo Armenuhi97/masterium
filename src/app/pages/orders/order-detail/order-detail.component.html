@@ -5,7 +5,7 @@
         <div>
           <div class="d-flex align-items-center justify-content-between">
             <h1 class="m-0">Заказ N {{order.order.order_number}}</h1>
-            <a *ngIf="order.status.status_code === 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+            <a *ngIf="order?.status?.status_code === 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="setPendingOrder()">
               <button nz-button nzType="primary" nzPrimary>Принять в обработку</button>
             </a>
@@ -17,7 +17,7 @@
           <nz-divider></nz-divider>
           <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
             <nz-descriptions-item nzTitle="Статус заказа"><span
-                class="status-primary">{{order.status.status_name[0].value
+                class="status-primary">{{order?.status?.status_name[0]?.value
                 }}</span></nz-descriptions-item>
             <nz-descriptions-item nzTitle="Адрес">{{order.order.address?.address }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Заказчик"> <a
@@ -53,7 +53,7 @@
       <ng-template #productPrefixTpl><i nz-icon nzType="bulb"></i></ng-template>
     </div>
   </div>
-  <div class="container" *ngIf="order.status.status_code !== 'ACC'">
+  <div class="container" *ngIf="order?.status?.status_code !== 'ACC'">
     <div class="order-ordering d-flex justify-content-between">
       <nz-tabset>
         <nz-tab nzTitle="Сервисы">
@@ -122,7 +122,7 @@
       <!-- && order.status.status_code !== 'ACC' -->
       <div>
         <button nz-button class="ml-auto mb-2 d-flex" nzType="primary"
-          [disabled]="!isAddSubgroupVisible || order.status.status_code == 'ACC'" (click)="addGroup(true)">Новый
+          [disabled]="!isAddSubgroupVisible || order?.status?.status_code == 'ACC'" (click)="addGroup(true)">Новый
           заказ</button>
         <div *ngFor="let subgroup of subgroups | slice:3; let i = index">
           <div class="list-container" *ngIf="subgroup.isEditing">

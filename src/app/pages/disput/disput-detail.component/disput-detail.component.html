@@ -36,7 +36,7 @@
         <div class="d-flex align-items-cener action-buttons">
             <a nz-popconfirm nzPopconfirmTitle="Вы уверены ?" nzPopconfirmPlacement="bottom"
                 (nzOnConfirm)="closeDisput()">
-                <button class="mr-3" nz-button nzType="primary" [disabled]="disput.status[1].value === 'Completed'"
+                <button class="mr-3" nz-button nzType="primary" [disabled]="disput.status.name_en === 'Completed'"
                     [nzLoading]="loading">Закрыть диспут </button>
             </a>
         </div>

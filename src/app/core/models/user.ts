@@ -105,7 +105,7 @@ export interface UserDetail {
 }
 
 export interface ClientDetail {
-  user_details: {
+  // user_details: {
     user: number;
     user_role: {
       id: number;
@@ -129,7 +129,7 @@ export interface ClientDetail {
     is_blocked: boolean;
     is_active: boolean;
     is_registered_executor: true;
-  };
+  // };
 }
 
 export interface ClientRequest {

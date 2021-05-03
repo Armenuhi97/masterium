@@ -313,6 +313,8 @@ export class ExecutorComponent implements OnInit {
 
   private _patchStateToForm(): void {
     const editingExecutor = this.executor;
+    console.log(editingExecutor);
+    
     const workScheduleStart = new Date(Date.now()).setHours(
       editingExecutor.user_schedule.start_time.split(':')[0],
       editingExecutor.user_schedule.start_time.split(':')[1]
@@ -330,7 +332,7 @@ export class ExecutorComponent implements OnInit {
       showingImage: editingExecutor.user_details.image || '',
       firstName: editingExecutor.user_details.first_name || '',
       lastName: editingExecutor.user_details.last_name || '',
-      phone: (editingExecutor.user_details.phone_number).slice(4) || '',
+      phone:editingExecutor.user_details.phone_number? (editingExecutor.user_details.phone_number).slice(4):'' || '',
       email: editingExecutor.user_details.email || '',
       creditCardNumber: editingExecutor.user_details.credit_card_number?.slice(3) || '',
       experience: editingExecutor.user_details.experience || '',
@@ -341,7 +343,7 @@ export class ExecutorComponent implements OnInit {
       workScheduleEnd: this.workScheduleEnd,
       workArea: editingExecutor.user_schedule.city || '',
       bet: editingExecutor.user_schedule.tarif || '',
-      documents: editingExecutor.user_attachments.map((attachment) => {
+      documents: editingExecutor.user_attachments.map((attachment) => {        
         const items = this.validateForm.get('documents') as FormArray;
         this.selectedUserAttachmentTypes.push(
           attachment.user_attachment.attachment_type.id
@@ -357,33 +359,34 @@ export class ExecutorComponent implements OnInit {
         );
       }),
       specializationsFormArray: editingExecutor.user_specialization.map(
-        (specialization) => {
+        (specialization) => {          
           const items = this.validateForm.get(
             'specializationsFormArray'
           ) as FormArray;
           this.selectedSpecializations.push(
-            specialization.user_specialization.specialization.id
+            specialization.specialization.id
           );
 
           items.push(
             this._createItem(
-              specialization.user_specialization.specialization.id,
-              specialization.specialization[0].value,
+              specialization.specialization.id,
+              specialization.specialization.name_ru,
               true,
-              specialization.user_specialization.is_prioritized
+              specialization.is_prioritized
             )
           );
         }
       ),
       subcategoriesFormArray: editingExecutor.user_subcategory.map((sub) => {
+        
         const items = this.validateForm.get(
           'subcategoriesFormArray'
         ) as FormArray;
-        this.selectedSubcategories.push(sub.subcategory.subcategory.id);
+        this.selectedSubcategories.push(sub.subcategory.id);
         items.push(
           this._createItem(
-            sub.subcategory.subcategory.id,
-            sub.name_ru,
+            sub.subcategory.id,
+            sub.subcategory.name_ru,
             true,
             sub.subcategory.is_prioritized
           )
@@ -429,10 +432,9 @@ export class ExecutorComponent implements OnInit {
     if (newId[0]) {
       const index = origin.findIndex(
         (el) =>
-          el.user_attachment_type?.id === newId[0] ||
-          el.specialization?.id === newId[0] ||
-          el.subcategory?.id === newId[0]
+          el?.id === newId[0]          
       );
+      
       items.push(
         this._createItem(
           newId[0],

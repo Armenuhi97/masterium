@@ -18,7 +18,7 @@
         <nz-select [nzPlaceHolder]="'Фильтр по категориям'" [formControl]="subCategoriesControl"
           class="subservice-filter">
           <nz-option nzValue="all" nzLabel="Все"> </nz-option>
-          <nz-option *ngFor="let subcategory of subCategories" [nzValue]="subcategory.subcategory.id"
+          <nz-option *ngFor="let subcategory of subCategories" [nzValue]="subcategory.id"
             [nzLabel]="subcategory.name_ru">
           </nz-option>
         </nz-select>
@@ -51,8 +51,8 @@
               let data of marketTable.data; let ind = index
             ">
             <td style="width: 50px">{{ (ind + 1)+((pageIndex-1)*10) }}</td>
-            <td style="width: 300px">{{data.name[0][0]?.value}}</td>
-            <td style="width: 350px">{{ data.description[0]?.value }}</td>
+            <td style="width: 300px">{{data.name_en}}</td>
+            <td style="width: 350px">{{ data.description_ru }}</td>
             <td>{{ data.price }}</td>
             <td>{{ data.minimal_count }}</td>
             <td>{{ data.minimum_count_for_order }}</td>
@@ -169,7 +169,7 @@
           <tr *ngFor="let data of warehouseBoards; let i = index">
             <td style="width: 50px">{{ i + 1 }}</td>
             <td>{{ data.user.first_name + ' ' + data.user.last_name }}</td>
-            <td>{{ data.name[0]?.value }}</td>
+            <td>{{ data.name_ru }}</td>
             <td>{{ data.minimal_count_for_board }}</td>
             <td>{{ data.quantity }}</td>
             <td (click)="onAddProductToExecutor(data)" class="action-button edit" style="width: 10px">

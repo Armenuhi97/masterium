@@ -199,17 +199,17 @@ export class ClientComponent implements OnInit {
   patchStateToForm(): void {
     const editingExecutor = this.user;
     this.validateForm.patchValue({
-      image: editingExecutor.user_details.image || '',
-      showingImage: editingExecutor.user_details.image || '',
-      firstName: editingExecutor.user_details.first_name || '',
-      lastName: editingExecutor.user_details.last_name || '',
-      phoneNumber: editingExecutor.user_details.phone_number?.slice(4) || '',
-      email: editingExecutor.user_details.email || '',
-      creditCardNumber: editingExecutor.user_details.credit_card_number || '',
-      companyId: editingExecutor.user_details.company_id || '',
-      companyName: editingExecutor.user_details.company_name || '',
-      companyType: editingExecutor.user_details.company_type || '',
-      isCooperativeUser: editingExecutor.user_details.is_cooperative_user,
+      image: editingExecutor.image || '',
+      showingImage: editingExecutor.image || '',
+      firstName: editingExecutor.first_name || '',
+      lastName: editingExecutor.last_name || '',
+      phoneNumber: editingExecutor.phone_number?.slice(4) || '',
+      email: editingExecutor.email || '',
+      creditCardNumber: editingExecutor.credit_card_number || '',
+      companyId: editingExecutor.company_id || '',
+      companyName: editingExecutor.company_name || '',
+      companyType: editingExecutor.company_type || '',
+      isCooperativeUser: editingExecutor.is_cooperative_user,
     });
   }
 

@@ -263,7 +263,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           console.log(res);
           console.log(this.subCategories);
-          
+
           this.subCategories.push(res);
           this.actionsAfterSuccessfullAction();
         }, () => {
@@ -333,33 +333,35 @@ export class MarketsComponent implements OnInit, OnDestroy {
     const formValue = this.validateForm.value;
 
     const sendingData: MarketProductRequest = {
-      image: [],
-      // product: {
-      id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].id : undefined,
-      price: formValue.price,
-      measurement: formValue.measurementType,
-      minimal_count: 1,
-      quantity: 0,
-      minimal_count_for_board: 0,
-      minimum_count_for_order: 1,
-      maximum_count_for_order: 10000,
-      vat: formValue.vat,
-      cost_price: formValue.costPrice,
-      product_code: formValue.productCode,
-      show_in_market: true,
-      product_subcategory: this.activeSubcategory.id,
-      // translation_key_description: this.isEditing ?
+      product: {
+        image: [],
+
+        id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].product.id : undefined,
+        price: formValue.price,
+        measurement: formValue.measurementType,
+        minimal_count: 1,
+        quantity: 0,
+        minimal_count_for_board: 0,
+        minimum_count_for_order: 1,
+        maximum_count_for_order: 10000,
+        vat: formValue.vat,
+        cost_price: formValue.costPrice,
+        product_code: formValue.productCode,
+        show_in_market: true,
+        product_subcategory: this.activeSubcategory.id,
+        // translation_key_description: this.isEditing ?
         // this.listOfData[this.editingMarketProductIndex].translation_key_description
         // : String('translation_key_description' + Date.now()),
-      // translation_key_name: this.isEditing ? this.listOfData[this.editingMarketProductIndex].translation_key_name
-      //   : String('translation_key_name' + Date.now()),
-      // },
-      name_en: formValue.nameInEnglish,
-      name_ru: formValue.nameInRussian,
-      name_ge: formValue.nameInGeorgian,
-      description_en: formValue.descriptionInEnglish,
-      description_ru: formValue.descriptionInRussian,
-      description_ge: formValue.descriptionInGeorgian
+        // translation_key_name: this.isEditing ? this.listOfData[this.editingMarketProductIndex].translation_key_name
+        //   : String('translation_key_name' + Date.now()),
+        // },
+        name_en: formValue.nameInEnglish,
+        name_ru: formValue.nameInRussian,
+        name_ge: formValue.nameInGeorgian,
+        description_en: formValue.descriptionInEnglish,
+        description_ru: formValue.descriptionInRussian,
+        description_ge: formValue.descriptionInGeorgian
+      }
     };
     if (this.isEditing) {
       this.editMarketProductWithImages(sendingData);
@@ -373,7 +375,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$),
         switchMap((response: any) => {
-          sendingData.image = response.map((image, index) => {
+          sendingData.product.image = response.map((image, index) => {
             return {
               image_url: image.url,
               is_primary: index === 0,
@@ -381,13 +383,13 @@ export class MarketsComponent implements OnInit, OnDestroy {
           });
           this.imagesList.forEach((image) => {
             if (image.imageUrl) {
-              sendingData.image.push({
+              sendingData.product.image.push({
                 image_url: image.imageUrl,
                 is_primary: false
               });
             }
           });
-          return this.editMarketProduct(sendingData, sendingData.id);
+          return this.editMarketProduct(sendingData, sendingData.product.id);
         })
       )
       .subscribe(() => {
@@ -403,7 +405,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$),
         switchMap((response: any) => {
-          sendingData.image = response.map((image, index) => {
+          sendingData.product.image = response.map((image, index) => {
             return {
               image_url: image.url,
               is_primary: index === 0,
@@ -467,24 +469,26 @@ export class MarketsComponent implements OnInit, OnDestroy {
     // else {
     //   this.editingMarketProductIndex = ((this.pageIndex - 1) * 10) + index;
     // }
+    console.log(marketProduct);
+
     this.validateForm.patchValue({
-      price: marketProduct.price,
-      measurementType: marketProduct.measurement,
-      vat: marketProduct.vat,
-      costPrice: marketProduct.cost_price,
+      price: marketProduct.product.price,
+      measurementType: marketProduct.product.measurement,
+      vat: marketProduct.product.vat,
+      costPrice: marketProduct.product.cost_price,
       // quantity: marketProduct.quantity,
       // minimalCount: marketProduct.product.minimal_count,
       // showInMarket: marketProduct.product.show_in_market,
-      productCode: marketProduct.product_code,
-      nameInEnglish: marketProduct.name_en,
-      nameInRussian: marketProduct.name_ru,
-      nameInGeorgian: marketProduct.name_ge,
-      descriptionInEnglish: marketProduct.description_en,
-      descriptionInRussian: marketProduct.description_ru,
-      descriptionInGeorgian: marketProduct.description_ge,
+      productCode: marketProduct.product.product_code,
+      nameInEnglish: marketProduct.product.name_en,
+      nameInRussian: marketProduct.product.name_ru,
+      nameInGeorgian: marketProduct.product.name_ge,
+      descriptionInEnglish: marketProduct.product.description_en,
+      descriptionInRussian: marketProduct.product.description_ru,
+      descriptionInGeorgian: marketProduct.product.description_ge,
       photo: ['', []],
     });
-    marketProduct.images.forEach((image, i) => {
+    marketProduct.product.images.forEach((image, i) => {
       this.imagesList.push({
         name: 'XXX',
         url: image.image_url,
@@ -520,7 +524,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   deleteMarketProduct(marketProduct: MarketsProduct, index: number): void {
     this.marketService
-      .deleteMarketProduct(marketProduct.id)
+      .deleteMarketProduct(marketProduct.product.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.showSuccessMessage();
@@ -535,7 +539,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
   calculateRedsCount(): void {
     this.redsCount = 0;
     this.listOfData.forEach(product => {
-      if (product.quantity < product.minimal_count) {
+      if (product.product.quantity < product.product.minimal_count) {
         this.redsCount += 1;
       }
     });
@@ -549,13 +553,13 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   changeProductCount(): void {
     this.marketService.changeProductQuantity(
-      this.listOfData[this.changingCountProductIndex].id,
+      this.listOfData[this.changingCountProductIndex].product.id,
       this.changeCountControl.value
     ).pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.showSuccessMessage();
         this.closeModal();
-        this.listOfData[this.changingCountProductIndex].quantity += this.changeCountControl.value;
+        this.listOfData[this.changingCountProductIndex].product.quantity += this.changeCountControl.value;
       }, () => {
         this.showFailMessage();
       });
