@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { EssenceType, EssenceTypes } from 'src/app/core/models/essence';
 import { Messages } from '../../core/models/messages';
 import { UtilsService } from './utils.service';
-import {EssenceItem} from '../../core/models/utils';
+import { EssenceItem } from '../../core/models/utils';
 
 @Component({
   selector: 'app-utils',
@@ -31,7 +31,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
   }
 
   initEssenceList(): void {
-    
+
     this.essenceList = [
       {
         buttonLabel: 'Добавить помощь',
@@ -69,7 +69,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
         type: EssenceType.userAttachmentType
       },
     ];
-    
+
   }
 
   addEssenceItem(event: { essenceType: string, essenceValue: EssenceItem }): void {
@@ -77,8 +77,13 @@ export class UtilsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(() => {
-        this.showSuccesMessageAndUpdateData();
+      .subscribe((value) => {
+        let item = this.essenceList.filter((data) => { return data.type == event.essenceType });
+        if (item && item.length) {
+          item[0].itemsList.push(value)
+          // filter((data)=>{return data.id == event.id})
+        }
+        // this.showSuccesMessageAndUpdateData();
       }, () => {
         this.showFailMessage();
       });
@@ -90,7 +95,14 @@ export class UtilsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe(() => {
-        this.showSuccesMessageAndUpdateData();
+        let item = this.essenceList.filter((data) => { return data.type == event.type });
+        if (item && item.length) {
+          let value = item[0].itemsList.filter((data) => { return data.id == event.id });
+          if (value && value[0]){
+            let index = item[0].itemsList.indexOf(value[0]);
+            item[0].itemsList.splice(index,1)
+          }
+        }
       }, () => {
         this.showFailMessage();
       });
@@ -98,12 +110,21 @@ export class UtilsComponent implements OnInit, OnDestroy {
   }
 
   editEssenceItem(event: { essenceType: string, essenceValue: any, id: number }): void {
+
     this.utilsService.editEssenceItem(event.essenceType, event.essenceValue, event.id)
       .pipe(
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(() => {
-        this.showSuccesMessageAndUpdateData();
+      .subscribe((data) => {
+        let item = this.essenceList.filter((el) => { return el.type == event.essenceType});
+        if (item && item.length) {
+          let value = item[0].itemsList.filter((el) => { return el.id == event.id });
+          if (value && value[0]){
+            let index = item[0].itemsList.indexOf(value[0])
+            item[0].itemsList[index]=data
+          }
+        }
+        // this.showSuccesMessageAndUpdateData();
       }, () => {
         this.showFailMessage();
       });
@@ -125,7 +146,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
       this.getSpecializations(),
       this.getSubservices(),
       this.getUserAttachmentTypes(),
-    ]).pipe(takeUntil(this.unsubscribe$)).subscribe(results => {      
+    ]).pipe(takeUntil(this.unsubscribe$)).subscribe(results => {
       this.helps = results[0];
       this.measurementTypes = results[1];
       this.specializations = results[2];

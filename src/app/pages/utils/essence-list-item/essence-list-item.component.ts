@@ -99,62 +99,62 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
           description_ru: this.validateForm.value.descriptionInRussian,
           description_en: this.validateForm.value.descriptionInEnglish,
 
-          help: {
-            translation_key_title: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].translation_key_title : `help_title___${Date.now()}`,
-            translation_key_description: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].translation_key_description : `help_description___${Date.now()}`
-          }
+          // help: {
+          //   translation_key_title: this.isEditing ?
+          //     this.itemsList[this.editingEssenceIndex].translation_key_title : `help_title___${Date.now()}`,
+          //   translation_key_description: this.isEditing ?
+          //     this.itemsList[this.editingEssenceIndex].translation_key_description : `help_description___${Date.now()}`
+          // }
         };
         sendingData = Object.assign(sendingData, titles)
       } else if (this.type === EssenceType.measurementType) {
         sendingData = {
-          measurement_type: {
-            translation_key: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].translation_key : `measurement_type___title${Date.now()}`,
-            code: (this.validateForm.value.code).toUpperCase()
+          // measurement_type: {
+          // translation_key: this.isEditing ?
+          //   this.itemsList[this.editingEssenceIndex].translation_key : `measurement_type___title${Date.now()}`,
+          code: (this.validateForm.value.code).toUpperCase()
 
-          },
+          // },
         };
         sendingData = Object.assign(sendingData, titles)
 
       } else if (this.type === EssenceType.specialization) {
-        sendingData = {
-          specialization: {
-            translation_key: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].translation_key : `specialization___title${Date.now()}`
-          }
-        };
+        sendingData = {}
+        //   specialization: {
+        //     translation_key: this.isEditing ?
+        //       this.itemsList[this.editingEssenceIndex].translation_key : `specialization___title${Date.now()}`
+        //   }
+        // };
         sendingData = Object.assign(sendingData, titles)
 
         if (typeof this.validateForm.get('icon').value === 'string') {
-          sendingData.specialization.icon = this.validateForm.get('icon').value;
+          sendingData.icon = this.validateForm.get('icon').value;
           this.emitValues(sendingData);
         } else {
           this.mainService.uploadFile(this.validateForm.get('icon').value)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((res) => {
-              sendingData.specialization.icon = res.url;
+              sendingData.icon = res.url;
               this.emitValues(sendingData);
             });
         }
       } else if (this.type === EssenceType.subserviceType) {
         sendingData = {
           // title: titles,
-          subservice_type: {
-            translation_key: this.isEditing ?
-              this.itemsList[this.editingEssenceIndex].translation_key : `subservice_type___title${Date.now()}`
-          }
+          // subservice_type: {
+          //   translation_key: this.isEditing ?
+          //     this.itemsList[this.editingEssenceIndex].translation_key : `subservice_type___title${Date.now()}`
+          // }
         };
         sendingData = Object.assign(sendingData, titles)
 
       } else if (this.type === EssenceType.userAttachmentType) {
         sendingData = {
           // title: titles,
-          user_attachment_type: {
-            translation_key: this.isEditing ? this.itemsList[this.editingEssenceIndex].translation_key :
-              `user_attachment_type${Date.now()}`
-          }
+          // user_attachment_type: {
+          //   translation_key: this.isEditing ? this.itemsList[this.editingEssenceIndex].translation_key :
+          //     `user_attachment_type${Date.now()}`
+          // }
         };
         sendingData = Object.assign(sendingData, titles)
 
@@ -169,6 +169,7 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
 
       if (this.type !== EssenceType.specialization) {
         this.emitValues(sendingData);
+
       }
       this.closeModal();
     } else if (this.validateForm.get('icon').invalid) {
@@ -181,7 +182,7 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
       this.edit.emit({
         essenceType: this.type,
         essenceValue: sendingData,
-        id: this.itemsList[this.editingEssenceIndex]?.id 
+        id: this.itemsList[this.editingEssenceIndex]?.id
       });
     } else {
       this.add.emit({
