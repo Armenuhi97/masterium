@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ServiceResponse, Subcategory, SubserviceResponse, SubserviceType} from '../../../../core/models/services';
-import {Form, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ServicesService} from '../../services.service';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
-import {Measurment} from '../../../../core/models/measurment';
-import {UtilsService} from '../../../../core/services/utils.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ServiceResponse, Subcategory, SubserviceResponse, SubserviceType } from '../../../../core/models/services';
+import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ServicesService } from '../../services.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { Measurment } from '../../../../core/models/measurment';
+import { UtilsService } from '../../../../core/services/utils.service';
 
 @Component({
   selector: 'app-create-edit-subservice',
@@ -47,12 +47,12 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
       this.subservices.forEach(subservice => {
         this.items = this.validateForm.get('items') as FormArray;        
         const subserviceTypeIndex =
-          this.subserviceTypes.findIndex(el => el.id === subservice.id);
-        this.listOfSelectedValue.push(subservice.id);
+          this.subserviceTypes.findIndex(el => el.id === subservice.subservice_type.id);
+        this.listOfSelectedValue.push(subservice.subservice_type.id);
         this.listOfSelectedValue = [...this.listOfSelectedValue];
         this.items.push(
           this.createItem(
-            subservice.id,
+            subservice.subservice_type.id,
             this.subserviceTypes[subserviceTypeIndex].name_en,
             subservice.price,
             subservice.measurement_type.id,
@@ -63,10 +63,10 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSubserviceTypes(): void {
+  getSubserviceTypes(): void {    
     this.servicesService.getSubserviceTypes()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((res) => {
+      .subscribe((res) => {        
         this.subserviceTypes = res;
         this.bindState();
       });
@@ -96,12 +96,12 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
     const newId = selectedTypes.filter(x => !existingIds.includes(x));
     const oldId = selectedTypes.filter(x => existingIds.includes(x));
     if (newId[0]) {
-      const index = this.subserviceTypes.findIndex(el => el.subservice_type.id === newId[0]);
+      const index = this.subserviceTypes.findIndex(el => el.id === newId[0]);
       this.items.push(this.createItem(newId[0], this.subserviceTypes[index].name_ru));
     } else {
       for (let i = 0; i < existingIds.length; i++) {
         const element = existingIds[i];
-        if (!selectedTypes.includes(element)){
+        if (!selectedTypes.includes(element)) {
           this.items.removeAt(i);
           return;
         }

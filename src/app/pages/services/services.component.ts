@@ -61,7 +61,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeServiceIndex = index;
     this.servicesService.getSubservicesByService(service.id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {
+      .subscribe(res => {        
         this.subservices = res;
       });
   }
@@ -269,12 +269,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   handleSubserviceChange(event): void {
     const sendingData: SubserviceRequest = {
-      service_id: this.services[this.activeServiceIndex].service.id,
+      service_id: this.services[this.activeServiceIndex].id,
       subservices: []
-    };
+    };        
     sendingData.subservices = event.items.map((item) => {
       return {
-        service: this.services[this.activeServiceIndex].service.id,
+        service: this.services[this.activeServiceIndex].id,
         subservice_type: item.id,
         price: item.price,
         measurement_type: item.measurementType,
@@ -282,7 +282,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
       };
     });
     if (this.isEditing) {
-      this.servicesService.editSubservice(sendingData, this.services[this.activeServiceIndex].service.id)
+      this.servicesService.editSubservice(sendingData, this.services[this.activeServiceIndex].id)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(res => {
           this.actionsAfterSuccessfullAction();

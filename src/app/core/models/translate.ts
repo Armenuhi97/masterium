@@ -6,6 +6,9 @@ export interface Language {
 }
 
 export interface TranslationItem {
+  name_en?: string
+  name_ge?: string
+  name_ru?: string
   id?: number;
   key?: string;
   value?: string;

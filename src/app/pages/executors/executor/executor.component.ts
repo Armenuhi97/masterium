@@ -343,18 +343,18 @@ export class ExecutorComponent implements OnInit {
       workScheduleEnd: this.workScheduleEnd,
       workArea: editingExecutor.user_schedule.city || '',
       bet: editingExecutor.user_schedule.tarif || '',
-      documents: editingExecutor.user_attachments.map((attachment) => {        
+      documents: editingExecutor.user_attachments.map((attachment) => {                
         const items = this.validateForm.get('documents') as FormArray;
         this.selectedUserAttachmentTypes.push(
-          attachment.user_attachment.attachment_type.id
+          attachment.attachment_type.id
         );
         items.push(
           this._createItem(
-            attachment.user_attachment.attachment_type.id,
-            attachment.attachment_type[0].value,
+            attachment.attachment_type.id,
+            attachment.attachment_type.name_ru,
             false,
             false,
-            attachment.user_attachment.file_url
+            attachment.file_url
           )
         );
       }),

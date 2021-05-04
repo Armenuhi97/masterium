@@ -6,5 +6,10 @@ export interface Measurment {
         code: string,
         translation_key: string
     };
+    id?: number,
+    code?: string,
+    name_en:string
+    name_ru:string
+    name_ge:string
     title: TranslationItem[];
 }

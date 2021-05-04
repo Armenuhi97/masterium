@@ -142,11 +142,11 @@
                 <tbody>
                     <tr *ngFor="let data of clientDisputHistory; let ind = index">
                         <td style="width:10px">{{ ind + 1 }}</td>
-                        <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data.order?.order_number
+                        <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data?.order_number
                                 }}</a> </td>
                         <td>{{ data.done_at ? (data.done_at | date: 'short') : 'В процесе'}}</td>
                         <td>{{ data.price }}</td>
-                        <td>{{data.order?.status.name_ru}}</td>
+                        <td>{{data?.status.name_ru}}</td>
                     </tr>
                 </tbody>
             </nz-table>

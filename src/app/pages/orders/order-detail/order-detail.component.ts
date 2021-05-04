@@ -186,11 +186,12 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               url: image.image_url,
             });
           });
+        console.log(sub);
         
           
           this.subgroups[this.subgroups.length - 1].suborderMain = sub.suborder;
           this.subgroups[this.subgroups.length - 1].executors = sub.executor;
-          this.subgroups[this.subgroups.length - 1].status = sub.status_name[0].value;
+          this.subgroups[this.subgroups.length - 1].status = sub.suborder.status.name_ru;
           this.subgroups[this.subgroups.length - 1].disput = sub.disput;
           this.subgroups.map(o => o.isEditing = false);
         });

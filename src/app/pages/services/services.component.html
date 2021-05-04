@@ -62,7 +62,7 @@
     <ng-container *ngIf="subservices?.length > 0">
       <div class="cascade-link-item" *ngFor="let subservice of subservices;let i = index">
         <app-service-item (delete)="deleteService(subservice.id, i)" [hideActions]="true"
-          [price]="subservice.price" [title]="subservice.name_ru">
+          [price]="subservice.price" [title]="subservice.subservice_type.name_ru">
         </app-service-item>
       </div>
     </ng-container>

@@ -136,7 +136,7 @@
         <nz-divider></nz-divider>
         <h3>Характеристики</h3>
         <div nz-row [nzGutter]="24">
-          <div nz-col [nzSpan]="8">
+          <div nz-col [nzSpan]="6">
             <nz-form-label class="inline-labels" nzRequired>Цена</nz-form-label>
             <nz-form-item>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
@@ -144,7 +144,7 @@
               </nz-form-control>
             </nz-form-item>
           </div>
-          <div nz-col [nzSpan]="8">
+          <div nz-col [nzSpan]="6">
             <nz-form-label class="inline-labels" nzRequired>Единица измерения</nz-form-label>
             <nz-form-item>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
@@ -156,7 +156,7 @@
               </nz-form-control>
             </nz-form-item>
           </div>
-          <div nz-col [nzSpan]="8">
+          <div nz-col [nzSpan]="6">
             <nz-form-label class="inline-labels" nzRequired>Код продукта</nz-form-label>
             <nz-form-item>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
@@ -164,8 +164,17 @@
               </nz-form-control>
             </nz-form-item>
           </div>
+          <div nz-col [nzSpan]="6">
+            <nz-form-label class="inline-labels" nzRequired>Гарантия в днях</nz-form-label>
+            <nz-form-item>
+              <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <input nz-input formControlName="guarantee_day_count" type="number" placeholder="Введите гарантия в днях" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- guarantee_day_count -->
         </div>
-        <div nz-row [nzGutter]="24">
+        <!-- <div nz-row [nzGutter]="24">
           <div nz-col [nzSpan]="12">
             <nz-form-label class="inline-labels" nzRequired>НДС</nz-form-label>
             <nz-form-item>
@@ -182,7 +191,7 @@
               </nz-form-control>
             </nz-form-item>
           </div>
-        </div>
+        </div> -->
         <!-- <label nz-checkbox formControlName="showInMarket">Показать в магазине</label> -->
         <div>
           <nz-upload nzListType="picture" [nzRemove]="handleRemove" [(nzFileList)]="imagesList"

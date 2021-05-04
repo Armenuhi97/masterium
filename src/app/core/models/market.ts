@@ -1,3 +1,4 @@
+import { Measurment } from './measurment';
 import { SubcategoryDetails } from './services';
 import { TranslationItem } from './translate';
 import { User } from './user';
@@ -12,12 +13,12 @@ export interface MarketsProduct {
     product_code?: string;
     translation_key_name: string;
     translation_key_description: string;
-    measurement: number;
+    measurement: Measurment;
     product_category_id: number;
     product_subcategory: number;
     vat?: string;
     cost_price?: number;
-
+    guarantee_day_count:number
     name_en: string;
     name_ru: string;
     name_ge: string,
@@ -63,7 +64,8 @@ export interface MarketProductItem {
   images: MarketProductImage[];
 }
 export interface MarketProductRequest {
-  product: {
+  // product: {
+    guarantee_day_count:number
     id: number;
     price: number;
     measurement: number;
@@ -89,7 +91,7 @@ export interface MarketProductRequest {
     description_en?: string,
     description_ru?: string,
     description_ge?: string
-  };
+  // };
 }
 export interface WarehouseRequest {
   product: {

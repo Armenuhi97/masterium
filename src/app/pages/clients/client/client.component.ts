@@ -110,6 +110,8 @@ export class ClientComponent implements OnInit {
     )
       .pipe(takeUntil(this._unsubscribe$)).subscribe((data: ServerResponce<any[]>) => {
         this.disputTotal = data.count;
+        console.log(data);
+        
         this.clientDisputHistory = data.results;
       });
   }

@@ -18,7 +18,7 @@ interface Suborder {
     order: number;
     real_price: number;
     start_date: string;
-    status: number;
+    status: TranslationItem;
     suborder_name: number;
     subservice: any;
     comment?: string;
@@ -89,7 +89,7 @@ export interface OrderSubgroupDragItem {
     order: number;
     real_price: number;
     start_date: string;
-    status: number;
+    status: TranslationItem;
     suborder_name: number;
     subservice: any;
     payed?: boolean;
