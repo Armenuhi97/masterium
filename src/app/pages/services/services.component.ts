@@ -22,6 +22,8 @@ import { MainService } from '../../core/services/main.service';
 })
 export class ServicesComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject();
+  showClosedHoursList:boolean=false;
+  activeSubserviceId:number;
   categories = [];
   subCategories: Subcategory[] = [];
   services: ServiceResponse[] = [];
@@ -266,7 +268,11 @@ export class ServicesComponent implements OnInit, OnDestroy {
         });
     }
   }
-
+  openClosedHoursModal(id:number){
+    this.showClosedHoursList=true;
+    this.activeSubserviceId=id
+   
+  }
   handleSubserviceChange(event): void {
     const sendingData: SubserviceRequest = {
       service_id: this.services[this.activeServiceIndex].id,

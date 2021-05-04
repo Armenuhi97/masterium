@@ -1,0 +1,62 @@
+<nz-modal [nzVisible]="true" [nzTitle]="'Закрытые часы'" (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+    <nz-table [nzTotal]="totalCount" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" [nzFrontPagination]="false"
+        (nzPageIndexChange)="pageIndexChange($event)" nzBordered #closedHours [nzData]="suborderClosedHoursList"
+        class="mt-3">
+        <thead>
+            <tr>
+                <th>N</th>
+                <th>От</th>
+                <th>До</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of closedHours.data; let ind = index">
+                <td style="width:10px">{{ ind + 1 }}</td>
+                <td>{{ data.start |date:'yyyy-MM-dd'}}</td>
+                <td>{{ data.end |date:'yyyy-MM-dd'}}</td>
+
+                <td style="width: 10px"><i nz-icon nzType="delete"></i></td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <!-- <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+    <nz-form-item>
+      <nz-form-label nzRequired>RU</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="russian" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzRequired>EN</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="english" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzRequired>GE</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="georgian" type="text" placeholder="" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+        <label nz-checkbox formControlName="isPopular">Показать на главном меню</label>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="clearfix">
+      <nz-upload nzListType="picture" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+        [nzHeaders]="{ authorization: 'authorization-text' }">
+        <button nz-button><i nz-icon nzType="upload"></i>Upload</button>
+      </nz-upload>
+    </div>
+  </form> -->
+</nz-modal>
+
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>

@@ -112,11 +112,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  getOrderById(id: number): void {
+  getOrderById(id: number): void {    
     this.ordersService
       .getOrderById(id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((order) => {
+      .subscribe((order) => {        
         this.subgroups = [
           {
             groupItemList: order.subservices.map((subservice: any) => ({
@@ -136,7 +136,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             groupItemList: order.product.map((product: any) => ({
               type: DragItemTypes.Product,
               name: product.name_ru,
-              id: product.id,
+              id: product.product,
               currentPrice: product.current_price,
               realPrice: product.real_price,
               quantity: product.quantity,
@@ -158,11 +158,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         ];
         order.suborder.forEach((sub) => {
           this.addGroup(false, order);
-          sub.products.forEach((product: any) => {
+          sub.products.forEach((product: any) => {            
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Product,
-              name: product.product.name[0].value,
-              id: product.product.id,
+              name: product.name_ru,
+              id: product.product,
               currentPrice: product.current_price,
               realPrice: product.real_price,
               quantity: product.quantity,
@@ -185,9 +185,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               id: image.id,
               url: image.image_url,
             });
-          });
-        console.log(sub);
-        
+          });       
           
           this.subgroups[this.subgroups.length - 1].suborderMain = sub.suborder;
           this.subgroups[this.subgroups.length - 1].executors = sub.executor;
@@ -430,7 +428,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }),
           product: suborder.groupItemList
             .filter((item) => item.type === DragItemTypes.Product)
-            .map((groupItemListItem) => {              
+            .map((groupItemListItem) => { 
+                           
               return {
                 product_id: groupItemListItem.id,
                 quantity: groupItemListItem.quantity,

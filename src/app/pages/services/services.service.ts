@@ -79,4 +79,7 @@ export class ServicesService {
   editSubservice(subservice: SubserviceRequest, id: number): Observable<SubserviceResponse[]> {
     return this.httpClient.post<SubserviceResponse[]>(`services/edit-service-subservices/${id}/`, subservice);
   }
+  getSubserviceClosedHours(id:number,page:number){
+    return this.httpClient.get(`services/closed-hour/?subservice=${id}&page=${page}`)
+  }
 }
