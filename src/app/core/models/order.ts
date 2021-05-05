@@ -23,6 +23,8 @@ interface Suborder {
     subservice: any;
     comment?: string;
     guarantee_period: number;
+    extra_service_price:number,
+    extra_service_text:string
   };
   suborder_real_price: number;
   disput: [];
@@ -155,6 +157,8 @@ export interface SuborderItem {
     services_price: number;
     guarantee_period: number;
     comment: string;
+    extra_service_price?: number,
+    extra_service_text?: string,
   };
   order_subservices: SuborderService[];
   executor: SuborderExecutor[];
@@ -164,8 +168,7 @@ export interface SuborderItem {
 
 export interface OrderRequest {
   order_id: number;
-  extra_service_price: number,
-  extra_service_text: string,
+
   removed_suborders: RemovedOrder[];
   suborders: SuborderItem[];
 }

@@ -53,7 +53,7 @@
     </div>
   </div>
   <div class="container" *ngIf="order?.status?.status_code !== 'ACC'">
-    <div class="order-ordering d-flex justify-content-between">
+    <div class="order-ordering d-flex justify-content-between flex-wrap">
       <nz-tabset>
         <nz-tab nzTitle="Сервисы">
           <app-category-autocomplete placeholder="Добавить сервис" (search)="searchForServices($event)"
@@ -72,6 +72,7 @@
               <div>
                 <p class="m-0">{{subgroupItem.name}}</p>
                 <small>{{subgroupItem.subservice}}</small>
+                <div class="used" *ngIf="checkISelect(subgroupItem)">Использовано</div>
               </div>
               <nz-form-item class="price-control">
                 <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
@@ -79,7 +80,7 @@
                     placeholder="Цена" />
                 </nz-form-control>
               </nz-form-item>
-              <!--            <i class="edit-drag" nz-icon nzType="edit" nzTheme="outline" (click)="editSubgroupItem(subgroups[0], i)"></i>-->
+              <!--<i class="edit-drag" nz-icon nzType="edit" nzTheme="outline" (click)="editSubgroupItem(subgroups[0], i)"></i>-->
             </div>
           </div>
         </nz-tab>
@@ -90,7 +91,7 @@
           <div cdkDropList id="{{subgroups[1].id}}" [cdkDropListData]="subgroups[1].groupItemList"
             [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
             class="drag-list fixed" (cdkDropListDropped)="drop($event, subgroups[1])">
-            <div class="drag-box justif-content-start"
+            <div class="drag-box justif-content-start flex-wrap"
               *ngFor="let subgroupItem of subgroups[1].groupItemList; let i = index" cdkDrag>
               <p class="m-0">{{subgroupItem.name}}</p>
               <nz-form-item class="ml-auto mr-1 price-control">
@@ -105,6 +106,8 @@
                     placeholder="Цена" />
                 </nz-form-control>
               </nz-form-item>
+              <div class="used" *ngIf="checkISelectProduct(subgroupItem)">Использовано
+                {{checkISelectProduct(subgroupItem)}}</div>
             </div>
           </div>
         </nz-tab>
@@ -134,7 +137,8 @@
               </div>
               <div class="d-flex align-items-start">
                 <div class="d-flex align-items-center">
-                  <button *ngIf="isShowExtraAddBtb(subgroup)" (click)="addExtra(i+3)" nz-button nzType="default" nzShape="circle">
+                  <button *ngIf="isShowExtraAddBtb(subgroup)" (click)="addExtra(i+3)" nz-button nzType="default"
+                    nzShape="circle">
                     <i nz-icon nzType="plus"></i>
                   </button>
                   <i class="d-block edit-group" nz-icon nzType="edit" nzTheme="outline" (click)="editGroup(i + 3)"></i>
@@ -221,7 +225,7 @@
           </nz-form-control>
         </nz-form-item>
         <div nz-row [nzGutter]="24">
-         
+
           <div nz-col [nzSpan]="12">
             <nz-form-item>
               <nz-form-control>
@@ -230,9 +234,9 @@
               </nz-form-control>
             </nz-form-item>
           </div>
-          
+
         </div>
-       
+
       </form>
     </nz-modal>
 

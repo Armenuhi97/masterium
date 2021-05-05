@@ -12,7 +12,7 @@ import { OrdersService } from '../orders.service';
 export class SubordersListComponent implements OnInit, OnDestroy {
   @Output() editSuborder: EventEmitter<OrderSubgroupDragItem> = new EventEmitter<OrderSubgroupDragItem>();
   @Output() delete: EventEmitter<number> = new EventEmitter<number>();
-  @Input() set suborders(subs: OrderSubgroupDragItem[]) {
+  @Input() set suborders(subs: OrderSubgroupDragItem[]) {    
     this.showSuborders = subs.filter(order => order.suborderMain?.id);        
   }
   private _unsubscribe = new Subject<void>()

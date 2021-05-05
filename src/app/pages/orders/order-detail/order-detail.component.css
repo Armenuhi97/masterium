@@ -39,7 +39,10 @@
 .status-primary {
   color: #ffad40;
 }
-
+.used{
+  color: grey;
+  width: 100%;
+}
 .drag-box {
   padding: 10px 10px;
   border-bottom: solid 1px #ccc;

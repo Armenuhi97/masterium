@@ -1,11 +1,13 @@
 import { DatePipe } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import * as moment from "moment";
 import { Subject } from "rxjs";
-import { map, switchMap, takeUntil } from "rxjs/operators";
+import { map, retry, switchMap, takeUntil } from "rxjs/operators";
 import { ClosedHoursResponce } from "src/app/core/models/closed-hours";
 import { ServerResponce } from "src/app/core/models/server-responce";
 import { ServicesService } from "../../services.service";
+// import * as moment from 'moment-timezone';
 
 @Component({
     selector: 'app-subservice-closed-hours',
@@ -51,6 +53,10 @@ export class SubserviceClosedHoursComponent {
     closeModal() {
         this.validateForm.reset();
         this.close.emit()
+    }
+    formatDate(date):string{        
+        let day = moment(date,moment.ISO_8601).format('yyyy-MM-DD HH:mm');
+        return day
     }
     addClosedHours() {
         if (this.validateForm.valid) {

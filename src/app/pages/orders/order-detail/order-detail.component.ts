@@ -155,6 +155,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       .getOrderById(id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((order) => {
+
         this.subgroups = [
           {
             groupItemList: order.subservices.map((subservice: any) => ({
@@ -174,7 +175,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             groupItemList: order.product.map((product: any) => ({
               type: DragItemTypes.Product,
               name: product.name_ru,
-              id: product.product,
+              id: product.product && product.product.id ? product.product.id : product.product,
               currentPrice: product.current_price,
               realPrice: product.real_price,
               quantity: product.quantity,
@@ -194,6 +195,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             isEditing: false
           },
         ];
+
         order.suborder.forEach((sub) => {
           this.addGroup(false, order);
           sub.products.forEach((product: any) => {
@@ -206,17 +208,38 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               quantity: product.quantity,
             });
           });
+          if (sub.suborder.extra_service_price || sub.suborder.extra_service_text) {
+            this.subgroups[this.subgroups.length - 1].groupItemList.push({
+              type: DragItemTypes.Extra,
+              name: sub.suborder.extra_service_text,
+              currentPrice: sub.suborder.extra_service_price,
+
+            });
+          }
           sub.subservice.forEach((service: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Service,
               name: service.subservice.service.name_ru,
-              subservice: service.subservice.subservice_type[0].value,
+              subservice: service.subservice.subservice_type.name_ru,
               currentPrice: service.current_price,
               serviceId: service.id,
               subserviceId: service.subservice.id,
               discountPrice: service.real_price,
             });
           });
+
+
+          // sub.subservice.forEach((service: any) => {
+          //   console.log();
+
+          //   this.subgroups[this.subgroups.length - 1].groupItemList.push({
+          //     type: DragItemTypes.Extra,
+          //     name: service.subservice.service.name_ru,
+          //     currentPrice: service.current_price,
+
+          //   });
+          // });
+
           sub.suborder.description_image.forEach((image: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Picture,
@@ -231,10 +254,42 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           this.subgroups[this.subgroups.length - 1].disput = sub.disput;
           this.subgroups.map(o => o.isEditing = false);
         });
+
         this.order = order;
       });
   }
+  checkISelect(subgroupItem) {
+    let count = 0;
+    let group=this.subgroups.slice(3);   
+    for (let subgroup of group) {      
+      if (subgroup.isEditing) {        
+        for (let item of subgroup.groupItemList) {
+          if (item.subserviceId == subgroupItem.subserviceId) {
+            count++;
+            break
+          }
+        }
+      }
+    }
+    return count > 0 ? true : false
 
+  }
+  checkISelectProduct(subgroupItem) {
+    let count = 0;
+    let group=this.subgroups.slice(3);   
+    for (let subgroup of group) {      
+      if (subgroup.isEditing) {        
+        for (let item of subgroup.groupItemList) {        
+          
+          if (item.subserviceId == subgroupItem.subserviceId) {
+            count+=item.quantity;            
+          }
+        }
+      }
+    }
+    return count
+
+  }
   onEditGroupSave(): void {
     if (this.editGroupForm.invalid) {
       this.nzMessagesService.error(Messages.failValidation);
@@ -345,10 +400,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       );
     } else {
       ////delete form
+      const index = this.subgroups.findIndex((val) => {
+        return val.id === item.id;
+      });
 
-      if (this.subgroups && this.subgroups[3] && this.subgroups[3].suborderMain) {
-        this.subgroups[3].suborderMain = null
+      if (this.subgroups && this.subgroups[index] && this.subgroups[index].suborderMain) {
+        this.subgroups[index].executors = []
       }
+
+
       // if (this.editGroupForm){
       //   this.editGroupForm.reset()
       // }
@@ -361,7 +421,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     }
   }
   addExtra(index: number) {
-    console.log(index);
     this.isShowExtraOrderModal = true;
     this.initExtraOrderGroup();
     this.extraOrderForm.get('index').setValue(index)
@@ -384,15 +443,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     if (subgroupItem.type === DragItemTypes.Picture) {
       index = this.subgroups.findIndex((sub) => sub.id === 'group-3');
     }
-
+    //delete
     if (subgroupItem.type === DragItemTypes.Service) {
-      if (this.subgroups && this.subgroups[3] && this.subgroups[3].suborderMain) {
-        this.subgroups[3].suborderMain = null
+      const index1 = this.subgroups.findIndex((val) => {
+        return val.id === subgroup.id;
+      });
+      if (this.subgroups && this.subgroups[index1] && this.subgroups[index1].suborderMain) {
+        this.subgroups[index1].executors = []
       }
     }
-    // if (subgroupItem.type === DragItemTypes.Extra) {
-    //   index = this.subgroups.findIndex((sub) => sub.id === 'group-4');
-    // }
 
     subgroup.groupItemList.splice(position, 1);
     if (subgroupItem.type !== DragItemTypes.Extra)
@@ -468,8 +527,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
     const sendingData: OrderRequest = {
       order_id: this.id,
-      extra_service_price: (extraOrder && extraOrder[0]) ? extraOrder[0].currentPrice : null,
-      extra_service_text: (extraOrder && extraOrder[0]) ? extraOrder[0].name : null,
+
       removed_suborders: this.removedSuborders.map((id) => {
         return {
           id,
@@ -504,7 +562,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             .map((groupItemListItem) => {
 
               return {
-                product_id: groupItemListItem.id,
+                product_id: groupItemListItem.id && groupItemListItem.id.id ? groupItemListItem.id.id : groupItemListItem.id,
                 quantity: groupItemListItem.quantity,
                 real_price: groupItemListItem.realPrice,
                 current_price: groupItemListItem.currentPrice,
@@ -518,6 +576,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             start_date: suborder.suborderMain?.start_date,
             suborder_name: '',
             suborder_id: suborder.suborderMain?.id || null,
+            extra_service_price: this.checkPropertyValue(this.checkPropertyValue(suborder.groupItemList
+              .filter((item) => item.type === DragItemTypes.Extra), 0, 0), 'currentPrice', 0),
+            extra_service_text: this.checkPropertyValue(this.checkPropertyValue(suborder.groupItemList
+              .filter((item) => item.type === DragItemTypes.Extra), 0), 'name'),
             products_price: suborder.groupItemList
               .filter((item) => item.type === DragItemTypes.Product)
               .reduce(
@@ -547,7 +609,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.removedSuborders = [];
       });
   }
-
+  public checkPropertyValue(object: object | Array<any>, element: string | number, returnValue = null) {
+    return (object != null && object[element]) ? object[element] : returnValue;
+  }
   executorsChange(selectedExecutors: User[]): void {
     let isMainUserDeleted = true;
     selectedExecutors.forEach((executor) => {
