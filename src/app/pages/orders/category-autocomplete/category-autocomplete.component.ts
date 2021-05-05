@@ -17,7 +17,7 @@ export class CategoryAutocompleteComponent implements OnInit {
   @Input() placeholder: string;
   @Input() loading: boolean;
   @Input() set searchResult(value: AutocompleteOptionGroups[]) {
-    if (value) {
+    if (value) {      
       this.showSearchResult = value;
     }
   }

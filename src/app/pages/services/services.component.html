@@ -11,7 +11,7 @@
           [active]="activeCategory?.id === category.id" [workloadPercent]="category.workload_percent"
           [specialistsCount]="category.specialists_count" [description]="category.description_ru"
           [title]="category.name_ru" [img]="category.icon" [colorOne]="category.color"
-          (delete)="deleteCategory(category.category.id, i)"></app-service-list-card>
+          (delete)="deleteCategory(category.id, i)"></app-service-list-card>
       </div>
     </ng-container>
   </div>
@@ -24,9 +24,8 @@
     <ng-container *ngIf="subCategories?.length > 0">
       <div class="cascade-link-item" *ngFor="let subcategory of subCategories; let i = index">
         <app-service-list-card (cardClicked)="getServicesBySubcategory(subcategory, i)"
-          (delete)="deleteSubcategory(subcategory.id, i)" (edit)="onEditSubcategory(i)"
-          [title]="subcategory.name_en" [img]="subcategory.icon"
-          [active]="activeSubcategory?.id === subcategory.id"></app-service-list-card>
+          (delete)="deleteSubcategory(subcategory.id, i)" (edit)="onEditSubcategory(i)" [title]="subcategory.name_en"
+          [img]="subcategory.icon" [active]="activeSubcategory?.id === subcategory.id"></app-service-list-card>
       </div>
     </ng-container>
   </div>
@@ -38,9 +37,8 @@
     </div>
     <ng-container *ngIf="services?.length > 0">
       <div class="cascade-link-item" *ngFor="let service of services;let i = index">
-        <app-service-item (cardClicked)="getSubservicesByService(service, i)"
-          (delete)="deleteService(service.id, i)" (edit)="onEditService(i)"
-          [active]="services[activeServiceIndex]?.id === service.id" [title]="service.name_en"
+        <app-service-item (cardClicked)="getSubservicesByService(service, i)" (delete)="deleteService(service.id, i)"
+          (edit)="onEditService(i)" [active]="services[activeServiceIndex]?.id === service.id" [title]="service.name_en"
           [description]="service.description_en">
         </app-service-item>
       </div>
@@ -62,7 +60,8 @@
     <ng-container *ngIf="subservices?.length > 0">
       <div class="cascade-link-item" *ngFor="let subservice of subservices;let i = index">
         <app-service-item (delete)="deleteService(subservice.id, i)" [hideActions]="true"
-        (edit)="openClosedHoursModal(subservice.id)"  [price]="subservice.price" [title]="subservice.subservice_type.name_ru">
+          (edit)="openClosedHoursModal(subservice.id)" [price]="subservice.price"
+          [title]="subservice.subservice_type.name_ru">
         </app-service-item>
       </div>
     </ng-container>
@@ -88,7 +87,7 @@
 </ng-container>
 
 <ng-container *ngIf="showClosedHoursList">
-  <app-subservice-closed-hours [id]="activeSubserviceId"></app-subservice-closed-hours>
-  <!-- <app-create-edit-subservice [subservices]="subservices" [isEdit]="isEditing" (close)="hideCategoryActions()"
-    (save)="handleSubserviceChange($event)"></app-create-edit-subservice> -->
+  <app-subservice-closed-hours (close)="closeSubserviceClosedHours()" [id]="activeSubserviceId">
+  </app-subservice-closed-hours>
+
 </ng-container>

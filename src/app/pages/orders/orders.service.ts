@@ -44,8 +44,14 @@ export class OrdersService {
     return this.httpClient.get<any>(`services/search-service/${term}/`);
   }
 
-  getExecutors(): Observable<ExecutorsResponse> {
-    return this.httpClient.get<ExecutorsResponse>(`userdetails/get-executor-list/`);
+  getExecutors(subserviceIds:string): Observable<ExecutorsResponse> {
+    let url='';
+    if(subserviceIds){
+      url+=`userdetails/get-executors-by-subservice/?subservices=${subserviceIds}`
+    }else{
+      url=`userdetails/get-executor-list/`
+    }
+    return this.httpClient.get<ExecutorsResponse>(url);
   }
 
   searchForProducts(term: string): Observable<any> {

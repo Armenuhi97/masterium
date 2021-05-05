@@ -10,6 +10,7 @@ import {
   SubserviceResponse,
   SubserviceType
 } from '../../core/models/services';
+import { ClosedHoursResponce } from 'src/app/core/models/closed-hours';
 
 @Injectable()
 export class ServicesService {
@@ -79,7 +80,13 @@ export class ServicesService {
   editSubservice(subservice: SubserviceRequest, id: number): Observable<SubserviceResponse[]> {
     return this.httpClient.post<SubserviceResponse[]>(`services/edit-service-subservices/${id}/`, subservice);
   }
-  getSubserviceClosedHours(id:number,page:number){
+  getSubserviceClosedHours(id: number, page: number) {
     return this.httpClient.get(`services/closed-hour/?subservice=${id}&page=${page}`)
+  }
+  addClosedHours(body: ClosedHoursResponce) {
+    return this.httpClient.post('services/closed-hour/', body)
+  }
+  deleteClosedHours(id: number) {
+    return this.httpClient.delete(`services/closed-hour/${id}/`)
   }
 }

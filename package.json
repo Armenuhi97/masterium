@@ -26,6 +26,7 @@
     "@types/socket.io-client": "^1.4.35",
     "angular2-infinite-scroll": "^0.3.5",
     "chart.js": "^2.9.4",
+    "moment": "^2.29.1",
     "ng-zorro-antd": "^11.1.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-cookie-service": "^11.0.2",

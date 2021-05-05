@@ -34,12 +34,14 @@ import { User } from '../../../core/models/user';
   encapsulation: ViewEncapsulation.None,
 })
 export class OrderDetailComponent implements OnInit, OnDestroy {
+  extraOrderForm: FormGroup;
   unsubscribe$ = new Subject();
   isEditEssenceItemVisible = false;
   order: OrderDetail;
   editGroupForm: FormGroup;
   essenceItemForm: FormGroup;
   isEditGroupVisible = false;
+  isShowExtraOrderModal: boolean = false;
   editingGroupIndex: number;
   executors: User[] = [];
   id: number;
@@ -66,15 +68,40 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.connectedTo.push('group-1', 'group-2', 'group-3');
   }
 
-  ngOnInit(): void {
-    this.getExecutors();
+  ngOnInit(): void { }
 
+  initExtraOrderGroup() {
+    this.extraOrderForm = this.formBuilder.group({
+      extra_service_price: [null, Validators.required],
+      extra_service_text: [null, Validators.required],
+      index: [null]
+    })
+  }
+  handleCloseExtraOrder() {
+    this.extraOrderForm.reset();
+    this.isShowExtraOrderModal = false
+  }
+  isShowExtraAddBtb(subgroup) {
+    let extra = subgroup.groupItemList.filter((data) => { return data.type == DragItemTypes.Extra });
+    return (extra && extra.length) ? false : true
+  }
+  onAddExtraOrder() {
+    if (this.extraOrderForm.valid) {
+      let formValue = this.extraOrderForm.value;
+      let index = formValue.index;
+      this.subgroups[index].groupItemList.push({
+        type: DragItemTypes.Extra,
+        currentPrice: formValue.extra_service_price,
+        name: formValue.extra_service_text
+      })
+      this.handleCloseExtraOrder();
+    }
   }
 
   initEditGroupForm(index: number): void {
     let mainExecutor;
     if (this.subgroups[index].executors && this.subgroups[index].executors.length)
-      if (this.subgroups[index].suborderMain?.id) {        
+      if (this.subgroups[index].suborderMain?.id) {
         this.selectedExecutors = this.subgroups[index].executors.map(ex => ex.user.user);
         mainExecutor = this.subgroups[index].executors?.find(e => e.is_overman)?.user.user
       } else {
@@ -101,22 +128,33 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  getExecutors(): void {
-    if (this.executors.length === 0) {
-      this.ordersService
-        .getExecutors()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((executors) => {
-          this.executors = executors.results;
-        });
+  getExecutors(index: number): void {
+    let ids = []
+    if (this.subgroups[index].groupItemList && this.subgroups[index].groupItemList.length) {
+
+      for (let item of this.subgroups[index].groupItemList) {
+        if (item.type == 'service')
+          ids.push(item.subserviceId)
+      }
     }
+    let idString = ids && ids.length ? ids.join(',') : ''
+    this.ordersService
+      .getExecutors(idString)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((executors) => {
+        this.initEditGroupForm(index);
+        this.isEditGroupVisible = true;
+        this.editingGroupIndex = index;
+        this.executors = executors.results;
+      });
+
   }
 
-  getOrderById(id: number): void {    
+  getOrderById(id: number): void {
     this.ordersService
       .getOrderById(id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((order) => {        
+      .subscribe((order) => {
         this.subgroups = [
           {
             groupItemList: order.subservices.map((subservice: any) => ({
@@ -158,7 +196,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         ];
         order.suborder.forEach((sub) => {
           this.addGroup(false, order);
-          sub.products.forEach((product: any) => {            
+          sub.products.forEach((product: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Product,
               name: product.name_ru,
@@ -185,8 +223,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               id: image.id,
               url: image.image_url,
             });
-          });       
-          
+          });
+
           this.subgroups[this.subgroups.length - 1].suborderMain = sub.suborder;
           this.subgroups[this.subgroups.length - 1].executors = sub.executor;
           this.subgroups[this.subgroups.length - 1].status = sub.suborder.status.name_ru;
@@ -203,6 +241,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       return;
     }
     const formValue = this.editGroupForm.value;
+
     this.subgroups[formValue.index].suborderMain = {
       ...this.subgroups[formValue.index].suborderMain,
       start_date: formValue.date,
@@ -244,9 +283,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   editGroup(index: number): void {
-    this.initEditGroupForm(index);
-    this.isEditGroupVisible = true;
-    this.editingGroupIndex = index;
+    this.getExecutors(index);
+
   }
 
   addGroup(isEditing: boolean, order?): void {
@@ -272,7 +310,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     service: AutocompleteOptionGroups;
     subservice: AutocompleteOptionGroups;
   }): void {
-    
+
     this.subgroups[0].groupItemList.push({
       type: DragItemTypes.Service,
       name: event.service.title,
@@ -284,7 +322,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  addProductItem(item: AutocompleteItem): void {    
+  addProductItem(item: AutocompleteItem): void {
     this.subgroups[1].groupItemList.push({
       type: DragItemTypes.Product,
       name: item.label,
@@ -306,6 +344,14 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
     } else {
+      ////delete form
+
+      if (this.subgroups && this.subgroups[3] && this.subgroups[3].suborderMain) {
+        this.subgroups[3].suborderMain = null
+      }
+      // if (this.editGroupForm){
+      //   this.editGroupForm.reset()
+      // }
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -314,12 +360,20 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       );
     }
   }
-
+  addExtra(index: number) {
+    console.log(index);
+    this.isShowExtraOrderModal = true;
+    this.initExtraOrderGroup();
+    this.extraOrderForm.get('index').setValue(index)
+  }
   deleteDragItemFromGroup(
     subgroup: OrderSubgroupDragItem,
     subgroupItem: { name: string; type: string },
     position: number
   ): void {
+    console.log('delete form');
+
+    //delete form
     let index: number;
     if (subgroupItem.type === DragItemTypes.Service) {
       index = this.subgroups.findIndex((sub) => sub.id === 'group-1');
@@ -330,11 +384,22 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     if (subgroupItem.type === DragItemTypes.Picture) {
       index = this.subgroups.findIndex((sub) => sub.id === 'group-3');
     }
+
+    if (subgroupItem.type === DragItemTypes.Service) {
+      if (this.subgroups && this.subgroups[3] && this.subgroups[3].suborderMain) {
+        this.subgroups[3].suborderMain = null
+      }
+    }
+    // if (subgroupItem.type === DragItemTypes.Extra) {
+    //   index = this.subgroups.findIndex((sub) => sub.id === 'group-4');
+    // }
+
     subgroup.groupItemList.splice(position, 1);
-    this.subgroups[index].groupItemList.unshift(subgroupItem);
+    if (subgroupItem.type !== DragItemTypes.Extra)
+      this.subgroups[index].groupItemList.unshift(subgroupItem);
   }
 
-  searchForServices(term: string): void {    
+  searchForServices(term: string): void {
     if (term === '') {
       term = ' ';
     }
@@ -347,16 +412,16 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           const autocompleteOptionGroups: AutocompleteOptionGroups = {
             children: r.subservices.map((sub) => {
               return {
-                title: sub.subservice.subservice_type[0].value,
+                title: sub.subservice.subservice_type.name_ru,
                 price: sub.subservice.price,
                 discountPrice: sub.discounted_price,
                 id: sub.subservice.id,
               };
             }),
-            title: r.name_ru,
+            title: r.service.name_ru,
             id: r.service.id,
           };
-          
+
           this.isSearching = false;
           return autocompleteOptionGroups;
         });
@@ -364,7 +429,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   searchForProducts(term: string): void {
-    
+
     if (term === '') {
       term = ' ';
     }
@@ -376,7 +441,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.productSearchResult = result.map((r) => {
           return {
             id: r.product.id,
-            label: r.name_ru,
+            label: r.product.name_ru,
             real_price: r.discounted_price,
             current_price: r.discounted_price,
             quantity: 1,
@@ -395,8 +460,16 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       this.nzMessagesService.error('Пожалуйста назначьте дату начала заказа');
       return;
     }
+    let extraOrder = [];
+    this.subgroups.slice(3).forEach((suborder) => {
+
+      extraOrder = suborder.groupItemList.filter((item) => { return item.type === DragItemTypes.Extra })
+    });
+
     const sendingData: OrderRequest = {
       order_id: this.id,
+      extra_service_price: (extraOrder && extraOrder[0]) ? extraOrder[0].currentPrice : null,
+      extra_service_text: (extraOrder && extraOrder[0]) ? extraOrder[0].name : null,
       removed_suborders: this.removedSuborders.map((id) => {
         return {
           id,
@@ -428,8 +501,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             }),
           product: suborder.groupItemList
             .filter((item) => item.type === DragItemTypes.Product)
-            .map((groupItemListItem) => { 
-                           
+            .map((groupItemListItem) => {
+
               return {
                 product_id: groupItemListItem.id,
                 quantity: groupItemListItem.quantity,
@@ -437,7 +510,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
                 current_price: groupItemListItem.currentPrice,
               };
             }),
-            
+
           suborder: {
             // this.subgroups[index] 
             comment: suborder.suborderMain.comment,
@@ -458,7 +531,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
                 (accumulator, item) => accumulator + item.currentPrice,
                 0
               ),
-          },
+          }
         };
       }),
     };

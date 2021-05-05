@@ -80,6 +80,7 @@ export interface OrderSubgroupDragItem {
   name: string;
   groupItemList: any[];
   status?: string;
+
   suborderMain?: {
     debet?: number;
     current_price: number;
@@ -106,6 +107,7 @@ export enum DragItemTypes {
   Service = 'service',
   Product = 'product',
   Picture = 'picture',
+  Extra = 'extra'
 }
 
 export interface AutocompleteOptionGroups {
@@ -162,6 +164,8 @@ export interface SuborderItem {
 
 export interface OrderRequest {
   order_id: number;
+  extra_service_price: number,
+  extra_service_text: string,
   removed_suborders: RemovedOrder[];
   suborders: SuborderItem[];
 }

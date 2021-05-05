@@ -273,6 +273,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeSubserviceId=id
    
   }
+  closeSubserviceClosedHours(){
+    this.showClosedHoursList=false
+  }
   handleSubserviceChange(event): void {
     const sendingData: SubserviceRequest = {
       service_id: this.services[this.activeServiceIndex].id,
@@ -310,11 +313,11 @@ export class ServicesComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:typedef
   handleServiceChange(event: any) {
     const sendingData: ServiceRequest = {
-      service: {
+      // service: {
         subcategory: this.activeSubcategory.id,
-        translation_key_description: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_description : 'translation_key_description' + String(Date.now()),
-        translation_key_title: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_title : 'translation_key_title' + String(Date.now()),
-      },
+      //   translation_key_description: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_description : 'translation_key_description' + String(Date.now()),
+      //   translation_key_title: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_title : 'translation_key_title' + String(Date.now()),
+      // },
       name_en: event.english,
       name_ge: event.georgian,
       name_ru: event.russian,
@@ -323,13 +326,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
       description_ru: event.russianDescription      
     };
     if (typeof event.icon === 'string') {
-      sendingData.service.icon = event.icon;
+      sendingData.icon = event.icon;
       this.sendRequest(sendingData);
     } else {
       this.mainService.uploadFile(event.icon)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((response) => {
-          sendingData.service.icon = response.url;
+          sendingData.icon = response.url;
           this.sendRequest(sendingData);
         });
     }
@@ -338,7 +341,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   sendRequest(sendingData): void {
     if (this.isEditing) {
-      this.servicesService.editService(sendingData, this.services[this.activeServiceIndex].service.id)
+      this.servicesService.editService(sendingData, this.services[this.activeServiceIndex].id)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(res => {
           this.services[this.activeServiceIndex] = res;

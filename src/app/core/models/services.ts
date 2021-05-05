@@ -113,15 +113,15 @@ export interface ServiceResponse {
 }
 
 export interface ServiceRequest {
-  service: {
+  // service: {
     price?: number,
     measurement_type?: number,
     guarantee_day_count?: number,
-    translation_key_title: string,
-    translation_key_description: string,
+    translation_key_title?: string,
+    translation_key_description?: string,
     icon?: string,
-    subcategory: number
-  };
+    subcategory?: number
+  // };
   title?: TranslationItem[];
   description?: TranslationItem[];
   name_en: string,
