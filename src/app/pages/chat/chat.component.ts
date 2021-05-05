@@ -67,18 +67,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     try {
       this.myScrollContainer.nativeElement.scrollTop = 480
       // this.myScrollContainer.nativeElement.scrollHeight;
-      console.log(this.myScrollContainer.nativeElement.scrollTop);
-      console.log(this.myScrollContainer.nativeElement.scrollHeight);
 
 
     } catch (err) { }
   }
-  scrollToTop(top) {    
+  scrollToTop(top) {
     if (!this._isScrollToUp)
       return top
   }
   // SEND MESSAGE
   public sendMessage(): void {
+
+
     const message: MessageRequest = {
       room: this.activeRoom.room.id,
       file_url: '',
@@ -87,6 +87,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       replier_is_admin: true,
       sender: 3
     };
+    this.messageControl.reset()
     if (this.fileControl.value) {
       this._mainService.uploadFile(this.fileControl.value)
         .pipe(takeUntil(this._unsubscribe$))
@@ -123,8 +124,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.subscribeToNewMessages()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
+        console.log(res);
+        
         if (res.message.room === this.activeRoom.room.id) {
           this.messages.push(res.message);
+          this.activeRoom.room.last_message = res.message.text;
           this._isScrollToUp = false;
         } else {
           const room = this.roomsList.find(r => r.room.id === res.message.room);
@@ -151,9 +155,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.subscribeToActiveRoomMessages()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res: any) => {
-        res = res.reverse()
-        if (!this.messages.length) {
 
+        if (!this.messages.length) {
+          res = res.reverse()
           this.messages = res;
           this._isScrollToUp = false;
           // let element = (document.getElementById('scrollMe'));
@@ -168,7 +172,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         } else {
           for (let message of res) {
             // console.log(message);
-            this.messages.unshift(message);           
+            this.messages.unshift(message);
             // console.log(this.messages, 'current');
 
           }
@@ -177,8 +181,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       });
   }
-  // 0,12,24
-
   private _subscribeToQueryChanges(): void {
     this._activatedRoute.queryParams.subscribe((params) => {
       // const token = String(params.token);
