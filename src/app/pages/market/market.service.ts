@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AddProductToExecutorRequest, MarketProduct, Transaction, WarehouseRequest } from 'src/app/core/models/market';
 import { Category, ServiceResponse, Subcategory } from '../../core/models/services';
 import { ServerResponce } from 'src/app/core/models/server-responce';
+import { User } from 'src/app/core/models/user';
 
 @Injectable()
 export class MarketService {
@@ -63,6 +64,9 @@ export class MarketService {
   public addProductToExecutor(sendingData: AddProductToExecutorRequest, boardId: number): Observable<{}> {
     return this.httpClient.post<{}>(`products/change-board-item-count/${boardId}/`, sendingData);
   }
+  public getExecutors(): Observable<ServerResponce<User[]>> {
+    return this.httpClient.get<ServerResponce<User[]>>(`userdetails/get-executor-list/?limit=100000`);
+  }
   public getProductsByCategory(page: number, categoryId: number, subCategoryId?: number | string, color?: string): Observable<ServerResponce<MarketProduct>> {
     let url = `products/product/?product_subcategory__product_category=${categoryId}&page=${page}`
     if (color && color !== 'all') {
@@ -73,4 +77,8 @@ export class MarketService {
     }
     return this.httpClient.get<ServerResponce<MarketProduct>>(url)
   }
+  addExecutorToProduct(id:number,body:{products:Array<{id:number,quantity:number}>}){
+    return this.httpClient.post(`/products/add-product-in-executor-board/${id}/`,body)
+  }
 }
+

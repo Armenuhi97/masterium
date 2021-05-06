@@ -17,6 +17,7 @@ import {
   RewardByPeriodRequest,
 } from 'src/app/core/models/user';
 import { ExecutorsService } from '../executors.service';
+
 @Component({
   selector: 'app-executor-reward-history',
   templateUrl: './executor-reward-history.component.html',
@@ -24,6 +25,7 @@ import { ExecutorsService } from '../executors.service';
   providers: [DatePipe],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
   @Input() userId: number;
   private unsubscribe = new Subject<void>();
@@ -37,7 +39,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private executorService: ExecutorsService,
     public datePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForms();
@@ -63,7 +65,9 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
     this.rewardPeriodForm.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
-        switchMap(() => this.getRewardByPeriod())
+        switchMap((value) => {
+          return this.getRewardByPeriod()
+        })
       )
       .subscribe((data) => {
         this.executorReward = data;
@@ -80,18 +84,23 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     this.rewardPeriodForm
       .get('range')
-      .setValue([firstDayOfMonth, new Date(Date.now())]);
+      .setValue(firstDayOfMonth);
   }
-
+  private _calculateLastDayInMonth(month: number, year: number): Date {
+    return new Date(year, month + 1, 0);
+  }
+  private _calculateFirstDayInMonth(month: number, year: number): Date {
+    return new Date(year, month, 1);
+  }
   public getRewardByPeriod(): Observable<any> {
     const formValue = this.rewardPeriodForm.value;
-    if (!formValue.range[0] || !formValue.range[1]) {
+    if (!formValue.range) {
       return;
     }
     const sendingData: RewardByPeriodRequest = {
       userId: this.userId,
-      startDate: this.transformDate(formValue.range[0], 'yyyy-MM-dd'),
-      endDate: this.transformDate(formValue.range[1], 'yyyy-MM-dd'),
+      startDate: this.transformDate(this._calculateFirstDayInMonth(formValue.range.getMonth(), formValue.range.getFullYear()), 'yyyy-MM-dd'),
+      endDate: this.transformDate(this._calculateLastDayInMonth(formValue.range.getMonth(), formValue.range.getFullYear()), 'yyyy-MM-dd'),
     };
     return this.executorService.getRewardByPeriod(sendingData);
   }
@@ -106,13 +115,12 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       point: formValue.count,
       comment: formValue.comment,
       user_id: this.userId,
-      suborder_id:null
     };
     this.executorService
       .giveUserSalarys(sendingData)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => {
-        this.salaryForm.reset();
+      .pipe(takeUntil(this.unsubscribe)
+      ).subscribe(() => {
+        this.setCurrentMonth()
       });
   }
 
@@ -134,10 +142,16 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       .fineUser(sendingData)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
-        this.fineForm.reset();
+        this.setCurrentMonth()
       });
   }
-
+  setCurrentMonth() {
+    const date = new Date();
+    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    this.rewardPeriodForm
+      .get('range')
+      .setValue(firstDayOfMonth);
+  }
   private transformDate(date, format: string): string {
     return this.datePipe.transform(date, format);
   }

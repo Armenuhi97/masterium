@@ -79,4 +79,5 @@ export interface AutocompleteItem {
   real_price: number;
   current_price: number;
   quantity: number;
+  realQuantity?:number
 }

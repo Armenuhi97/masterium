@@ -260,9 +260,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
   checkISelect(subgroupItem) {
     let count = 0;
-    let group=this.subgroups.slice(3);   
-    for (let subgroup of group) {      
-      if (subgroup.isEditing) {        
+    let group = this.subgroups.slice(3);
+    for (let subgroup of group) {
+      if (subgroup.isEditing) {
         for (let item of subgroup.groupItemList) {
           if (item.subserviceId == subgroupItem.subserviceId) {
             count++;
@@ -276,13 +276,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
   checkISelectProduct(subgroupItem) {
     let count = 0;
-    let group=this.subgroups.slice(3);   
-    for (let subgroup of group) {      
-      if (subgroup.isEditing) {        
-        for (let item of subgroup.groupItemList) {        
-          
+    let group = this.subgroups.slice(3);
+    for (let subgroup of group) {
+      if (subgroup.isEditing) {
+        for (let item of subgroup.groupItemList) {
+
           if (item.subserviceId == subgroupItem.subserviceId) {
-            count+=item.quantity;            
+            count += item.quantity;
           }
         }
       }
@@ -503,7 +503,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             label: r.product.name_ru,
             real_price: r.discounted_price,
             current_price: r.discounted_price,
-            quantity: 1,
+            quantity: r.quantity >= 1 ? 1 : 0,
           };
         });
         this.isSearching = false;

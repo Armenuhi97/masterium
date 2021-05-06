@@ -17,6 +17,7 @@ import { Measurment } from '../../core/models/measurment';
 import { UtilsService } from '../../core/services/utils.service';
 import { Category, Subcategory } from '../../core/models/services';
 import { ServerResponce } from 'src/app/core/models/server-responce';
+import { User } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-market',
@@ -26,6 +27,8 @@ import { ServerResponce } from 'src/app/core/models/server-responce';
 })
 export class MarketComponent implements OnInit, OnDestroy {
   tabInex = 0;
+  activeItem:MarketProductItem;
+  isShowExecutorModal: boolean = false;
   unsubscribe$ = new Subject();
   editingMarketProductIndex: number;
   activeCategoryId = null;
@@ -56,7 +59,8 @@ export class MarketComponent implements OnInit, OnDestroy {
   boardPageindex = 1;
   pageSize = 10;
   selectedWarehouseBoard: any;
-  total: number=0;
+  total: number = 0;
+  executors: User[]=[]
   constructor(
     public message: NzMessageService,
     public formBuilder: FormBuilder,
@@ -79,6 +83,7 @@ export class MarketComponent implements OnInit, OnDestroy {
         this.subscribeToColorControlChange()
         this.getMeasurments();
         this.getWarehouseBoards();
+        this.getExecutorList()
       });
   }
 
@@ -163,14 +168,33 @@ export class MarketComponent implements OnInit, OnDestroy {
         this.measurementTypes = res;
       });
   }
-
+  getExecutorList(): void {
+    this.marketService.getExecutors()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res: ServerResponce<User[]>) => {
+        this.executors = res.results;
+      });
+  }
   public onAddProductToExecutor(item): void {
     this.selectedWarehouseBoard = item;
     this.showAddProductToExecutorModal = true;
   }
-
-
-
+  public closeExecutorModal() {
+    this.isShowExecutorModal = false;
+    this.activeItem = null
+  }
+  public addExutorToProduct($event) {
+    if ($event) {
+      let sendResponse = {
+        products: [{ id: this.activeItem.id, quantity: $event.count }]
+      }
+      this.marketService.addExecutorToProduct($event.executor, sendResponse).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+        let index = this.listOfData.findIndex((data) => { return data.id == this.activeItem.id })
+        this.listOfData[index].quantity -= $event.count;
+        this.closeExecutorModal();
+      })
+    }
+  }
   public addProductToExecutor(): void {
     const sendingData: AddProductToExecutorRequest = {
       quantity: this.addProductToExecutorForm.value.quantity
@@ -452,7 +476,10 @@ export class MarketComponent implements OnInit, OnDestroy {
   boardWarehousePageIndexChange(pageIndex: number): void {
     this.boardPageindex = pageIndex;
   }
-
+  openExecutorModal(data) {
+    this.isShowExecutorModal = true;
+    this.activeItem = data
+  }
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

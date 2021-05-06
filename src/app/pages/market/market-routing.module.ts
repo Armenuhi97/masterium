@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AddExecutorComponent } from './component';
 import { MarketComponent } from './market.component';
 
 const routes: Routes = [
@@ -11,5 +12,5 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class MarketRoutingModule {
-    static components = [MarketComponent];
+    static components = [MarketComponent, AddExecutorComponent];
 }

@@ -4,7 +4,9 @@
     <form nz-form [formGroup]="rewardPeriodForm">
       <nz-form-item>
         <nz-form-control nzHasFeedback>
-          <nz-range-picker formControlName="range"></nz-range-picker>
+          <nz-date-picker nzMode="month"  [nzFormat]="'yyyy-MMMM'" formControlName="range"></nz-date-picker>
+
+          <!-- <nz-range-picker formControlName="range"></nz-range-picker> -->
         </nz-form-control>
       </nz-form-item>
     </form>
@@ -12,7 +14,7 @@
       <nz-col [nzSpan]="12">
         <nz-card class="statistic-card">
           <nz-statistic
-            [nzValue]="(executorReward.suborders_sum | number: '1.0-2')!"
+            [nzValue]="(executorReward.salary_sum | number: '1.0-2')!"
             [nzTitle]="'Премии и поощрения'"
             [nzPrefix]="prefixTplOne"
             [nzSuffix]="'₾'"
@@ -73,7 +75,7 @@
   </div>
   <nz-divider class="vertical-divider" nzType="vertical"></nz-divider>
   <div nz-col nzSpan="12">
-    <h5>Зарплата</h5>
+    <h5>Премия</h5>
 
     <form
       nz-form
@@ -90,7 +92,7 @@
             type="number"
             min="0"
             formControlName="count"
-            placeholder="Зарплата"
+            placeholder="Премия"
           />
         </nz-form-control>
       </nz-form-item>
@@ -119,7 +121,7 @@
       </nz-form-item>
     </form>
 
-    <h5 class="mt-2">Платежи наличними</h5>
+    <!-- <h5 class="mt-2">Платежи наличними</h5>
     <form
       nz-form
       [formGroup]="cashSalaryForm"
@@ -160,7 +162,7 @@
           </button>
         </nz-form-control>
       </nz-form-item>
-    </form>
+    </form> -->
 
     <h5 class="mt-2">Штраф</h5>
     <form

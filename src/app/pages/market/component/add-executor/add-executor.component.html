@@ -1,0 +1,28 @@
+<nz-modal [nzCancelText]="'Отмена'" [nzOkText]="'Добавить'" nzWidth="800px" [nzVisible]="true" [nzTitle]="'Прикрепить исполнителя'"
+    (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+    <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="12">
+                <nz-form-label class="inline-labels" nzRequired>Выберите заказчика</nz-form-label>
+                <nz-form-item>
+                    <nz-form-control nzHasFeedback>
+                        <nz-select formControlName="executor">
+                            <nz-option *ngFor="let executor of executors" [nzLabel]="serExecutorName(executor)"
+                                [nzValue]="executor.id">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-label class="inline-labels" nzRequired>Количество</nz-form-label>
+                <nz-form-item>
+                    <nz-form-control nzHasFeedback >
+                        <input OnlyNumber="true" nz-input formControlName="count" type="number"
+                            placeholder="Введите количество" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>

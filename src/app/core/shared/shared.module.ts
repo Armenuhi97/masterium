@@ -48,12 +48,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiceListCardComponent } from 'src/app/pages/services/components/service-list-card/service-list-card.component';
 import { IconsProviderModule } from 'src/app/icons-provider.module';
+import { OnlyNumber } from '../directives/onlynumber.directive';
 
 @NgModule({
     declarations: [
         SectionTitleComponent,
         AppNzAutocompleteComponent,
-        ServiceListCardComponent
+        ServiceListCardComponent,
+        OnlyNumber
     ],
     imports: [
         NzAutocompleteModule,
@@ -68,6 +70,7 @@ import { IconsProviderModule } from 'src/app/icons-provider.module';
 
     ],
     exports: [
+        OnlyNumber,
         ServiceListCardComponent,
         SectionTitleComponent,
         NzLayoutModule,
