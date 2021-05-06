@@ -23,9 +23,9 @@
          <td>
           <img class="add-photo" [src]="data.images[2]?.image" />
         </td>
-        <td style="width:200px">{{ data.advertisement.advertisement_type.title }}</td>
-        <td>От {{data.advertisement.start_date | date:'yyyy-MM-dd' }} до {{data.advertisement.end_date | date:'yyyy-MM-dd' }}</td>
-        <td>{{data.advertisement.sale?.name}}</td>
+        <td style="width:200px">{{ data.advertisement_type.title }}</td>
+        <td>От {{data.start_date | date:'yyyy-MM-dd' }} до {{data.end_date | date:'yyyy-MM-dd' }}</td>
+        <td>{{data.sale?.name}}</td>
         <td (click)="onEditAdvertisement(ind)" class="action-button edit" style="width:10px"><i nz-icon nzType="edit"></i></td>
         <td class="action-button delete" style="width:10px">
         <a
@@ -60,12 +60,12 @@
              </nz-select>
            </nz-form-control>
         </nz-form-item>
-       <nz-form-item>
+       <nz-form-item *ngIf="validateForm.get('type').value == 1">
          <nz-form-label nzRequired>Акция</nz-form-label>
          <nz-form-control nzHasFeedback>
            <nz-select [nzPlaceHolder]="'Тип'" formControlName="sale">
-             <nz-option *ngFor="let promotion of promotions" [nzValue]="promotion.sale.id"
-                        [nzLabel]="promotion.sale.name">
+             <nz-option *ngFor="let promotion of promotions" [nzValue]="promotion.id"
+                        [nzLabel]="promotion.name">
              </nz-option>
            </nz-select>
          </nz-form-control>
@@ -90,11 +90,11 @@
             <i  *ngIf="!validateForm.get('russianImage').value" nz-icon nzType="upload"></i>Выберите файл RU
           </button>
         </div>
-<!--        <img-->
-<!--          *ngIf="isEditing"-->
-<!--          class="img-fluid preview-image"-->
-<!--          [src]="validateForm.get('russianImage').value"-->
-<!--        />-->
+       <img
+       
+         class="img-fluid preview-image"
+         [src]="validateForm.get('showrussianImage').value"
+       />
       </nz-upload>
    <nz-upload
      class="upload"
@@ -114,11 +114,11 @@
        </button>
 
      </div>
-<!--     <img-->
-<!--       *ngIf="isEditing"-->
-<!--       class="img-fluid preview-image"-->
-<!--       [src]="validateForm.get('englishImage').value"-->
-<!--     />-->
+    <img
+      
+      class="img-fluid preview-image"
+      [src]="validateForm.get('showenglishImage').value"
+    />
    </nz-upload>
    <nz-upload
      class="upload"
@@ -139,11 +139,11 @@
        </button>
 
      </div>
-<!--     <img-->
-<!--       *ngIf="isEditing"-->
-<!--       class="img-fluid preview-image"-->
-<!--       [src]="validateForm.get('georgianImage').value"-->
-<!--     />-->
+    <img
+     
+      class="img-fluid preview-image"
+      [src]="validateForm.get('showgeorgianImage').value"
+    />
    </nz-upload>
     </form>
 </nz-modal>

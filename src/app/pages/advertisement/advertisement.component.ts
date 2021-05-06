@@ -10,6 +10,7 @@ import { Messages } from 'src/app/core/models/messages';
 import { AdvertisementService } from './advertisement.service';
 import { MainService } from '../../core/services/main.service';
 import { Promotion } from '../../core/models/promotion';
+import { getBase64 } from 'src/app/core/utilities/base64';
 
 @Component({
   templateUrl: './advertisement.component.html',
@@ -49,14 +50,18 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
       isMain: '',
       russianImage: ['', Validators.required],
       englishImage: ['', Validators.required],
-      georgianImage: ['', Validators.required]
+      georgianImage: ['', Validators.required],
+      showrussianImage: ['', Validators.required],
+      showenglishImage: ['', Validators.required],
+      showgeorgianImage: ['', Validators.required],
     });
 
     this.validateForm.get('type').valueChanges.subscribe(data => {
       if (data === 1) {
         this.validateForm.addControl('sale', new FormControl());
       } else {
-        this.validateForm.removeControl('sale');
+        if (this.validateForm.get('sale'))
+          this.validateForm.removeControl('sale');
       }
     });
   }
@@ -68,7 +73,7 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
   getAllPromotions(): void {
     this.advertisementsService.getPromotions()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {        
+      .subscribe(res => {
         this.promotions = res;
       });
   }
@@ -148,7 +153,7 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
   }
 
   editAdvertisement(advertisement: Advertisement): void {
-    this.advertisementsService.editAdvertisement(advertisement, this.advertisements[this.editingAdvertisementIndex].advertisement.id)
+    this.advertisementsService.editAdvertisement(advertisement, this.advertisements[this.editingAdvertisementIndex].id)
       .pipe(
         takeUntil(this.unsubscribe$),
         switchMap(() => this.advertisementsService.getAdvertisements())
@@ -171,13 +176,20 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
   addAdvertisement(): void {
     this.isVisible = true;
     this.isEditing = false;
-    this.validateForm.reset();
+    // console.log(this.validateForm.value);
+    // if (this.validateForm)
+    // this.validateForm.reset();
   }
 
   handleCancel(): void {
     this.isVisible = false;
     this.isEditing = false;
     this.editingAdvertisementIndex = undefined;
+    if (this.validateForm.get('sale')) {
+      this.validateForm.removeControl('sale');
+    }
+    this.validateForm.reset();
+
   }
 
 
@@ -192,18 +204,21 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
     const editingAdvertisement = this.advertisements[this.editingAdvertisementIndex];
     this.validateForm.addControl('sale', new FormControl());
     this.validateForm.patchValue({
-      sale: editingAdvertisement.advertisement.sale,
-      type: editingAdvertisement.advertisement.advertisement_type.id,
-      date: [new Date(editingAdvertisement.advertisement.start_date), new Date(editingAdvertisement.advertisement.end_date)],
+      sale: editingAdvertisement.sale ? editingAdvertisement.sale.id : null,
+      type: editingAdvertisement.advertisement_type.id,
+      date: [new Date(editingAdvertisement.start_date), new Date(editingAdvertisement.end_date)],
       russianImage: editingAdvertisement.images[0]?.image,
       englishImage: editingAdvertisement.images[1]?.image,
-      georgianImage: editingAdvertisement.images[2]?.image
+      georgianImage: editingAdvertisement.images[2]?.image,
+      showrussianImage: editingAdvertisement.images[0]?.image,
+      showenglishImage: editingAdvertisement.images[1]?.image,
+      showgeorgianImage: editingAdvertisement.images[2]?.image
     });
   }
 
   deleteAdvertisement(advertisement: AdvertisementResponse, index: number): void {
     this.advertisementsService
-      .deleteAdvertisement(advertisement.advertisement.id)
+      .deleteAdvertisement(advertisement.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.advertisements.splice(index, 1);
@@ -212,14 +227,17 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
       });
   }
 
-  handleChange(info: NzUploadChangeParam, controlName: string): void {
+  async handleChange(info: NzUploadChangeParam, controlName: string): Promise<void> {    
     if (this.isEditing) {
       this.mainService.uploadFile(info.file.originFileObj)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(res => {
           this.validateForm.get(controlName).setValue(res.url);
+          this.validateForm.get(`show${controlName}`).setValue(res.url);
         });
     } else {
+      const base64Image = await getBase64(info.file.originFileObj!);      
+      this.validateForm.get(`show${controlName}`).setValue(base64Image);
       this.validateForm.get(controlName).setValue(info.file.originFileObj);
     }
   }

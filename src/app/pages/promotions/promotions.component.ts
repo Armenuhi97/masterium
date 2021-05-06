@@ -4,7 +4,7 @@ import { Subcategory } from '../../core/models/services';
 import { PromotionService } from './promotion.service';
 import { takeUntil } from 'rxjs/operators';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import { Promotion } from '../../core/models/promotion';
+import { Promotion, PromotionRequestObject } from '../../core/models/promotion';
 import { DatePipe } from '@angular/common';
 import { Messages } from '../../core/models/messages';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -143,11 +143,11 @@ export class PromotionsComponent implements OnInit, OnDestroy {
   }
 
   bindState(): void {
-    this.validateForm.get('name').setValue(this.promotions[this.editingPromotionIndex].sale.name);
+    this.validateForm.get('name').setValue(this.promotions[this.editingPromotionIndex].name);
     // this.validateForm.get('productSubcategories').setValue(this.promotions[this.editingPromotionIndex].sale.)
     this.validateForm.get('date').setValue([
-      new Date(this.promotions[this.editingPromotionIndex].sale.start_date),
-      new Date(this.promotions[this.editingPromotionIndex].sale.end_date)
+      new Date(this.promotions[this.editingPromotionIndex].start_date),
+      new Date(this.promotions[this.editingPromotionIndex].end_date)
     ]);
     this.items = this.validateForm.get('items') as FormArray;
     this.productItems = this.validateForm.get('productItems') as FormArray;
@@ -184,7 +184,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
   deletePromotion(promotion: Promotion, index: number): void {
     this.promotionService
-      .deletePromotion(promotion.sale.id)
+      .deletePromotion(promotion.id)
       .pipe(
         takeUntil(this.unsubscribe$),
       )
@@ -201,11 +201,11 @@ export class PromotionsComponent implements OnInit, OnDestroy {
       return;
     }
     const formValue = this.validateForm.value;
-    const sendingData: Promotion = {
+    const sendingData: PromotionRequestObject = {
       sale: {
         name: formValue.name,
         end_date: this.transformDate(formValue.date[1], 'yyyy-MM-dd'),
-        start_date: this.transformDate(formValue.date[0], 'yyyy-MM-dd')
+        start_date: this.transformDate(formValue.date[0], 'yyyy-MM-dd'),
       },
       discount: [],
       product_subcategory: []
@@ -230,8 +230,10 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
 
     console.log(sendingData);
+    console.log(this.isEditing);
+    
     if (this.isEditing) {
-      sendingData.sale.id = this.promotions[this.editingPromotionIndex].sale.id;
+      sendingData.id = this.promotions[this.editingPromotionIndex].id;
       this.promotionService.editPromotion(sendingData)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(res => {
@@ -262,6 +264,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
   }
 
   getSubcategoryName(id: number): string {
+    
     const subcategory = this.subCategories.filter(sub => sub.id === id);
     return subcategory.length > 0 ? subcategory[0].name_ru : '';
   }

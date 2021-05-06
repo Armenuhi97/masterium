@@ -54,7 +54,7 @@
   </div>
   <div class="container" *ngIf="order?.status?.status_code !== 'ACC'">
     <div class="order-ordering d-flex justify-content-between flex-wrap">
-      <nz-tabset>
+      <nz-tabset class="m-top-10">
         <nz-tab nzTitle="Сервисы">
           <app-category-autocomplete placeholder="Добавить сервис" (search)="searchForServices($event)"
             (selected)="addServiceItem($event)" [searchResult]="serviceSearchResult" [loading]="isSearching">
@@ -122,7 +122,7 @@
         </nz-tab>
       </nz-tabset>
       <!-- && order.status.status_code !== 'ACC' -->
-      <div>
+      <div class="m-top-10">
         <button nz-button class="ml-auto mb-2 d-flex" nzType="primary"
           [disabled]="!isAddSubgroupVisible || order?.status?.status_code == 'ACC'" (click)="addGroup(true)">Новый
           заказ</button>

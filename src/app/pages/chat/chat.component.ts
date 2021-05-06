@@ -114,6 +114,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
         this._loaderService.setHttpProgressStatus(false)
+
+        console.log(res);
+        // res.sort((a: any, b: any) =>
+        //   new Date(a.date).getTime() - new Date(b.date).getTime()
+        // );
         this.roomsList = res;
         if (this._activeRoomId)
           this.setActiveRoom(+this._activeRoomId)
@@ -125,7 +130,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
         console.log(res);
-        
+
         if (res.message.room === this.activeRoom.room.id) {
           this.messages.push(res.message);
           this.activeRoom.room.last_message = res.message.text;

@@ -19,11 +19,11 @@
   <tbody>
     <tr *ngFor="let data of addTable.data;let ind=index">
       <td style="width:50px">{{ind + 1}}</td>
-      <td style="width:200px">{{ data.sale.name }}</td>
-      <td style="width: 250px">От {{data.sale.start_date | date:'yyyy-MM-dd' }} до {{data.sale.end_date |
+      <td style="width:200px">{{ data.name }}</td>
+      <td style="width: 250px">От {{data.start_date | date:'yyyy-MM-dd' }} до {{data.end_date |
         date:'yyyy-MM-dd' }}</td>
       <td style="width:200px">{{ data.discount[0]?.percent }}</td>
-      <td style="width:200px">{{ getSubcategoryName(data.discount[0]?.subcategory.id) }}</td>
+      <td style="width:200px">{{ getSubcategoryName(data?.discount[0]?.subcategory?.id) }}</td>
       <!-- <td style="width:200px">{{ getProductSubcategoryName() }}</td> -->
 
       <td (click)="onEditPromotion(ind)" class="action-button edit" style="width:10px"><i nz-icon nzType="edit"></i>

@@ -10,7 +10,7 @@ export interface Advertisement {
   images: AdvertisementImage[];
 }
 export interface AdvertisementResponse {
-  advertisement: {
+  // advertisement: {
     advertisement_type: {
       id: number,
       title: string,
@@ -22,7 +22,7 @@ export interface AdvertisementResponse {
     end_date: string;
     sale: any;
     start_date: string;
-  };
+  // };
   images: AdvertisementImage[];
 }
 interface AdvertisementImage {
