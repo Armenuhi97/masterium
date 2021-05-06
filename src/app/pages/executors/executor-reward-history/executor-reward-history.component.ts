@@ -120,6 +120,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       .giveUserSalarys(sendingData)
       .pipe(takeUntil(this.unsubscribe)
       ).subscribe(() => {
+        this.salaryForm.reset()
         this.setCurrentMonth()
       });
   }
@@ -142,6 +143,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       .fineUser(sendingData)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
+        this.fineForm.reset()
         this.setCurrentMonth()
       });
   }
