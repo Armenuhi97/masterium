@@ -328,7 +328,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.validateForm.invalid) {
+    if (this.validateForm.invalid || (!this.imagesList || (this.imagesList && !this.imagesList.length))) {
       return;
     }
     const formValue = this.validateForm.value;

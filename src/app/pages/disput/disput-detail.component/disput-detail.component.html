@@ -9,16 +9,24 @@
                             routerLinkActive="router-link-active">Перейти к заказу</a>
                     </div>
                     <nz-divider></nz-divider>
-                    <nz-descriptions class="order-details" nzTitle="" [nzColumn]="1">
-                        <nz-descriptions-item nzTitle="Заказчик"><a
-                                [routerLink]="['/dashboard/clients/' + disput.customer_id]">{{disput.customer_name
-                                }}</a>
-                        </nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Исполнитель"><a
-                                [routerLink]="['/dashboard/executors/' + disput.executr_id]">{{disput.executr_name
-                                }}</a>
-                        </nz-descriptions-item>
-                    </nz-descriptions>
+                    <div class="d-flex flex-wrap">
+                        <nz-descriptions class="order-details" nzTitle="" [nzColumn]="1">
+                            <nz-descriptions-item nzTitle="Заказчик"><a
+                                    [routerLink]="['/dashboard/clients/' + disput?.customer?.user]">{{disput?.customer?.first_name}} {{disput?.customer?.last_name}} </a>
+                            </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Адрес"><span>{{disput?.address?.address}}</span> </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.customer?.city}}</span> </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.customer?.phone_number}}</span> </nz-descriptions-item>
+
+                        </nz-descriptions>
+                        <nz-descriptions class="order-details m-left-5" nzTitle="" [nzColumn]="1">
+                            <nz-descriptions-item nzTitle="Исполнитель"><a
+                                    [routerLink]="['/dashboard/executors/' + disput?.executor?.user]">{{disput?.executor?.first_name}} {{disput?.executor?.last_name}}</a>
+                            </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.executor?.city}}</span> </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.executor?.phone_number}}</span> </nz-descriptions-item>
+                        </nz-descriptions>
+                    </div>
                     <nz-descriptions class="description-details" nzTitle="Описание">
                         <nz-descriptions-item nzTitle="">{{disput.description}}</nz-descriptions-item>
                     </nz-descriptions>

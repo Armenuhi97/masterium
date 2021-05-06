@@ -26,8 +26,8 @@
             <td style="width:50px">{{ind + 1}}</td>
             <td style="width:200px">{{data.created_at | date:'yyyy-MM-dd'}}</td>
             <td style="width: 250px">{{data.order_number}}</td>
-            <td style="width:200px">{{data.customer_name}}</td>
-            <td style="width:200px">{{data.executr_name}}</td>
+            <td style="width:200px">{{data?.customer?.first_name}} {{data?.customer?.last_name}}</td>
+            <td style="width:200px">{{data?.executor?.first_name}} {{data?.executor?.last_name}}</td>
             <td style="width:200px">{{data.status?.name_ru}}</td>
             <td [routerLink]="['/dashboard/disput', data.id]" class="action-button edit" style="width:10px"><i nz-icon
                     nzType="edit"></i>

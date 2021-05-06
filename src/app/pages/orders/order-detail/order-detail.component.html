@@ -16,8 +16,7 @@
           </div>
           <nz-divider></nz-divider>
           <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
-            <nz-descriptions-item nzTitle="Статус заказа"><span class="status-primary">{{order?.status?.name_ru
-                }}</span></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Статус заказа"><span class="status-primary">{{order?.order?.status?.name_ru}}</span></nz-descriptions-item>
             <nz-descriptions-item nzTitle="Адрес">{{order.order.address?.address }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Заказчик"> <a
                 [routerLink]="['/dashboard/clients/' + order.order.user.user]">{{order.order.user?.first_name + ' ' +

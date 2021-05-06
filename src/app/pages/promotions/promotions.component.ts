@@ -227,11 +227,6 @@ export class PromotionsComponent implements OnInit, OnDestroy {
         product_subcategory: item.id
       };
     })];
-
-
-    console.log(sendingData);
-    console.log(this.isEditing);
-    
     if (this.isEditing) {
       sendingData.id = this.promotions[this.editingPromotionIndex].id;
       this.promotionService.editPromotion(sendingData)
@@ -264,7 +259,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
   }
 
   getSubcategoryName(id: number): string {
-    
+
     const subcategory = this.subCategories.filter(sub => sub.id === id);
     return subcategory.length > 0 ? subcategory[0].name_ru : '';
   }
