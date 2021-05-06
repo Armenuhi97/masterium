@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import {
   ExecutorDeal,
@@ -66,7 +66,13 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe),
         switchMap((value) => {
-          return this.getRewardByPeriod()
+          console.log(value);
+          
+          if (value && value.range) {
+            return this.getRewardByPeriod()
+          } else {
+            return of()
+          }
         })
       )
       .subscribe((data) => {
