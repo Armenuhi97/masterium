@@ -27,7 +27,7 @@ import { User } from 'src/app/core/models/user';
 })
 export class MarketComponent implements OnInit, OnDestroy {
   tabInex = 0;
-  activeItem:MarketProductItem;
+  activeItem: MarketProductItem;
   isShowExecutorModal: boolean = false;
   unsubscribe$ = new Subject();
   editingMarketProductIndex: number;
@@ -60,7 +60,7 @@ export class MarketComponent implements OnInit, OnDestroy {
   pageSize = 10;
   selectedWarehouseBoard: any;
   total: number = 0;
-  executors: User[]=[]
+  executors: User[] = []
   constructor(
     public message: NzMessageService,
     public formBuilder: FormBuilder,
@@ -86,7 +86,27 @@ export class MarketComponent implements OnInit, OnDestroy {
         this.getExecutorList()
       });
   }
+  public changeShowInMarket($event, data: MarketProductItem,ind:number) {
+    console.log($event);
 
+    data.show_in_market = $event;
+    const product = {
+      ...this.listOfData[ind],
+      show_in_market:$event,
+      id: this.listOfData[ind].id
+      // minimal_count_for_board: formValue.minimalCountForBoard,
+      // minimal_count: formValue.minimalCount,
+      // minimum_count_for_order: formValue.minimumCountForOrder,
+      // maximum_count_for_order: formValue.maximumCountForOrder,
+    };
+    const sendingData = {
+      ...this.listOfData[ind],
+      product,
+    };
+    sendingData.measurement=this.listOfData[ind].measurement ? this.listOfData[ind].measurement.id : null;
+    delete Object.assign(sendingData, { ['image']: sendingData.images }).images;
+    this.editMarketProduct(sendingData, sendingData.product.id).pipe(takeUntil(this.unsubscribe$)).subscribe()
+  }
   public initAddProductToExecutorForm(): void {
     this.addProductToExecutorForm = this.formBuilder.group({
       quantity: [null, [Validators.required]]
@@ -213,20 +233,22 @@ export class MarketComponent implements OnInit, OnDestroy {
     if (this.validateForm.invalid) {
       return;
     }
-
-    const formValue = this.validateForm.value;
+    const formValue = this.validateForm.value;    
     const product = {
       ...this.listOfData[this.editingMarketProductIndex],
+      
       id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].id : undefined,
       minimal_count_for_board: formValue.minimalCountForBoard,
       minimal_count: formValue.minimalCount,
       minimum_count_for_order: formValue.minimumCountForOrder,
       maximum_count_for_order: formValue.maximumCountForOrder,
     };
+   
     const sendingData = {
       ...this.listOfData[this.editingMarketProductIndex],
       product,
     };
+    sendingData.measurement=this.listOfData[this.editingMarketProductIndex].measurement ? this.listOfData[this.editingMarketProductIndex].measurement.id : null;
     delete Object.assign(sendingData, { ['name']: sendingData.title }).title;
     delete Object.assign(sendingData, { ['image']: sendingData.images }).images;
 

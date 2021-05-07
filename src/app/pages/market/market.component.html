@@ -40,6 +40,7 @@
             <th>Мин.кол.</th>
             <th>Мин.кол. на борту</th>
             <th>В наличии</th>
+            <th>Показать в магазине</th>
             <th></th>
             <th></th>
             <th></th>
@@ -58,6 +59,10 @@
             <td>{{ data.minimal_count }}</td>
             <td>{{ data.minimum_count_for_order }}</td>
             <td>{{ data.quantity?data.quantity:0 }} </td>
+            <td>
+              <nz-switch (ngModelChange)="changeShowInMarket($event,data,ind)" [(ngModel)]="data.show_in_market"></nz-switch>
+              <!-- <nz-switch (ngModelChange)="changeShowInMarket($event,data)" [(ngModel)]="data.show_in_market"></nz-switch> -->
+            </td>
             <td (click)="onChangeProductCount(ind)" class="action-button plus" style="width: 10px">
               <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
             </td>
