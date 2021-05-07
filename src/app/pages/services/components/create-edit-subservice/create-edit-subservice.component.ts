@@ -15,7 +15,9 @@ import { UtilsService } from '../../../../core/services/utils.service';
 export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
-  @Input() subservices: SubserviceResponse[];
+  @Output() edit = new EventEmitter<any>();
+  @Input() subservices: SubserviceResponse[] = [];
+  @Input() editSubserviceId: number;
   @Input() isEdit: boolean;
   measurementTypes: Measurment[] = [];
   validateForm: FormGroup;
@@ -43,31 +45,63 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
 
   bindState(): void {
     if (this.isEdit) {
+
       this.items = this.validateForm.get('items') as FormArray;
-      this.subservices.forEach(subservice => {
-        this.items = this.validateForm.get('items') as FormArray;        
-        const subserviceTypeIndex =
-          this.subserviceTypes.findIndex(el => el.id === subservice.subservice_type.id);
-        this.listOfSelectedValue.push(subservice.subservice_type.id);
-        this.listOfSelectedValue = [...this.listOfSelectedValue];
-        this.items.push(
-          this.createItem(
-            subservice.subservice_type.id,
-            this.subserviceTypes[subserviceTypeIndex].name_en,
-            subservice.price,
-            subservice.measurement_type.id,
-            subservice.guarantee_day_count
-          )
-        );
-      });
+      if (this.editSubserviceId) {
+        //   this.subservices.forEach(subservice => {
+        //     this.items = this.validateForm.get('items') as FormArray;
+        //     const subserviceTypeIndex =
+        //       this.subserviceTypes.findIndex(el => el.id === subservice.subservice_type.id);
+        //     this.listOfSelectedValue.push(subservice.subservice_type.id);
+        //     this.listOfSelectedValue = [...this.listOfSelectedValue];
+        //     this.items.push(
+        //       this.createItem(
+        //         subservice.subservice_type.id,
+        //         this.subserviceTypes[subserviceTypeIndex].name_en,
+        //         subservice.price,
+        //         subservice.measurement_type.id,
+        //         subservice.guarantee_day_count
+        //       )
+        //     );
+        //   });
+        // } else {
+        // let subservice=findIndex
+        let currentSubservice: SubserviceResponse[] = this.subservices.filter((el) => { return el.id == this.editSubserviceId })
+        currentSubservice.forEach(subservice => {
+          this.items = this.validateForm.get('items') as FormArray;
+          const subserviceTypeIndex =
+            this.subserviceTypes.findIndex(el => el.id === subservice.subservice_type.id);
+          this.listOfSelectedValue.push(subservice.subservice_type.id);
+          this.listOfSelectedValue = [...this.listOfSelectedValue];
+          this.items.push(
+            this.createItem(
+              subservice.subservice_type.id,
+              this.subserviceTypes[subserviceTypeIndex].name_en,
+              subservice.price,
+              subservice.measurement_type.id,
+              subservice.guarantee_day_count
+            )
+          );
+        });
+      } else {
+
+      }
     }
   }
 
-  getSubserviceTypes(): void {    
+  getSubserviceTypes(): void {
     this.servicesService.getSubserviceTypes()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((res) => {        
+      .subscribe((res) => {
         this.subserviceTypes = res;
+        if (!this.editSubserviceId) {
+          let ids = []
+          this.subservices.forEach((subservice) => {
+            ids.push(subservice.subservice_type.id)
+          })
+          this.subserviceTypes = this.subserviceTypes.filter((data) => { return ids.indexOf(data.id) == -1 })
+        }
+        
         this.bindState();
       });
   }
@@ -112,7 +146,11 @@ export class CreateEditSubserviceComponent implements OnInit, OnDestroy {
 
   onSave(): void {
     if (this.validateForm.valid) {
-      this.save.emit(this.validateForm.value);
+      if (!this.editSubserviceId) {
+        this.save.emit(this.validateForm.value);
+      } else {
+        this.edit.emit(this.validateForm.value)
+      }
     } else {
       alert('HOP');
     }

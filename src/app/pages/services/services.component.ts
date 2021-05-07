@@ -21,9 +21,11 @@ import { MainService } from '../../core/services/main.service';
   styleUrls: ['./services.component.scss']
 })
 export class ServicesComponent implements OnInit, OnDestroy {
+  editSubserviceId: number;
+  editSubserviceIndex: number;
   unsubscribe$ = new Subject();
-  showClosedHoursList:boolean=false;
-  activeSubserviceId:number;
+  showClosedHoursList: boolean = false;
+  activeSubserviceId: number;
   categories = [];
   subCategories: Subcategory[] = [];
   services: ServiceResponse[] = [];
@@ -63,7 +65,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeServiceIndex = index;
     this.servicesService.getSubservicesByService(service.id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {        
+      .subscribe(res => {
         this.subservices = res;
       });
   }
@@ -99,6 +101,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.showSubcategoryActions = false;
     this.showServiceActions = false;
     this.showSubserviceActions = false;
+    this.editSubserviceId = null;
+    this.editSubserviceIndex = null;
   }
 
   onEditCategory(index: number): void {
@@ -121,11 +125,17 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.activeServiceIndex = index;
   }
 
-  onEditSubservice(): void {
+  onCreateSubservice(): void {
     this.isEditing = true;
     this.showSubserviceActions = true;
   }
+  editCurrentSubservice(subservice, index: number) {
+    this.isEditing = true
+    this.editSubserviceId = subservice.id;
 
+    this.editSubserviceIndex = index;
+    this.showSubserviceActions = true;
+  }
   onAddCategory(): void {
     this.showCategoryActions = true;
     this.isEditing = false;
@@ -268,43 +278,56 @@ export class ServicesComponent implements OnInit, OnDestroy {
         });
     }
   }
-  openClosedHoursModal(id:number){
-    this.showClosedHoursList=true;
-    this.activeSubserviceId=id
-   
+  openClosedHoursModal(id: number) {
+    this.showClosedHoursList = true;
+    this.activeSubserviceId = id
+
   }
-  closeSubserviceClosedHours(){
-    this.showClosedHoursList=false
+  closeSubserviceClosedHours() {
+    this.showClosedHoursList = false
   }
   handleSubserviceChange(event): void {
-    const sendingData: SubserviceRequest = {
-      service_id: this.services[this.activeServiceIndex].id,
-      subservices: []
-    };        
-    sendingData.subservices = event.items.map((item) => {
-      return {
-        service: this.services[this.activeServiceIndex].id,
-        subservice_type: item.id,
-        price: item.price,
-        measurement_type: item.measurementType,
-        guarantee_day_count: item.guaranteeDays
-      };
-    });
-    if (this.isEditing) {
-      this.servicesService.editSubservice(sendingData, this.services[this.activeServiceIndex].id)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(res => {
-          this.actionsAfterSuccessfullAction();
-          this.subservices = res;
-        }, () => {
-          this.actionsAfterFailAction();
-        });
+    if (this.editSubserviceId) {
+      if (event.items && event.items[0]) {
+        let item = event.items[0]
+        const sendingData = {
+          service_id: this.services[this.activeServiceIndex].id,
+          service: this.services[this.activeServiceIndex].id,
+          subservice_type: item.id,
+          price: item.price,
+          measurement_type: item.measurementType,
+          guarantee_day_count: item.guaranteeDays
+        };
+        this.servicesService.editSubservice(this.editSubserviceId, sendingData)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((res: any) => {            
+            this.subservices[this.editSubserviceIndex] = res;
+            this.actionsAfterSuccessfullAction();
+
+          }, () => {
+            this.actionsAfterFailAction();
+          });
+      }
     } else {
-      this.servicesService.addSubservice(sendingData)
+      const sendingData: SubserviceRequest = {
+        service_id: this.services[this.activeServiceIndex].id,
+        subservices: []
+      };
+      sendingData.subservices = event.items.map((item) => {
+        return {
+          service: this.services[this.activeServiceIndex].id,
+          subservice_type: item.id,
+          price: item.price,
+          measurement_type: item.measurementType,
+          guarantee_day_count: item.guaranteeDays
+        };
+      });
+      this.servicesService.addSubservice(this.services[this.activeServiceIndex].id, sendingData)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(res => {
+        .subscribe((res: any) => {
+          this.subservices = [...this.subservices, ...res];
           this.actionsAfterSuccessfullAction();
-          this.subservices = res;
+
         }, () => {
           this.actionsAfterFailAction();
         });
@@ -314,7 +337,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   handleServiceChange(event: any) {
     const sendingData: ServiceRequest = {
       // service: {
-        subcategory: this.activeSubcategory.id,
+      subcategory: this.activeSubcategory.id,
       //   translation_key_description: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_description : 'translation_key_description' + String(Date.now()),
       //   translation_key_title: this.isEditing ? this.services[this.activeServiceIndex].service.translation_key_title : 'translation_key_title' + String(Date.now()),
       // },
@@ -323,7 +346,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
       name_ru: event.russian,
       description_en: event.englishDescription,
       description_ge: event.georgianDescription,
-      description_ru: event.russianDescription      
+      description_ru: event.russianDescription
     };
     if (typeof event.icon === 'string') {
       sendingData.icon = event.icon;
@@ -375,11 +398,15 @@ export class ServicesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.subCategories.splice(index, 1);
-        this.activeSubcategoryIndex = undefined;
-        this.services = [];
       });
   }
-
+  deleteSubService(id: number, index: number): void {
+    this.servicesService.deleteSubService(id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.subservices.splice(index, 1);
+      });
+  }
   deleteService(id: number, index: number): void {
     this.servicesService.deleteService(id)
       .pipe(takeUntil(this.unsubscribe$))
@@ -396,6 +423,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.showSubcategoryActions = false;
     this.showServiceActions = false;
     this.showSubserviceActions = false;
+    this.editSubserviceId = null;
+    this.editSubserviceIndex = null;
   }
 
   actionsAfterFailAction(): void {
@@ -404,6 +433,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.showSubcategoryActions = false;
     this.showServiceActions = false;
     this.showSubserviceActions = false;
+    this.editSubserviceId = null;
+    this.editSubserviceIndex = null;
   }
 
   // tslint:disable-next-line:typedef

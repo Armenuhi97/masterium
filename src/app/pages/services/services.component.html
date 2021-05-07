@@ -49,8 +49,8 @@
     <div class="action-section d-flex align-items-center justify-content-between w-100">
       <p>Подсервисы</p>
       <div>
-        <button class="mr-2" (click)="onEditSubservice()" nz-button nzType="default" nzShape="circle">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
+        <button class="mr-2" (click)="onCreateSubservice()" nz-button nzType="default" nzShape="circle">
+          <i nz-icon nzType="plus" nzTheme="outline"></i>
         </button>
         <!--        <button (click)="onAddSubservice()" nz-button nzType="default" nzShape="circle">-->
         <!--          <i nz-icon nzType="plus"></i>-->
@@ -59,9 +59,9 @@
     </div>
     <ng-container *ngIf="subservices?.length > 0">
       <div class="cascade-link-item" *ngFor="let subservice of subservices;let i = index">
-        <app-service-item (delete)="deleteService(subservice.id, i)" [hideActions]="true"
-          (edit)="openClosedHoursModal(subservice.id)" [price]="subservice.price"
-          [title]="subservice.subservice_type.name_ru">
+        <app-service-item (delete)="deleteSubService(subservice.id, i)" [hideActions]="true"
+          (edit)="editCurrentSubservice(subservice,i)" (editCloseHours)="openClosedHoursModal(subservice.id)"
+          [price]="subservice.price" [title]="subservice.subservice_type.name_ru">
         </app-service-item>
       </div>
     </ng-container>
@@ -82,7 +82,8 @@
     (save)="handleServiceChange($event)"></app-create-edit-service>
 </ng-container>
 <ng-container *ngIf="showSubserviceActions">
-  <app-create-edit-subservice [subservices]="subservices" [isEdit]="isEditing" (close)="hideCategoryActions()"
+  <app-create-edit-subservice [subservices]="subservices" [editSubserviceId]="editSubserviceId" [isEdit]="isEditing" 
+  (close)="hideCategoryActions()" (edit)="handleSubserviceChange($event)"
     (save)="handleSubserviceChange($event)"></app-create-edit-subservice>
 </ng-container>
 

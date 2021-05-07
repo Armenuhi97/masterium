@@ -3,11 +3,13 @@
         <p>{{title}} </p>
         <div class="ml-auto d-flex align-items-center">
             <div class="action-buttons">
+                <button *ngIf="hideActions" class="edit" nz-button nzType="default"
+                    (click)="setClosedHours();$event.stopPropagation()"><i nz-icon nzType="field-time"
+                        nzTheme="outline"></i></button>
                 <button class="edit" nz-button nzType="default" (click)="onEdit();$event.stopPropagation()"><i nz-icon
                         nzType="edit" nzTheme="outline"></i></button>
-                <a *ngIf="!hideActions" (click)="$event.stopPropagation()" nz-popconfirm
-                    nzPopconfirmTitle="Вы действительно хотите удалить?" nzPopconfirmPlacement="bottom"
-                    (nzOnConfirm)="onDelete()">
+                <a (click)="$event.stopPropagation()" nz-popconfirm nzPopconfirmTitle="Вы действительно хотите удалить?"
+                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="onDelete()">
                     <button class="delete" nz-button nzType="default"><i nz-icon nzType="delete"
                             nzTheme="outline"></i></button>
                 </a>

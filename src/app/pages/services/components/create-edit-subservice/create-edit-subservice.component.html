@@ -1,23 +1,14 @@
 <nz-modal nzWidth="800px" [nzVisible]="true" [nzTitle]="isEdit ? 'Изменить подсервис' : 'Добавить подсервис'"
-          (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
+  (nzOnCancel)="closeModal()" (nzOnOk)="onSave()">
   <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
-    <nz-form-label class="inline-labels" nzRequired>Выберите подсервисы</nz-form-label>
+    <nz-form-label *ngIf="!editSubserviceId" class="inline-labels" nzRequired>Выберите подсервисы</nz-form-label>
 
-    <nz-select
-      class="subservice-types"
-      [nzMaxTagCount]="4"
-      [nzMaxTagPlaceholder]="tagPlaceHolder"
-      nzMode="multiple"
-      nzPlaceHolder="Подсервисы"
-      [(ngModel)]="listOfSelectedValue"
-      (ngModelChange)="addOrDeleteItem($event)"
-      [ngModelOptions]="{standalone: true}"
-    >
+    <nz-select *ngIf="!editSubserviceId" class="subservice-types" [nzMaxTagCount]="4"
+      [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple" nzPlaceHolder="Подсервисы"
+      [(ngModel)]="listOfSelectedValue" (ngModelChange)="addOrDeleteItem($event)" [ngModelOptions]="{standalone: true}">
       <nz-option *ngFor="let type of subserviceTypes" [nzLabel]="type.name_en" [nzValue]="type.id"></nz-option>
     </nz-select>
-    <div formArrayName="items"
-         class="item"
-         *ngFor="let item of validateForm.get('items')['controls']; let i = index;">
+    <div formArrayName="items" class="item" *ngFor="let item of validateForm.get('items')['controls']; let i = index;">
       <div [formGroupName]="i">
         <h5>{{validateForm.get('items').controls[i].value.name}}</h5>
         <div nz-row [nzGutter]="24">
@@ -34,8 +25,7 @@
             <nz-form-item>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                 <nz-select nzPlaceHolder="Единица измерения" formControlName="measurementType">
-                  <nz-option *ngFor="let m of measurementTypes" [nzValue]="m.id"
-                             [nzLabel]="m.name_ru">
+                  <nz-option *ngFor="let m of measurementTypes" [nzValue]="m.id" [nzLabel]="m.name_ru">
                   </nz-option>
                 </nz-select>
               </nz-form-control>

@@ -8,6 +8,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class ServiceItemComponent implements OnInit {
   @Output() cardClicked = new EventEmitter<void>();
   @Output() edit = new EventEmitter<void>();
+  @Output() editCloseHours = new EventEmitter<void>();
+
   @Output() delete = new EventEmitter<void>();
   @Input() title: string;
   @Input() active: boolean;
@@ -22,7 +24,9 @@ export class ServiceItemComponent implements OnInit {
   onEdit(): void {
     this.edit.emit();
   }
-
+  setClosedHours(): void {
+    this.editCloseHours.emit();
+  }
   onDelete(): void {
     this.delete.emit();
   }

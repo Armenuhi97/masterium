@@ -73,13 +73,22 @@ export class ServicesService {
     return this.httpClient.get<SubserviceType[]>('utils/subservice-type/');
   }
 
-  addSubservice(subservice: SubserviceRequest): Observable<SubserviceResponse[]> {
-    return this.httpClient.post<SubserviceResponse[]>(`services/subservice/`, subservice);
+  deleteSubService(id: number): Observable<{}> {
+    return this.httpClient.post<{}>(`services/delete-service-subservices/${id}/`,{});
   }
+  editSubservice(id: number,body){
+    return this.httpClient.post(`services/edit-service-subservices/${id}/`,body);
+  } 
+  addSubservice(serviceId: number,body:SubserviceRequest) {
+    return this.httpClient.post(`services/add-service-subservices/${serviceId}/`,body);
+  }
+  // addSubservice(subservice: SubserviceRequest): Observable<SubserviceResponse[]> {
+  //   return this.httpClient.post<SubserviceResponse[]>(`services/subservice/`, subservice);
+  // }
 
-  editSubservice(subservice: SubserviceRequest, id: number): Observable<SubserviceResponse[]> {
-    return this.httpClient.post<SubserviceResponse[]>(`services/edit-service-subservices/${id}/`, subservice);
-  }
+  // editSubservice(subservice: SubserviceRequest, id: number): Observable<SubserviceResponse[]> {
+  //   return this.httpClient.post<SubserviceResponse[]>(`services/edit-service-subservices/${id}/`, subservice);
+  // }
   getSubserviceClosedHours(id: number, page: number) {
     return this.httpClient.get(`services/closed-hour/?subservice=${id}&page=${page}`)
   }
