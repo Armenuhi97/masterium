@@ -246,7 +246,7 @@ export class ExecutorBoardComponent implements OnInit, OnDestroy {
     public getBoardById(id: number): void {
         this._executorService.getBoardById(id).pipe(takeUntil(this.unsubscribe$)).subscribe((data: ExecutorBoard) => {
             this.validateForm.patchValue({
-                name: data.product.name[0].value,
+                name: data.product.name_ru,
                 price: data.product.price,
                 quantity: data.quantity
             });

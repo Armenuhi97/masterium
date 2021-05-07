@@ -222,7 +222,10 @@ export interface ExecutorBoard {
   id: number;
   product: {
     id: number,
-    name: Array<{ value: string }>
+    name_ru:string;
+    name_en:string;
+    name_ge:string
+    // name: Array<{ value: string }>
     price: number
     product_images: Array<{
       id: number

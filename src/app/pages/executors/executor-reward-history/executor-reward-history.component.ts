@@ -65,9 +65,7 @@ export class ExecutorRewardHistoryComponent implements OnInit, OnDestroy {
     this.rewardPeriodForm.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
-        switchMap((value) => {
-          console.log(value);
-          
+        switchMap((value) => {          
           if (value && value.range) {
             return this.getRewardByPeriod()
           } else {

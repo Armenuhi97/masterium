@@ -20,7 +20,7 @@
         <tr *ngFor="let data of executeBoardSpareParts; let ind = index">
             <td style="width:10px">{{ ind + 1 }}</td>
             <td class="img-column"><img [src]="data?.product?.product_images[0].image_url" alt=""> </td>
-            <td>{{ data.product.name[0].value}}</td>
+            <td>{{ data.product.name_ru}}</td>
             <td>{{ data.product?.price }}</td>
             <td>{{data.quantity}}</td>
             <td (click)="onChangeProductCount(ind)" class="action-button plus" style="width:10px"><i nz-icon

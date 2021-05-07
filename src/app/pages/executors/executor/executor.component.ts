@@ -314,7 +314,7 @@ export class ExecutorComponent implements OnInit {
   private _patchStateToForm(): void {
     const editingExecutor = this.executor;
     console.log(editingExecutor);
-    
+
     const workScheduleStart = new Date(Date.now()).setHours(
       editingExecutor.user_schedule.start_time.split(':')[0],
       editingExecutor.user_schedule.start_time.split(':')[1]
@@ -332,7 +332,7 @@ export class ExecutorComponent implements OnInit {
       showingImage: editingExecutor.user_details.image || '',
       firstName: editingExecutor.user_details.first_name || '',
       lastName: editingExecutor.user_details.last_name || '',
-      phone:editingExecutor.user_details.phone_number? (editingExecutor.user_details.phone_number).slice(4):'' || '',
+      phone: editingExecutor.user_details.phone_number ? (editingExecutor.user_details.phone_number).slice(4) : '' || '',
       email: editingExecutor.user_details.email || '',
       creditCardNumber: editingExecutor.user_details.credit_card_number?.slice(3) || '',
       experience: editingExecutor.user_details.experience || '',
@@ -343,23 +343,25 @@ export class ExecutorComponent implements OnInit {
       workScheduleEnd: this.workScheduleEnd,
       workArea: editingExecutor.user_schedule.city || '',
       bet: editingExecutor.user_schedule.tarif || '',
-      documents: editingExecutor.user_attachments.map((attachment) => {                
-        const items = this.validateForm.get('documents') as FormArray;
-        this.selectedUserAttachmentTypes.push(
-          attachment.attachment_type.id
-        );
-        items.push(
-          this._createItem(
-            attachment.attachment_type.id,
-            attachment.attachment_type.name_ru,
-            false,
-            false,
-            attachment.file_url
-          )
-        );
+      documents: editingExecutor.user_attachments.map((attachment) => {
+        if (attachment && attachment.attachment_type) {
+          const items = this.validateForm.get('documents') as FormArray;
+          this.selectedUserAttachmentTypes.push(
+            attachment.attachment_type.id
+          );
+          items.push(
+            this._createItem(
+              attachment.attachment_type.id,
+              attachment.attachment_type.name_ru,
+              false,
+              false,
+              attachment.file_url
+            )
+          );
+        }
       }),
       specializationsFormArray: editingExecutor.user_specialization.map(
-        (specialization) => {          
+        (specialization) => {
           const items = this.validateForm.get(
             'specializationsFormArray'
           ) as FormArray;
@@ -378,7 +380,7 @@ export class ExecutorComponent implements OnInit {
         }
       ),
       subcategoriesFormArray: editingExecutor.user_subcategory.map((sub) => {
-        
+
         const items = this.validateForm.get(
           'subcategoriesFormArray'
         ) as FormArray;
@@ -432,9 +434,9 @@ export class ExecutorComponent implements OnInit {
     if (newId[0]) {
       const index = origin.findIndex(
         (el) =>
-          el?.id === newId[0]          
+          el?.id === newId[0]
       );
-      
+
       items.push(
         this._createItem(
           newId[0],
