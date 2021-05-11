@@ -1,44 +1,58 @@
 .category-container {
-    width: 100%;
+  width: 100%;
+}
+.action-section {
+  padding: 10px 0;
+  p {
+    margin: 0;
+    color: #001529;
+    font-size: 18px;
   }
-  .action-section {
-    padding: 10px 0;
-    p {
-      margin: 0;
-      color: #001529;
-      font-size: 18px;
+}
+
+.active-value {
+  margin-top: 15px;
+  .category-item {
+    padding: 10px;
+    background: rgb(193, 193, 219);
+  }
+  .category-item:last-child {
+    margin-left: 10px;
+  }
+  button{
+    margin-left: 10px;
+    margin: auto;
+  }
+}
+.cascade-link-item {
+  margin: 10px 0;
+}
+
+.categories-container,
+.subcategories-container,
+.product-container {
+  border-radius: 6px;
+  padding: 0 5px;
+  margin: 0 5px;
+  width: 350px;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(232, 236, 238, 0.7) 0%, rgba(232, 236, 238, 0) 100%);
+  &.hide {
+    visibility: hidden;
+  }
+}
+.product-container {
+  width: 100% !important;
+}
+:host::ng-deep {
+  app-service-list-card {
+    .service-card {
+      padding: 10px !important;
     }
   }
- 
-  .cascade-link-item {
-    margin: 10px 0;
-  }
-  
-  .categories-container,
-  .subcategories-container,
-  .product-container {
-    border-radius: 6px;
-    padding: 0 5px;
-    margin: 0 5px;
-    width: 350px;
-    max-height: 75vh;
-    overflow-y: auto;
-    background: linear-gradient(180deg, rgba(232, 236, 238, 0.7) 0%, rgba(232, 236, 238, 0) 100%);
-    &.hide {
-      visibility: hidden;
-    }
-  }
-  .product-container{
-    width: 100% !important;
-  }
-  :host::ng-deep{
-    app-service-list-card{
-      .service-card{
-        padding: 10px !important;
-      }
-    }
-  }
-  
-  :host ::ng-deep .ant-upload-list-item {
-    width: fit-content !important;
-  }
+}
+
+:host ::ng-deep .ant-upload-list-item {
+  width: fit-content !important;
+}

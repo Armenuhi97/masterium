@@ -18,6 +18,7 @@ import { MarketsService } from './markets.service';
   styleUrls: ['markets.component.scss']
 })
 export class MarketsComponent implements OnInit, OnDestroy {
+  isShowCategoryAnSubcategoryList:boolean=true;
   unsubscribe$ = new Subject();
   categories: Category[] = [];
   subCategories: Subcategory[] = [];
@@ -587,7 +588,9 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.pageIndex = pageIndex;
     this.getProductsBySubcategory(this.activeSubcategory, this.activeSubcategoryIndex);
   }
-
+  showOrHideItems(){
+    this.isShowCategoryAnSubcategoryList=!this.isShowCategoryAnSubcategoryList
+  }
   // tslint:disable-next-line:typedef
   ngOnDestroy() {
     this.unsubscribe$.next();
