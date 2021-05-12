@@ -25,8 +25,8 @@ export class PromotionService {
     return this.httpClient.post<Promotion[]>('advertisements/sale/', promotion);
   }
 
-  editPromotion(promotion: PromotionRequestObject): Observable<Promotion> {
-    return this.httpClient.put<Promotion>(`advertisements/sale/${promotion.id}/`, promotion);
+  editPromotion(promotion: PromotionRequestObject,id:number): Observable<Promotion> {
+    return this.httpClient.put<Promotion>(`advertisements/sale/${id}/`, promotion);
   }
 
   deletePromotion(id: number): Observable<{}> {

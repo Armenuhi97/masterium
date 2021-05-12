@@ -153,18 +153,20 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     this.productItems = this.validateForm.get('productItems') as FormArray;
     this.promotions[this.editingPromotionIndex].discount.forEach(discount => {
       if (discount.product_subcategory === null) {
-        this.items = this.validateForm.get('items') as FormArray;
+        this.items = this.validateForm.get('items') as FormArray;       
         const subserviceTypeIndex =
-          this.subCategories.findIndex(el => el.id === discount.id);
-        this.listOfSelectedValue.push(discount.id);
+          this.subCategories.findIndex(el => +el.id === +discount.subcategory.id);          
+        this.listOfSelectedValue.push(discount.subcategory.id);
         this.listOfSelectedValue = [...this.listOfSelectedValue];
         this.items.push(
           this.createItem(
-            discount.id,
+            discount.subcategory.id,
             this.subCategories[subserviceTypeIndex]?.name_ru,
             discount.percent
           )
         );
+        console.log(this.items);
+        
       } else {
         this.productItems = this.validateForm.get('productItems') as FormArray;
         const subserviceTypeIndex =
@@ -197,6 +199,8 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
 
   onSubmit(): void {
+    console.log(this.validateForm);
+    
     if (this.validateForm.invalid) {
       return;
     }
@@ -213,6 +217,8 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
 
     sendingData.discount = formValue.items.map((item) => {
+      console.log(item);
+      
       return {
         subcategory: item.id,
         percent: item.percent,
@@ -229,7 +235,7 @@ export class PromotionsComponent implements OnInit, OnDestroy {
     })];
     if (this.isEditing) {
       sendingData.id = this.promotions[this.editingPromotionIndex].id;
-      this.promotionService.editPromotion(sendingData)
+      this.promotionService.editPromotion(sendingData,this.promotions[this.editingPromotionIndex].id)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(res => {
           this.showSuccessMessage();
