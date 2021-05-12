@@ -54,9 +54,22 @@ export class SubserviceClosedHoursComponent {
         this.validateForm.reset();
         this.close.emit()
     }
-    formatDate(date):string{        
-        let day = moment(date,moment.ISO_8601).format('yyyy-MM-DD HH:mm');
-        return day
+    formatDate(date): string {
+        let value = date.split('T');
+        let time:string;
+        let day:string;
+        if (value && value.length) {
+            day = value[0]
+            let lastPointIndex = value[1].lastIndexOf(':');
+            console.log(lastPointIndex);
+
+            if (lastPointIndex > -1) {
+                time = value[1].substr(0, lastPointIndex)
+            }
+            console.log(time);
+        }
+        
+        return `${day} ${time}`
     }
     addClosedHours() {
         if (this.validateForm.valid) {

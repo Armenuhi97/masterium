@@ -12,6 +12,7 @@ export interface MarketsProduct {
   id: number;
   subcategory: SubcategoryDetails;
   price: number;
+  maximum_count_for_order:number;
   show_in_market: boolean;
   minimal_count: number;
   product_code?: string;
@@ -33,6 +34,8 @@ export interface MarketsProduct {
   title: TranslationItem[];
   description: TranslationItem[];
   images: MarketProductImage[];
+  minimal_count_for_board: number
+  minimum_count_for_order: number
 
   // discounted_price: number
 }

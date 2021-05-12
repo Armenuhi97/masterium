@@ -8,9 +8,9 @@ export class MarketListPipe implements PipeTransform {
       case 'all':
         return value;
       case 'showReds':
-        return value.filter(v => v.product.quantity < v.product.minimal_count);
+        return value.filter(v => v.quantity < v.minimal_count);
       case 'showBlues':
-        return value.filter(v => v.product.quantity > v.product.minimal_count);
+        return value.filter(v => v.quantity > v.minimal_count);
     }
   }
 }

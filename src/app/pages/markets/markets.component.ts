@@ -4,7 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { MarketProduct, MarketProductRequest, MarketsProduct, Transaction } from 'src/app/core/models/market';
+import { MarketProduct, MarketProductItem, MarketProductRequest, MarketsProduct, Transaction } from 'src/app/core/models/market';
 import { Measurment } from 'src/app/core/models/measurment';
 import { Messages } from 'src/app/core/models/messages';
 import { Category, ServiceRequest, ServiceResponse, Subcategory, SubcategoryRequest } from 'src/app/core/models/services';
@@ -82,6 +82,31 @@ export class MarketsComponent implements OnInit, OnDestroy {
         this.validateForm.reset();
       }, () => this.messagesService.error(Messages.fail));
   }
+  public changeStatus(data:MarketsProduct,event:boolean){
+    const sendingData: MarketProductRequest = {
+      // product: {
+      image: data.images,
+      id: data.id,
+      price: data.price,
+      measurement: data.measurement.id,
+      minimal_count:  data.minimal_count,
+      quantity: data.quantity,
+      minimal_count_for_board: data.minimal_count_for_board,
+      minimum_count_for_order: data.minimum_count_for_order,
+      guarantee_day_count: data.guarantee_day_count,
+      maximum_count_for_order: data.maximum_count_for_order,
+      product_code: data.product_code,
+      show_in_market: event,
+      product_subcategory: this.activeSubcategory.id,      
+      name_en: data.name_en,
+      name_ru: data.name_ru,
+      name_ge: data.name_ge,
+      description_en: data.description_en,
+      description_ru: data.description_ru,
+      description_ge: data.description_ge,
+    };
+    this.editMarketProduct(sendingData, sendingData.id).pipe(takeUntil(this.unsubscribe$)).subscribe();
+  }
   getMeasurments(): void {
     this.utilsService.getMeasurments()
       .pipe(takeUntil(this.unsubscribe$))
@@ -103,8 +128,10 @@ export class MarketsComponent implements OnInit, OnDestroy {
   }
 
   getProductsBySubcategory(subcategory: Subcategory, index: number, isReset: boolean = false): void {
-    if (isReset)
+    if (isReset){
       this.pageIndex = 1;
+      this.sortItems=[]
+    }
     this.activeSubcategory = subcategory;
     this.activeSubcategoryIndex = index;
     this.activeServiceIndex = undefined;
@@ -344,7 +371,6 @@ export class MarketsComponent implements OnInit, OnDestroy {
     const sendingData: MarketProductRequest = {
       // product: {
       image: [],
-
       id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].id : undefined,
       price: formValue.price,
       measurement: formValue.measurementType,
@@ -354,24 +380,15 @@ export class MarketsComponent implements OnInit, OnDestroy {
       minimum_count_for_order: 1,
       maximum_count_for_order: 10000,
       guarantee_day_count: formValue.guarantee_day_count,
-      // vat: formValue.vat,
-      // cost_price: formValue.costPrice,
       product_code: formValue.productCode,
       show_in_market: true,
-      product_subcategory: this.activeSubcategory.id,
-      // translation_key_description: this.isEditing ?
-      // this.listOfData[this.editingMarketProductIndex].translation_key_description
-      // : String('translation_key_description' + Date.now()),
-      // translation_key_name: this.isEditing ? this.listOfData[this.editingMarketProductIndex].translation_key_name
-      //   : String('translation_key_name' + Date.now()),
-      // },
+      product_subcategory: this.activeSubcategory.id,      
       name_en: formValue.nameInEnglish,
       name_ru: formValue.nameInRussian,
       name_ge: formValue.nameInGeorgian,
       description_en: formValue.descriptionInEnglish,
       description_ru: formValue.descriptionInRussian,
       description_ge: formValue.descriptionInGeorgian
-      // }
     };
     if (this.isEditing) {
       this.editMarketProductWithImages(sendingData);

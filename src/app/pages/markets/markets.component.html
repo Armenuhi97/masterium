@@ -93,7 +93,7 @@
           <td>{{ data.product_code }}</td>
           <td>{{ data.quantity }}</td>
           <td>
-            <nz-switch [(ngModel)]="data.show_in_market"></nz-switch>
+            <nz-switch (ngModelChange)="changeStatus(data,$event)" [(ngModel)]="data.show_in_market"></nz-switch>
           </td>
           <td (click)="onEditMarketProduct(data, ind)" class="action-button edit" style="width: 10px">
             <i nz-icon nzType="edit"></i>
