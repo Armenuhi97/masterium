@@ -18,7 +18,9 @@ import { MarketsService } from './markets.service';
   styleUrls: ['markets.component.scss']
 })
 export class MarketsComponent implements OnInit, OnDestroy {
-  isShowCategoryAnSubcategoryList:boolean=true;
+  sortItems: string[] = [];
+  searchProduct: string;
+  isShowCategoryAnSubcategoryList: boolean = true;
   unsubscribe$ = new Subject();
   categories: Category[] = [];
   subCategories: Subcategory[] = [];
@@ -63,7 +65,10 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.getAllCategories();
     this.initForm();
   }
-
+  search() {
+    this.pageIndex = 1;
+    this.getProductsRequest()
+  }
   getAllCategories(): void {
     this.marketService.getAllCategories()
       .pipe(takeUntil(this.unsubscribe$))
@@ -71,6 +76,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
         this.categories = categories;
         this.subCategories = [];
         this.listOfData = [];
+        this.sortItems = []
         this.getMeasurments();
 
         this.validateForm.reset();
@@ -102,14 +108,17 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.activeSubcategory = subcategory;
     this.activeSubcategoryIndex = index;
     this.activeServiceIndex = undefined;
-    this.marketService.getProductBySubcatery(subcategory.id, this.pageIndex)
+    this.getProductsRequest()
+  }
+  getProductsRequest() {
+    let ordering = this.sortItems && this.sortItems.length ? this.sortItems.join(',') : '';
+    this.marketService.getProductBySubcatery(this.activeSubcategory.id, this.pageIndex, ordering, this.searchProduct)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((products) => {
         this.totalCount = products.count;
-        this.listOfData = products.results;
+        this.listOfData = products.results.products;
       });
   }
-
   hideCategoryActions(): void {
     this.showCategoryActions = false;
     this.showSubcategoryActions = false;
@@ -135,8 +144,6 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.showServiceActions = true;
     this.activeServiceIndex = index;
   }
-
-
 
   onAddCategory(): void {
     this.showCategoryActions = true;
@@ -338,7 +345,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
       // product: {
       image: [],
 
-      id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].product.id : undefined,
+      id: this.isEditing ? this.listOfData[this.editingMarketProductIndex].id : undefined,
       price: formValue.price,
       measurement: formValue.measurementType,
       minimal_count: 1,
@@ -441,8 +448,6 @@ export class MarketsComponent implements OnInit, OnDestroy {
     return this.mainService.uploadFile(formData);
   }
 
-
-
   postMarketProduct(sendingData: MarketProductRequest): Observable<any> {
     return this.marketService.postMarketProduct(sendingData);
   }
@@ -474,25 +479,25 @@ export class MarketsComponent implements OnInit, OnDestroy {
     //   this.editingMarketProductIndex = ((this.pageIndex - 1) * 10) + index;
     // }
     this.validateForm.patchValue({
-      price: marketProduct.product.price,
-      measurementType: marketProduct.product.measurement.id,
-      guarantee_day_count: marketProduct.product.guarantee_day_count,
+      price: marketProduct.price,
+      measurementType: marketProduct.measurement.id,
+      guarantee_day_count: marketProduct.guarantee_day_count,
       // vat: marketProduct.product.vat,
       // costPrice: marketProduct.product.cost_price,
 
       // quantity: marketProduct.quantity,
       // minimalCount: marketProduct.product.minimal_count,
       // showInMarket: marketProduct.product.show_in_market,
-      productCode: marketProduct.product.product_code,
-      nameInEnglish: marketProduct.product.name_en,
-      nameInRussian: marketProduct.product.name_ru,
-      nameInGeorgian: marketProduct.product.name_ge,
-      descriptionInEnglish: marketProduct.product.description_en,
-      descriptionInRussian: marketProduct.product.description_ru,
-      descriptionInGeorgian: marketProduct.product.description_ge,
+      productCode: marketProduct.product_code,
+      nameInEnglish: marketProduct.name_en,
+      nameInRussian: marketProduct.name_ru,
+      nameInGeorgian: marketProduct.name_ge,
+      descriptionInEnglish: marketProduct.description_en,
+      descriptionInRussian: marketProduct.description_ru,
+      descriptionInGeorgian: marketProduct.description_ge,
       photo: ['', []],
     });
-    marketProduct.product.images.forEach((image, i) => {
+    marketProduct.images.forEach((image, i) => {
       this.imagesList.push({
         name: 'XXX',
         url: image.image_url,
@@ -528,7 +533,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   deleteMarketProduct(marketProduct: MarketsProduct, index: number): void {
     this.marketService
-      .deleteMarketProduct(marketProduct.product.id)
+      .deleteMarketProduct(marketProduct.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.showSuccessMessage();
@@ -543,7 +548,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
   calculateRedsCount(): void {
     this.redsCount = 0;
     this.listOfData.forEach(product => {
-      if (product.product.quantity < product.product.minimal_count) {
+      if (product.quantity < product.minimal_count) {
         this.redsCount += 1;
       }
     });
@@ -557,13 +562,13 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
   changeProductCount(): void {
     this.marketService.changeProductQuantity(
-      this.listOfData[this.changingCountProductIndex].product.id,
+      this.listOfData[this.changingCountProductIndex].id,
       this.changeCountControl.value
     ).pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.showSuccessMessage();
         this.closeModal();
-        this.listOfData[this.changingCountProductIndex].product.quantity += this.changeCountControl.value;
+        this.listOfData[this.changingCountProductIndex].quantity += this.changeCountControl.value;
       }, () => {
         this.showFailMessage();
       });
@@ -588,8 +593,46 @@ export class MarketsComponent implements OnInit, OnDestroy {
     this.pageIndex = pageIndex;
     this.getProductsBySubcategory(this.activeSubcategory, this.activeSubcategoryIndex);
   }
-  showOrHideItems(){
-    this.isShowCategoryAnSubcategoryList=!this.isShowCategoryAnSubcategoryList
+  showOrHideItems() {
+    this.isShowCategoryAnSubcategoryList = !this.isShowCategoryAnSubcategoryList
+  }
+  sort(sort, key: string): void {
+    if (sort == 'ascend') {
+
+      this._deleteKeyFromSort(`-${key}`)
+      if (this._checkIsExist(key) == -1) {
+        this.sortItems.push(key);
+        this.pageIndex = 1;
+        this.getProductsRequest();
+
+      }
+    } else {
+      if (sort == 'descend') {
+        this._deleteKeyFromSort(`${key}`)
+        if (this._checkIsExist(`-${key}`) == -1) {
+          this.sortItems.push(`-${key}`)
+          this.pageIndex = 1;
+          this.getProductsRequest();
+        }
+      } else {
+        this._deleteKeyFromSort(`${key}`);
+        this._deleteKeyFromSort(`-${key}`);
+        this.pageIndex = 1;
+        this.getProductsRequest();
+
+      }
+    }
+  }
+  private _checkIsExist(key: string): number {
+    let index = this.sortItems.indexOf(key);
+    return index
+  }
+  private _deleteKeyFromSort(key: string) {
+    let index = this.sortItems.indexOf(key);
+    if (index > -1) {
+      this.sortItems.splice(index, 1)
+
+    }
   }
   // tslint:disable-next-line:typedef
   ngOnDestroy() {

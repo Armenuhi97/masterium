@@ -2,35 +2,39 @@ import { Measurment } from './measurment';
 import { SubcategoryDetails } from './services';
 import { TranslationItem } from './translate';
 import { User } from './user';
-
+export interface MarketsProductResponce {
+  all_count: number,
+  products: MarketsProduct[],
+  red_count: number,
+  white_count: number
+}
 export interface MarketsProduct {
-  product: {
-    id: number;
-    subcategory: SubcategoryDetails;
-    price: number;
-    show_in_market: boolean;
-    minimal_count: number;
-    product_code?: string;
-    translation_key_name: string;
-    translation_key_description: string;
-    measurement: Measurment;
-    product_category_id: number;
-    product_subcategory: number;
-    vat?: string;
-    cost_price?: number;
-    guarantee_day_count: number
-    name_en: string;
-    name_ru: string;
-    name_ge: string,
-    description_en: string;
-    description_ru: string;
-    description_ge: string
-    quantity?: number;
-    title: TranslationItem[];
-    description: TranslationItem[];
-    images: MarketProductImage[];
-  }
-  discounted_price: number
+  id: number;
+  subcategory: SubcategoryDetails;
+  price: number;
+  show_in_market: boolean;
+  minimal_count: number;
+  product_code?: string;
+  translation_key_name: string;
+  translation_key_description: string;
+  measurement: Measurment;
+  product_category_id: number;
+  product_subcategory: number;
+  vat?: string;
+  cost_price?: number;
+  guarantee_day_count: number
+  name_en: string;
+  name_ru: string;
+  name_ge: string,
+  description_en: string;
+  description_ru: string;
+  description_ge: string
+  quantity?: number;
+  title: TranslationItem[];
+  description: TranslationItem[];
+  images: MarketProductImage[];
+
+  // discounted_price: number
 }
 
 
@@ -50,7 +54,7 @@ export interface MarketProductItem {
   product_code?: string;
   translation_key_name: string;
   translation_key_description: string;
-  measurement:any;
+  measurement: any;
   product_category_id: number;
   product_subcategory: number;
   vat?: string;

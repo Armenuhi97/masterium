@@ -5,8 +5,7 @@
     <nz-form-item>
       <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusSubOrderFilterControl" class="status-filter">
         <nz-option nzValue="" nzLabel="Все"> </nz-option>
-        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.id"
-          [nzLabel]="status.name_ru">
+        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.id" [nzLabel]="status.name_ru">
         </nz-option>
       </nz-select>
     </nz-form-item>
@@ -23,11 +22,18 @@
     <nz-form-item>
       <nz-select nzPlaceHolder="Фильтр по категориям" [formControl]="statusFilterControl" class="status-filter">
         <nz-option nzValue="" nzLabel="Все"> </nz-option>
-        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.id"
-          [nzLabel]="status.name_ru">
+        <nz-option *ngFor="let status of orderStatuses" [nzValue]="status.id" [nzLabel]="status.name_ru">
         </nz-option>
       </nz-select>
     </nz-form-item>
+  </div>
+  <div>
+    <nz-input-group  class="m-right-10"  nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input [(ngModel)]="searchProduct" placeholder="Поиск" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button (click)="search()" nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+    </ng-template>
   </div>
 
 </div>
@@ -36,13 +42,23 @@
   <thead>
     <tr>
       <th>N</th>
-      <th>Имя</th>
-      <th>Назало заказа</th>
-      <th>Сервисы</th>
+      <th>Заказчик</th>
+      <th>Исполнитель</th>
+      <th>Описания проблемы</th>
+      <th>Регион</th>
+      <th>Назало заказа<br>
+        Завершение
+      </th>
+      <th>Категория<br>
+        Подкатегория</th>
+      <th>Сервисы<br>
+        Подсервисы</th>
       <th>Продукты</th>
       <th>Диспуты</th>
-      <th>Подзаказы</th>
+      <!-- <th>Подзаказы</th> -->
       <th>Статус</th>
+      <th>Метод оплаты</th>
+      <th>Номер заказа</th>
       <th></th>
     </tr>
   </thead>
@@ -50,15 +66,21 @@
     <tr *ngFor="let data of userTable.data; let ind = index">
       <td style="width:10px">{{ ind + 1 }}</td>
       <td style="width: 300px">
-        {{ data.user?.user_name }} <br />
+        {{data.user?.first_name}} {{data.user?.last_name }}<br />
         {{ data.user?.phone_number }}
       </td>
+      <td></td>
+      <td></td>
+      <td></td>
       <td>{{data.start_date | date:'yyyy-MM-dd'}}</td>
+      <td></td>
       <td>{{data.ordered_subservice_count}}</td>
       <td>{{data.ordered_product_count}}</td>
       <td>{{data.disput_count}}</td>
-      <td>{{data.suborders_count}}</td>
-      <td>{{data.status[0]?.value}}</td>
+      <!-- <td>{{data.suborders_count}}</td> -->
+      <td>{{data.status.name_ru}}</td>
+      <td></td>
+      <td>{{data.order_number}}</td>
       <td [routerLink]="['/dashboard/orders', data.id]" class="action-button edit">
         <i nz-icon nzType="edit"></i>
       </td>

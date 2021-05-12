@@ -4,3 +4,9 @@ export interface ServerResponce<T> {
     previous: string;
     results: T;
 }
+export interface FilterResponce<T>{
+    all_count: 0
+    products: T
+    red_count: 0
+    white_count: 0
+}

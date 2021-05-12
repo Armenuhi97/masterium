@@ -19,7 +19,9 @@
     <tbody>
         <tr *ngFor="let data of executeBoardSpareParts; let ind = index">
             <td style="width:10px">{{ ind + 1 }}</td>
-            <td class="img-column"><img [src]="data?.product?.product_images[0].image_url" alt=""> </td>
+            <td class="img-column">
+                <img *ngIf="data?.product?.product_images && data?.product?.product_images.length" [src]="data?.product?.product_images[0].image_url" alt=""> 
+            </td>
             <td>{{ data.product.name_ru}}</td>
             <td>{{ data.product?.price }}</td>
             <td>{{data.quantity}}</td>

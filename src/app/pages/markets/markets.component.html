@@ -17,7 +17,7 @@
       </div>
     </ng-container>
   </div>
-  <div  class="subcategories-container" *ngIf="activeCategory && isShowCategoryAnSubcategoryList">
+  <div class="subcategories-container" *ngIf="activeCategory && isShowCategoryAnSubcategoryList">
     <div class="action-section d-flex align-items-center justify-content-between w-100">
       <p>Подкатегории</p>
       <button (click)="onAddSubcategory()" nz-button nzType="default" nzShape="circle">
@@ -41,13 +41,32 @@
         <span class="category-item"> {{activeCategory?.name_ru}}</span>
         <span class="category-item"> {{activeSubcategory?.name_ru}}</span>
       </div>
-      <button (click)="showOrHideItems()" nz-button nzType="primary" nzShape="round"><i nz-icon [nzType]="isShowCategoryAnSubcategoryList?'arrow-up':'arrow-down'"></i>{{isShowCategoryAnSubcategoryList?'Свернуть':'Развернуть'}}</button>
+      <button (click)="showOrHideItems()" nz-button nzType="primary" nzShape="round"><i nz-icon
+          [nzType]="isShowCategoryAnSubcategoryList?'arrow-up':'arrow-down'"></i>{{isShowCategoryAnSubcategoryList?'Свернуть':'Развернуть'}}</button>
     </div>
+
     <div class="title-container">
       <app-section-title title="Продукты"></app-section-title>
-      <button class="add-essence" nz-button nzType="primary" (click)="openMarketProductActionModal()">
-        Добавить продукт
-      </button>
+
+      <div class="d-flex align-items-center">
+        <!-- <div>
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input type="text" [(ngModel)]="searchProduct" nz-input placeholder="Поиск" />
+          </nz-input-group>
+        </div>
+        <ng-template #suffixIconSearch>
+          <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template> -->
+        <nz-input-group class="m-right-10" nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" nz-input [(ngModel)]="searchProduct" placeholder="Поиск" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button (click)="search()" nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+        <button class="add-essence" nz-button nzType="primary" (click)="openMarketProductActionModal()">
+          Добавить продукт
+        </button>
+      </div>
     </div>
 
     <nz-table (nzPageIndexChange)="pageIndexChange($event)" [nzTotal]="totalCount" [nzPageIndex]="pageIndex"
@@ -55,10 +74,12 @@
       <thead>
         <tr>
           <th>N</th>
-          <th>Название</th>
-          <th>Описание</th>
-          <th>Цена</th>
-          <th>Код продукта</th>
+          <th nzSortFn="true" nzSortPriority="1" (nzSortOrderChange)="sort($event,'name_ru')">Название</th>
+          <th nzSortFn="true" nzSortPriority="2" (nzSortOrderChange)="sort($event,'description_ru')">Описание</th>
+          <th nzSortFn="true" nzSortPriority="3" (nzSortOrderChange)="sort($event,'price')"> Цена</th>
+          <th nzSortFn="true" nzSortPriority="4" (nzSortOrderChange)="sort($event,'product_code')">Код продукта</th>
+          <th>Наличие склада</th>
+          <th>Активен</th>
           <th></th>
           <th></th>
         </tr>
@@ -66,11 +87,14 @@
       <tbody>
         <tr *ngFor="let data of listOfData; let ind = index">
           <td style="width: 50px">{{ (ind + 1)+((pageIndex-1)*10)}}</td>
-          <td style="width: 300px">{{ data?.product?.name_ru }}</td>
-          <td style="width: 350px">{{ data?.product?.description_ru }}</td>
-          <td>{{ data.product.price }}</td>
-          <td>{{ data.product.product_code }}</td>
-
+          <td>{{ data?.name_ru }}</td>
+          <td>{{ data?.description_ru }}</td>
+          <td>{{ data.price }}</td>
+          <td>{{ data.product_code }}</td>
+          <td>{{ data.quantity }}</td>
+          <td>
+            <nz-switch [(ngModel)]="data.show_in_market"></nz-switch>
+          </td>
           <td (click)="onEditMarketProduct(data, ind)" class="action-button edit" style="width: 10px">
             <i nz-icon nzType="edit"></i>
           </td>

@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit, OnDestroy {
+  public searchProduct:string;
   public isVisible = false;
   public isEditing = false;
   public orders: Order[] = [];
@@ -43,7 +44,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.handleSubOrderStatusChange();
     this.handleIsDiputControlChange()
   }
-
+  search(){}
   public handleOrderStatusChange(): void {
     this.statusFilterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))

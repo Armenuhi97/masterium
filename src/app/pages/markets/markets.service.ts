@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MarketProduct, MarketProductRequest, MarketsProduct } from 'src/app/core/models/market';
-import { ServerResponce } from 'src/app/core/models/server-responce';
+import { MarketProduct, MarketProductRequest, MarketsProduct, MarketsProductResponce } from 'src/app/core/models/market';
+import { FilterResponce, ServerResponce } from 'src/app/core/models/server-responce';
 import {
   Category,
   ServiceRequest,
@@ -23,10 +23,10 @@ export class MarketsService {
     return this.httpClient.get<Subcategory[]>(`products/product-subcategories-by-category/${categoryId}/`);
   }
 
-  getProductBySubcatery(subCategoryId: number, page?: number): Observable<ServerResponce<MarketsProduct[]>> {
-    let params = new HttpParams();
-    params = params.append('page', page.toString());
-    return this.httpClient.get<ServerResponce<MarketsProduct[]>>(`products/products-by-subcategory/${subCategoryId}/`, { params });
+  getProductBySubcatery(subCategoryId: number, page?: number,ordering:string='',search:string=''): Observable<ServerResponce<MarketsProductResponce>> {
+    // let params = new HttpParams();
+    // params = params.append('page', page.toString());
+    return this.httpClient.get<ServerResponce<MarketsProductResponce>>(`products/product/?product_subcategory=${subCategoryId}&page=${page}&ordering=${ordering}&search=${search}`);
 
   }
   changeProductQuantity(productId: number, quantity: number): Observable<any> {
