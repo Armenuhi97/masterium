@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   // API_URL: 'http://192.168.1.123:8000/',
   API_URL: 'http://api.masterium.ge/',
-  SOCKET_ENDPOINT: 'ws://www.api.masterium.ge/'
+  SOCKET_ENDPOINT: 'ws://api.masterium.ge/'
 };
 
 /*
