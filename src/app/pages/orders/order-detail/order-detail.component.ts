@@ -141,11 +141,25 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.ordersService
       .getExecutors(idString)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((executors) => {
+      .subscribe((executors:any) => {
+        if (idString) {
+          executors = executors.map((ext:any) => ({
+            user: {
+              first_name: ext.first_name,
+              image: ext.image,
+              last_name: ext.last_name,
+              user: ext.user_id,
+              user_role:ext.user_role
+            }
+          }))
+          this.executors = executors
+        }else{
+          this.executors = executors.results;
+        }
         this.initEditGroupForm(index);
         this.isEditGroupVisible = true;
         this.editingGroupIndex = index;
-        this.executors = executors.results;
+        
       });
 
   }
@@ -160,13 +174,14 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           {
             groupItemList: order.subservices.map((subservice: any) => ({
               type: DragItemTypes.Service,
-              name: subservice.service_name_ru,
-              subservice: subservice.subservice_name_ru,
+              name: subservice.service_name.name_ru,
+              subservice: subservice.subservice_name.name_ru,
               currentPrice: subservice.current_price,
               serviceId: subservice.service_id,
               subserviceId: subservice.subserv,
               discountPrice: subservice.real_price,
-            })),
+            }))
+            ,
             id: 'group-1',
             name: 'Сервисы',
             isEditing: false
@@ -195,7 +210,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             isEditing: false
           },
         ];
-
         order.suborder.forEach((sub) => {
           this.addGroup(false, order);
           sub.products.forEach((product: any) => {

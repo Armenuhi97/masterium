@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this._handleSocketConnected().pipe(takeUntil(this._unsubscribe$)).subscribe(() => { });
+    this._chatService.socketConnected().pipe(takeUntil(this._unsubscribe$)).subscribe(() => { });
     this._getRoomsList();
     this._subscribeToActiveRoomMessages();
     this._getNewMessages();
@@ -114,11 +114,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
         this._loaderService.setHttpProgressStatus(false)
-
-        console.log(res);
-        // res.sort((a: any, b: any) =>
-        //   new Date(a.date).getTime() - new Date(b.date).getTime()
-        // );
+        res.sort((a: any, b: any) =>
+          new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
+        );
         this.roomsList = res;
         if (this._activeRoomId)
           this.setActiveRoom(+this._activeRoomId)
@@ -129,15 +127,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.subscribeToNewMessages()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
-        console.log(res);
+        if (this.activeRoom && res.message.room === this.activeRoom.room.id) {
 
-        if (res.message.room === this.activeRoom.room.id) {
           this.messages.push(res.message);
+          this.messages.sort((a: any, b: any) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+
+          // created_at
           this.activeRoom.room.last_message = res.message.text;
+          this.activeRoom.room.last_message_date = res.message.created_at;
+          this._sortRoomList()
           this._isScrollToUp = false;
         } else {
           const room = this.roomsList.find(r => r.room.id === res.message.room);
           room.room.last_message = res.message.text;
+          room.room.last_message_date = res.message.created_at;
+         this._sortRoomList()
           room.unseen_message_count++;
         }
         this.messageControl.reset();
@@ -146,6 +152,11 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.type = null;
         this.name = null
       });
+  }
+  private _sortRoomList(){
+    this.roomsList.sort((a: any, b: any) =>
+    new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
+  );
   }
   // ROOM MESSAGES
   private _getActiveRoomMessages(): void {
@@ -160,29 +171,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.subscribeToActiveRoomMessages()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res: any) => {
-
         if (!this.messages.length) {
           res = res.reverse()
           this.messages = res;
           this._isScrollToUp = false;
-          // let element = (document.getElementById('scrollMe'));
-          // console.log(element.scrollHeight);
 
           (document.getElementById('scrollMe')).scroll({
             top: document.getElementById('scrollMe').scrollHeight,
             left: 0,
             behavior: 'smooth'
           });
-          // this.scrollToBottom()
         } else {
           for (let message of res) {
-            // console.log(message);
             this.messages.unshift(message);
-            // console.log(this.messages, 'current');
-
           }
         }
-        // }
 
       });
   }
@@ -194,7 +197,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       // }
       this._activeRoomId = +params.focusedUserId | +params.focusedRoomId | 0
       // if(params.focusedRoomId){
-      //   console.log(params.focusedRoomId);
       //   this.setActiveRoom(+params.focusedRoomId)
       // }
       const token = String(this._cookieService.get('access'));

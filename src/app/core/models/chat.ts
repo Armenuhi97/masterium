@@ -15,6 +15,7 @@ export interface Message {
     replier_is_admin: boolean;
     room: number;
     text: string;
+    last_message_date:string
     sender: {
         user: {
             first_name: string;
@@ -47,6 +48,7 @@ export interface RoomList {
         room_members: RoomMember[];
         last_message: string;
         with_admin: boolean;
+        last_message_date:string
     }
 }
 
