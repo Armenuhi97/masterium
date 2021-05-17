@@ -16,6 +16,7 @@ export interface Message {
     room: number;
     text: string;
     last_message_date:string
+    file_type: string
     sender: {
         user: {
             first_name: string;

@@ -8,10 +8,27 @@ import { Message } from 'src/app/core/models/chat';
 })
 export class MessageItemComponent implements OnInit {
   @Input() isIncoming: boolean;
-  @Input() message: Message;
+  @Input('message')
+  set setImage($event) {
+    console.log($event);;
+    this.message = $event
+
+  }
+
+  message: Message;
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  public checkType():string {
+    if (this.message.file_type) {
+      if (this.message.file_type.indexOf('image') > -1) {
+        return 'image'
+      } else {
+        return 'file'
+      }
+    }
+    return
   }
 
 }

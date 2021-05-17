@@ -51,18 +51,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public userTypeChange(event: string): void { }
 
-  public async handleChange(image: NzUploadChangeParam): Promise<void> {
-    this.name = image.file.name;
-    this.type = image.file.type
-    this.fileControl.setValue(image.file.originFileObj);
-    // tslint:disable-next-line:no-non-null-assertion
-    const base64Image = await getBase64(image.file.originFileObj!);
-    if (this.type.indexOf('image') > -1) {
-      this.showImage = base64Image
-    } else {
-      this.showImage = null
-    }
-  }
+  // public async handleChange(image: NzUploadChangeParam): Promise<void> {
+  //   this.name = image.file.name;
+  //   this.type = image.file.type
+  //   this.fileControl.setValue(image.file.originFileObj);
+  //   // tslint:disable-next-line:no-non-null-assertion
+  //   const base64Image = await getBase64(image.file.originFileObj!);
+  //   if (this.type.indexOf('image') > -1) {
+  //     this.showImage = base64Image
+  //   } else {
+  //     this.showImage = null
+  //   }
+  // }
   scrollToBottom(): void {
     try {
       this.myScrollContainer.nativeElement.scrollTop = 480
@@ -77,8 +77,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
   // SEND MESSAGE
   public sendMessage(): void {
-
-
     const message: MessageRequest = {
       room: this.activeRoom.room.id,
       file_url: '',
@@ -143,7 +141,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           const room = this.roomsList.find(r => r.room.id === res.message.room);
           room.room.last_message = res.message.text;
           room.room.last_message_date = res.message.created_at;
-         this._sortRoomList()
+          this._sortRoomList()
           room.unseen_message_count++;
         }
         this.messageControl.reset();
@@ -153,10 +151,18 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.name = null
       });
   }
-  private _sortRoomList(){
+  private _sortRoomList() {
     this.roomsList.sort((a: any, b: any) =>
-    new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
-  );
+      new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
+    );
+  }
+  public handleChange(info: NzUploadChangeParam) {
+    // if (type === 'file') {
+    this.type = info.file.type;
+    this.fileControl.setValue(info.file.originFileObj);
+    // } else if (type === 'image') {
+    // this.validateForm.get('image').setValue(info.file.originFileObj);
+    // }
   }
   // ROOM MESSAGES
   private _getActiveRoomMessages(): void {

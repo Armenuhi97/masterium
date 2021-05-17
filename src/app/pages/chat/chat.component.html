@@ -20,28 +20,32 @@
     </div>
     <div class="col-7 px-0">
       <!--  [scrollTop]="scrollMe.scrollHeight" -->
-      <div #scrollMe id="scrollMe" [scrollTop]="scrollToTop(scrollMe.scrollHeight)" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="10"
-        (scrolledUp)="onScrollUp()" [scrollWindow]="false" [fromRoot]="false" style="overflow:auto"
-        class="px-4 py-5 chat-box bg-white">
+      <div #scrollMe id="scrollMe" [scrollTop]="scrollToTop(scrollMe.scrollHeight)" infiniteScroll
+        [infiniteScrollDistance]="2" [infiniteScrollThrottle]="10" (scrolledUp)="onScrollUp()" [scrollWindow]="false"
+        [fromRoot]="false" style="overflow:auto" class="px-4 py-5 chat-box bg-white">
         <ng-container *ngFor="let message of messages">
-          <app-message-item [message]="message" [isIncoming]="message.replier_is_admin"></app-message-item>
-        </ng-container>
+          <app-message-item  [message]="message" [isIncoming]="message.replier_is_admin"></app-message-item>
+        </ng-container>       
       </div>
       <!-- Typing area -->
       <div class="form-control bg-light">
-        <div *ngIf="fileControl.value" class="file-item w-100">
 
-          <div class="file">
-            <img *ngIf="showImage" [src]="showImage" alt="">
-            <span class="file-name" *ngIf="!showImage">{{name}}</span>
-          </div>
-        </div>
         <div class="mesage-item align-items-start d-flex justify-content-between">
           <div class="d-flex align-items-center">
-            <nz-upload class="upload" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+            <!-- <nz-upload class="upload" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
               [nzHeaders]="{ authorization: 'authorization-text' }">
               <div class="d-flex align-items-center">
                 <button nz-button><i nz-icon nzType="upload"></i></button>
+              </div>
+            </nz-upload> -->
+            <nz-upload class="upload" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
+              [nzHeaders]="{ authorization: 'authorization-text' }">
+              <div class="d-flex align-items-center">
+                  <button nz-button>
+                    <i *ngIf="fileControl.value" nz-icon nzType="upload"></i>
+                    <i *ngIf="!fileControl.value" nz-icon nzType="upload"></i>
+                  </button>
+
               </div>
             </nz-upload>
           </div>

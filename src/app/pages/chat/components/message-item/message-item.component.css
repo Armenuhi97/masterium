@@ -2,3 +2,13 @@
     max-width: 80%;
     width: fit-content;
 }
+img{
+    object-fit: contain;
+    object-position: center;
+    max-height: 500px;
+    max-width: 100%;
+}
+a{
+    color: white;
+    word-break: break-all;
+}

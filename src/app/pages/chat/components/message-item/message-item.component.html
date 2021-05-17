@@ -7,6 +7,17 @@
     <div class="media-body" [class.ml-3]="!isIncoming">
         <div class="rounded py-2 px-3 mb-2" [class.bg-primary]="isIncoming" [class.bg-light]="!isIncoming">
             <p class="text-small mb-0" [class.text-white]="isIncoming">{{message.text}}</p>
+            <ng-container *ngIf="checkType() == 'image'">
+                <img class="content-image" [src]="message?.file_url" />
+            </ng-container>
+            <ng-container *ngIf="checkType() == 'file'">
+                <div class="d-flex align-items-center">
+                    <i nz-icon nzType="download" class="download-file mr-1" nzTheme="outline"></i>
+                    <a class="content-file" target="_blank" [href]="message.file_url">
+                        {{message?.file_url}}
+                    </a>
+                </div>
+            </ng-container>
         </div>
         <p class="small text-muted">{{message.created_at | date: 'short'}}</p>
     </div>
