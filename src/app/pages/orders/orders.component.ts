@@ -43,7 +43,17 @@ export class OrdersComponent implements OnInit, OnDestroy {
       });
     this.handleOrderStatusChange();
     this.handleSubOrderStatusChange();
-    this.handleIsDiputControlChange()
+    this.handleIsDiputControlChange();
+    this._subscribeToSearchontrol()
+  }
+  private _subscribeToSearchontrol(){
+    this.searchProductControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe((value)=>{
+      if(!value){
+        this.pageIndex=1;
+        this.getOrders()
+      }
+
+    })
   }
   search() {
     this.pageIndex = 1;
