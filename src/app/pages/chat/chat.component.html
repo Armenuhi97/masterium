@@ -42,7 +42,8 @@
               [nzHeaders]="{ authorization: 'authorization-text' }">
               <div class="d-flex align-items-center">
                   <button nz-button>
-                    <i *ngIf="fileControl.value" nz-icon nzType="upload"></i>
+                
+                    <i *ngIf="fileControl.value"  class="success-icon" nz-icon nzType="upload"></i>
                     <i *ngIf="!fileControl.value" nz-icon nzType="upload"></i>
                   </button>
 

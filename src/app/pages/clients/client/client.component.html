@@ -116,7 +116,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of clientOrdersHistory; let ind = index">
-                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td style="width:10px">{{ (ind + 1)+((historypageIndex-1)*10) }}</td>
                         <td> <a [routerLink]="'/dashboard/orders/' + data.order_id + '/'">{{ data.order_number }}</a>
                         </td>
                         <td>{{ data.date ? (data.date | date: 'short') : 'В процесе'}}</td>
@@ -141,7 +141,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of clientDisputHistory; let ind = index">
-                        <td style="width:10px">{{ ind + 1 }}</td>
+                        <td style="width:10px">{{ (ind + 1)+((disputPageIndex-1)*10) }}</td>
                         <td> <a [routerLink]="'/dashboard/orders/' + data.order.id + '/'">{{ data?.order_number
                                 }}</a> </td>
                         <td>{{ data.done_at ? (data.done_at | date: 'short') : 'В процесе'}}</td>

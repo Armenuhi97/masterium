@@ -14,7 +14,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let data of executorsStatisticTable.data; let ind = index">
-            <td style="width:10px">{{ ind + 1 }}</td>
+            <td style="width:10px">{{(ind + 1)+((pageIndex-1)*10) }}</td>
             <td>{{ data.executor_details.first_name + ' ' + data.executor_details.last_name }}</td>
             <td>{{ data.tarif + '%' }}</td>
             <td>{{ data.tips }}</td>

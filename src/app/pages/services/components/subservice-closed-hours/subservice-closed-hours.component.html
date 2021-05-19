@@ -18,7 +18,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of closedHours.data; let ind = index">
-        <td style="width:10px">{{ ind + 1 }}</td>
+        <td style="width:10px">{{ (ind + 1)+((pageIndex-1)*10) }}</td>
         <td>{{formatDate(data.start)}}</td>
         <td>{{formatDate(data.end)}}</td>
         <!-- <td>{{ data.start |date:'yyyy-MM-dd HH:mm'}}</td>
