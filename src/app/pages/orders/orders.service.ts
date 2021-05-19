@@ -9,8 +9,8 @@ export class OrdersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getOrders( offset: number, status: string, subOrderStatus: string, isHasDisput: boolean): Observable<ServerResponce<Order[]>> {
-    let url = `orders/order-list/?limit=10&offset=${offset}&status=${status}&order_suborders__status=${subOrderStatus}`;
+  getOrders( offset: number, status: string, subOrderStatus: string, isHasDisput: boolean,ordering='',search=''): Observable<ServerResponce<Order[]>> {
+    let url = `orders/order-list/?limit=10&offset=${offset}&status=${status}&order_suborders__status=${subOrderStatus}&ordering=${ordering}&search=${search}`;
     if (isHasDisput) {
       url += `&has_disput=True`
     }

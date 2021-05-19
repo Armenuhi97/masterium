@@ -619,7 +619,6 @@ export class MarketsComponent implements OnInit, OnDestroy {
       this._deleteKeyFromSort(`-${key}`)
       if (this._checkIsExist(key) == -1) {
         this.sortItems.push(key);
-        this.pageIndex = 1;
         this.getProductsRequest();
 
       }
@@ -628,13 +627,11 @@ export class MarketsComponent implements OnInit, OnDestroy {
         this._deleteKeyFromSort(`${key}`)
         if (this._checkIsExist(`-${key}`) == -1) {
           this.sortItems.push(`-${key}`)
-          this.pageIndex = 1;
           this.getProductsRequest();
         }
       } else {
         this._deleteKeyFromSort(`${key}`);
         this._deleteKeyFromSort(`-${key}`);
-        this.pageIndex = 1;
         this.getProductsRequest();
 
       }
