@@ -20,7 +20,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private _isScrollToUp: boolean = false
-
+  windowHeight:number;
   private _unsubscribe$: Subject<void> = new Subject<void>();
   public roomsList: RoomList[];
   public activeRoom: RoomList;
@@ -39,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _cookieService: CookieService,
     private _loaderService: LoaderService
   ) {
+    this.windowHeight=window.innerHeight-112-130;
     this._subscribeToQueryChanges();
   }
 
@@ -51,18 +52,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public userTypeChange(event: string): void { }
 
-  // public async handleChange(image: NzUploadChangeParam): Promise<void> {
-  //   this.name = image.file.name;
-  //   this.type = image.file.type
-  //   this.fileControl.setValue(image.file.originFileObj);
-  //   // tslint:disable-next-line:no-non-null-assertion
-  //   const base64Image = await getBase64(image.file.originFileObj!);
-  //   if (this.type.indexOf('image') > -1) {
-  //     this.showImage = base64Image
-  //   } else {
-  //     this.showImage = null
-  //   }
-  // }
   scrollToBottom(): void {
     try {
       this.myScrollContainer.nativeElement.scrollTop = 480
@@ -156,10 +145,15 @@ export class ChatComponent implements OnInit, OnDestroy {
       new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
     );
   }
+  public deleteFile(){
+    this.fileControl.reset()
+  }
   public handleChange(info: NzUploadChangeParam) {
     // if (type === 'file') {
     this.type = info.file.type;
     this.fileControl.setValue(info.file.originFileObj);
+    console.log(this.fileControl.value);
+    
     // } else if (type === 'image') {
     // this.validateForm.get('image').setValue(info.file.originFileObj);
     // }

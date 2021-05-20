@@ -7,13 +7,15 @@ import { Message } from 'src/app/core/models/chat';
   styleUrls: ['./message-item.component.css']
 })
 export class MessageItemComponent implements OnInit {
-  @Input() isIncoming: boolean;  
+  @Input() isIncoming: boolean;
 
   @Input() message: Message;
-
+  windowHeight: number;
   constructor() { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.windowHeight = window.innerHeight - 150
+  }
 
   public checkType(): string {
     if (this.message && this.message.file_type) {

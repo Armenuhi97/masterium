@@ -44,13 +44,17 @@ export class OrdersService {
     return this.httpClient.get<any>(`services/search-service/${term}/`);
   }
 
-  getExecutors(subserviceIds:string): Observable<ExecutorsResponse> {
-    let url='';
+  getExecutors(subserviceIds:string='',executorId:number): Observable<ExecutorsResponse> {
+    let url=``;
     if(subserviceIds){
-      url+=`userdetails/get-executors-by-subservice/?subservices=${subserviceIds}`
-    }else{
-      url=`userdetails/get-executor-list/`
+      url+=`userdetails/get-executors-by-subservice/${executorId}/?subservices=${subserviceIds}&is_active=true`
     }
+    else{
+      url=`userdetails/get-executor-list/?is_active=true`
+    }
+    // http://api.masterium.ge/userdetails/get-executors-by-subservice/id/?is_active=true&subservices=1,2
+  //  let url =`userdetails/get-executors-by-subservice/${executorId}/?subservices=${subserviceIds}&is_active=true`
+
     return this.httpClient.get<ExecutorsResponse>(url);
   }
 

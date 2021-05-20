@@ -5,18 +5,19 @@
         <div>
           <div class="d-flex align-items-center justify-content-between">
             <h1 class="m-0">Заказ N {{order.order.order_number}}</h1>
-            <a *ngIf="order?.status?.status_code === 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+            <a *ngIf="order?.order?.status?.code === 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="setPendingOrder()">
               <button nz-button nzType="primary" nzPrimary>Принять в обработку</button>
             </a>
-            <!-- <a *ngIf="order.status.status_code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+            <!-- <a *ngIf="order.order.status.code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="cancelOrder()">
               <button nz-button nzType="danger" nzPrimary>Отменить заказ</button>
             </a> -->
           </div>
           <nz-divider></nz-divider>
           <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
-            <nz-descriptions-item nzTitle="Статус заказа"><span class="status-primary">{{order?.order?.status?.name_ru}}</span></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Статус заказа"><span
+                class="status-primary">{{order?.order?.status?.name_ru}}</span></nz-descriptions-item>
             <nz-descriptions-item nzTitle="Адрес">{{order.order.address?.address }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Заказчик"> <a
                 [routerLink]="['/dashboard/clients/' + order.order.user.user]">{{order.order.user?.first_name + ' ' +
@@ -51,7 +52,7 @@
       <ng-template #productPrefixTpl><i nz-icon nzType="bulb"></i></ng-template>
     </div>
   </div>
-  <div class="container" *ngIf="order?.status?.status_code !== 'ACC'">
+  <div class="container">
     <div class="order-ordering d-flex justify-content-between flex-wrap">
       <nz-tabset class="m-top-10">
         <nz-tab nzTitle="Сервисы">
@@ -95,12 +96,12 @@
               <p class="m-0">{{subgroupItem.name}}</p>
               <nz-form-item class="ml-auto mr-1 price-control">
                 <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
-                  <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].quantity"  type="number"
+                  <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].quantity" type="number"
                     placeholder="Количество" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item class="price-control">
-                <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl" >
                   <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].currentPrice" type="number"
                     placeholder="Цена" />
                 </nz-form-control>
@@ -115,15 +116,15 @@
             [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
             class="drag-list fixed images-container d-flex" (cdkDropListDropped)="drop($event, subgroups[2])">
             <div class="drag-box d-flex" *ngFor="let subgroupItem of subgroups[2].groupItemList" cdkDrag>
-              <img nz-image class="m-auto order-image" [nzSrc]="subgroupItem.url" />
+              <img style="height: 200px" nz-image class="m-auto order-image" [nzSrc]="subgroupItem.url" />
             </div>
           </div>
         </nz-tab>
       </nz-tabset>
-      <!-- && order.status.status_code !== 'ACC' -->
+      <!-- && order.order.status.code !== 'ACC' -->
       <div class="m-top-10">
         <button nz-button class="ml-auto mb-2 d-flex" nzType="primary"
-          [disabled]="!isAddSubgroupVisible || order?.status?.status_code == 'ACC'" (click)="addGroup(true)">Новый
+          [disabled]="!isAddSubgroupVisible || order?.order?.status?.code == 'ACC'" (click)="addGroup(true)">Новый
           заказ</button>
         <div *ngFor="let subgroup of subgroups | slice:3; let i = index">
           <div class="list-container" *ngIf="subgroup.isEditing">

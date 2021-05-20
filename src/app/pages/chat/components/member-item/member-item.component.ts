@@ -11,7 +11,7 @@ export class MemberItemComponent implements OnInit {
   @Output() selectRoom: EventEmitter<number> = new EventEmitter<number>();
   @Input() active: boolean;
   @Input('room') set setRoom(room: RoomList) {
-    this.room = room;
+    this.room = room;    
     this.member = room.room.room_members.find(r => r.user.user_role.code !== 'ADM');
   }
   public member: RoomMember;

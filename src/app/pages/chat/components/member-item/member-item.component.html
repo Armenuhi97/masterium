@@ -10,7 +10,7 @@
         <div class="unread-message" *ngIf="room.unseen_message_count > 0">
           <nz-badge [nzOverflowCount]="9" nzStandalone [nzCount]="room.unseen_message_count"></nz-badge>
         </div>
-        <small class="small">{{room.room.created_at | date: 'short'}}</small>
+        <small class="small">{{room.room.last_message_date | date: 'dd/MM/yyyy HH:mm'}}</small>
       </div>
       <p *ngIf="room.room.last_message" class="mb-0 last-message text-small">{{room.room.last_message}}</p>
     </div>

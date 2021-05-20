@@ -5,6 +5,7 @@
       <th>Номер заказа</th>
       <th>Общая сумма</th>
       <th>Дата начала</th>
+      <th>Гарантия</th>
       <th>Статус</th>
       <th>Исполнитель</th>
       <th></th>
@@ -19,6 +20,7 @@
       <td>{{data.name}}</td>
       <td>{{data.suborderMain.price}}</td>
       <td>{{data.suborderMain.start_date | date:'yyyy-MM-dd'}}</td>
+      <td>{{data?.suborderMain?.guarantee_period}}</td>
       <td>{{data?.status}}</td>
       <td>
         {{checkExecutor(data.executors)}}

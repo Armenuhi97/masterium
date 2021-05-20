@@ -114,7 +114,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       guarantee_period: [this.subgroups[index]?.suborderMain?.guarantee_period],
       comment: [this.subgroups[index]?.suborderMain?.comment || this.order.order.description, [Validators.required]],
       date: [
-        this.subgroups[index]?.suborderMain?.start_date,
+        this.subgroups[index]?.suborderMain?.start_date ? this.subgroups[index]?.suborderMain?.start_date : this.order.order.start_date,
         [Validators.required],
       ],
       mainExecutor: [mainExecutor],
@@ -133,33 +133,39 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     if (this.subgroups[index].groupItemList && this.subgroups[index].groupItemList.length) {
 
       for (let item of this.subgroups[index].groupItemList) {
+        let id=item.subserviceId && item.subserviceId.id?item.subserviceId.id:item.subserviceId
         if (item.type == 'service')
-          ids.push(item.subserviceId)
+          ids.push(id)
       }
-    }
+    }    
     let idString = ids && ids.length ? ids.join(',') : ''
     this.ordersService
-      .getExecutors(idString)
+      .getExecutors(idString,this.order.order.user.user)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((executors:any) => {
+      .subscribe((executors: any) => {        
         if (idString) {
-          executors = executors.map((ext:any) => ({
+          executors = executors.map((ext: any) => ({
             user: {
-              first_name: ext.first_name,
-              image: ext.image,
-              last_name: ext.last_name,
-              user: ext.user_id,
-              user_role:ext.user_role
+              first_name: ext.user.first_name,
+              image: ext.user.image,
+              last_name: ext.user.last_name,
+              user: ext.user.user_id,
+              user_role: ext.user.user_role
             }
-          }))
-          this.executors = executors
-        }else{
+          }))          
+          this.executors = executors;
+          if (idString)
+            this.executors.sort((value: any) => {
+              return value.is_in_user_list ? 1 : -1
+            })
+        } 
+        else {
           this.executors = executors.results;
         }
         this.initEditGroupForm(index);
         this.isEditGroupVisible = true;
         this.editingGroupIndex = index;
-        
+
       });
 
   }
@@ -442,10 +448,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   deleteDragItemFromGroup(
     subgroup: OrderSubgroupDragItem,
     subgroupItem: { name: string; type: string },
-    position: number
+    position: number, isSave: boolean = true
   ): void {
-    console.log('delete form');
-
     //delete form
     let index: number;
     if (subgroupItem.type === DragItemTypes.Service) {
@@ -466,10 +470,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.subgroups[index1].executors = []
       }
     }
-
-    subgroup.groupItemList.splice(position, 1);
+    if (isSave)
+      subgroup.groupItemList.splice(position, 1);
     if (subgroupItem.type !== DragItemTypes.Extra)
       this.subgroups[index].groupItemList.unshift(subgroupItem);
+
   }
 
   searchForServices(term: string): void {
@@ -566,7 +571,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             .filter((item) => item.type === DragItemTypes.Service)
             .map((groupItemListItem) => {
               return {
-                subservice_id: groupItemListItem.subserviceId,
+                subservice_id: groupItemListItem.subserviceId && groupItemListItem.subserviceId.id?groupItemListItem.subserviceId.id:groupItemListItem.subserviceId,
                 real_price: groupItemListItem.discountPrice,
                 current_price: groupItemListItem.currentPrice,
               };
@@ -655,9 +660,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   deleteGroup(index: number): void {
     const group = this.subgroups[index];
+    group.groupItemList.forEach((data, ind) => {
+      this.deleteDragItemFromGroup(group, data, ind,false)
+    })
     if (group?.suborderMain?.id) {
       // this.removedSuborders.push(group.suborderMain.id);
     }
+
     this.subgroups.splice(index, 1);
   }
 

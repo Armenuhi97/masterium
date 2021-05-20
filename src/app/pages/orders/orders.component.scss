@@ -13,6 +13,13 @@
 }
 :host::ng-deep{
     .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
-        padding: 5px 16px !important;
+        padding: 3px 13px !important;
     }
+}
+.comment{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+    display: inline-block;
+    white-space: nowrap;
 }

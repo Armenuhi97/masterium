@@ -67,9 +67,12 @@
         {{data.user?.first_name}} {{data.user?.last_name }}<br />
         {{ data.user?.phone_number }}
       </td>
-      <td>{{data?.suborder?.suborder_worker[0]?.user?.first_name}}
-        {{data?.suborder?.suborder_worker[0]?.user?.last_name}}</td>
-      <td>{{data?.suborders_count ? data?.suborder?.comment : data?.description}}</td>
+      <td>
+        <div *ngIf="data?.suborder?.suborder_worker[0]"> {{data?.suborder?.suborder_worker[0]?.user?.first_name}}
+          {{data?.suborder?.suborder_worker[0]?.user?.last_name}}</div>
+          <div *ngIf="!data?.suborder?.suborder_worker[0]"> - </div>
+      </td>
+      <td><span class="comment"> {{data?.suborders_count ? data?.suborder?.comment : data?.description}}</span></td>
       <td>
         <span *ngIf="data?.suborders_count && data.suborder && data.suborder.start_date">{{data.suborder.start_date |
           date:'yyyy-MM-dd'}} <span *ngIf="data?.suborder?.done_at">- {{ data.suborder.done_at |
@@ -81,8 +84,9 @@
       <td>{{data.ordered_product_count}}</td>
       <td>{{data.disput_count}}</td>
       <!-- <td>{{data.suborders_count}}</td> -->
-      <td>{{data.status.name_ru}}</td>
-      <td><span *ngIf="data?.suborders_count">{{data?.suborders_count?'оплачено кешем':'не оплачено кешем'}}</span></td>
+      <td><span *ngIf="data?.suborders_count">{{data?.suborder?.status?.name_ru}}</span>
+        <span *ngIf="!data?.suborders_count">{{data?.status?.name_ru}}</span> </td>
+      <td><span *ngIf="data?.suborders_count && data?.suborder?.status?.code == 'ACC'">{{data?.suborders_count?'оплачено кешем':'не оплачено кешем'}}</span></td>
       <td>{{data.order_number}}</td>
       <td [routerLink]="['/dashboard/orders', data.id]" class="action-button edit">
         <i nz-icon nzType="edit"></i>
