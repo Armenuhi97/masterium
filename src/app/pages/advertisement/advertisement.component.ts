@@ -176,7 +176,6 @@ export class AdvertisementComponent implements OnInit, OnDestroy {
   addAdvertisement(): void {
     this.isVisible = true;
     this.isEditing = false;
-    // console.log(this.validateForm.value);
     // if (this.validateForm)
     // this.validateForm.reset();
   }

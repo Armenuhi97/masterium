@@ -109,9 +109,7 @@ export class ClientComponent implements OnInit {
       this.disputPageIndex
     )
       .pipe(takeUntil(this._unsubscribe$)).subscribe((data: ServerResponce<any[]>) => {
-        this.disputTotal = data.count;
-        console.log(data);
-        
+        this.disputTotal = data.count;        
         this.clientDisputHistory = data.results;
       });
   }

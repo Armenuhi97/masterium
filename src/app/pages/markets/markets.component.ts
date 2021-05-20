@@ -296,8 +296,6 @@ export class MarketsComponent implements OnInit, OnDestroy {
             return this.marketService.addSubcategory(sendingData);
           }))
         .subscribe(res => {
-          console.log(res);
-          console.log(this.subCategories);
 
           this.subCategories.push(res);
           this.actionsAfterSuccessfullAction();

@@ -16,8 +16,6 @@ export class OrdersPaymentControlPanelComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.defaultDebet);
-
     this.debit = this.defaultDebet;
   }
 

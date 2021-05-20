@@ -36,7 +36,6 @@ export class FinancesExecutorsComponent implements OnInit, OnDestroy {
       this._datePipe.transform(range[1], 'yyyy-MM-dd')
     ]).pipe(map(response => {
       this.totalCount = response.count;
-      console.log(response);
       return response.results;
     }));
   }

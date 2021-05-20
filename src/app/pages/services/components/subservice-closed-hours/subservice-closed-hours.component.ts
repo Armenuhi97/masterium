@@ -45,9 +45,6 @@ export class SubserviceClosedHoursComponent {
         return this.servicesService.getSubserviceClosedHours(this.subOrderId, this.pageIndex).pipe(map((data: ServerResponce<any>) => {
             this.suborderClosedHoursList = data.results;
             this.total = data.count;
-
-            console.log(data);
-
         }))
     }
     closeModal() {
@@ -56,25 +53,21 @@ export class SubserviceClosedHoursComponent {
     }
     formatDate(date): string {
         let value = date.split('T');
-        let time:string;
-        let day:string;
+        let time: string;
+        let day: string;
         if (value && value.length) {
             day = value[0]
             let lastPointIndex = value[1].lastIndexOf(':');
-            console.log(lastPointIndex);
 
             if (lastPointIndex > -1) {
                 time = value[1].substr(0, lastPointIndex)
             }
-            console.log(time);
         }
-        
+
         return `${day} ${time}`
     }
     addClosedHours() {
         if (this.validateForm.valid) {
-
-            console.log(this.validateForm.value);
             let sendObject: ClosedHoursResponce = {
                 subservice: this.subOrderId,
                 start: this._datePipe.transform(this.validateForm.value.date[0], 'yyyy-MM-dd HH:mm'),

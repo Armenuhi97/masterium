@@ -156,7 +156,6 @@ export class ExecutorComponent implements OnInit {
 
 
   public onExecutorSave(): void {
-    console.log(this.validateForm);
 
     if (this.validateForm.invalid) {
       for (const i in this.validateForm.controls) {
@@ -313,7 +312,6 @@ export class ExecutorComponent implements OnInit {
 
   private _patchStateToForm(): void {
     const editingExecutor = this.executor;
-    console.log(editingExecutor);
 
     const workScheduleStart = new Date(Date.now()).setHours(
       editingExecutor.user_schedule.start_time.split(':')[0],
@@ -325,7 +323,6 @@ export class ExecutorComponent implements OnInit {
     );
     this.workScheduleStart = new Date(workScheduleStart);
     this.workScheduleEnd = new Date(workScheduleEnd);
-    console.log(this.validateForm, editingExecutor);
 
     this.validateForm.patchValue({
       image: editingExecutor.user_details.image || '',

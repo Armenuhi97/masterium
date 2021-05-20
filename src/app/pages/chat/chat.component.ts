@@ -151,9 +151,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   public handleChange(info: NzUploadChangeParam) {
     // if (type === 'file') {
     this.type = info.file.type;
-    this.fileControl.setValue(info.file.originFileObj);
-    console.log(this.fileControl.value);
-    
+    this.fileControl.setValue(info.file.originFileObj);    
     // } else if (type === 'image') {
     // this.validateForm.get('image').setValue(info.file.originFileObj);
     // }

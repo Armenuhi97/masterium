@@ -14,7 +14,6 @@ export class SubordersListComponent implements OnInit, OnDestroy {
   @Output() delete: EventEmitter<number> = new EventEmitter<number>();
   @Input() set suborders(subs: OrderSubgroupDragItem[]) {    
     this.showSuborders = subs.filter(order => order.suborderMain?.id);    
-    console.log(this.showSuborders);
         
   }
   private _unsubscribe = new Subject<void>()

@@ -9,7 +9,7 @@ export class OrdersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getOrders( offset: number, status: string, subOrderStatus: string, isHasDisput: boolean,ordering='',search=''): Observable<ServerResponce<Order[]>> {
+  getOrders(offset: number, status: string, subOrderStatus: string, isHasDisput: boolean, ordering = '', search = ''): Observable<ServerResponce<Order[]>> {
     let url = `orders/order-list/?limit=10&offset=${offset}&status=${status}&order_suborders__status=${subOrderStatus}&ordering=${ordering}&search=${search}`;
     if (isHasDisput) {
       url += `&has_disput=True`
@@ -44,17 +44,11 @@ export class OrdersService {
     return this.httpClient.get<any>(`services/search-service/${term}/`);
   }
 
-  getExecutors(subserviceIds:string='',executorId:number): Observable<ExecutorsResponse> {
-    let url=``;
-    if(subserviceIds){
-      url+=`userdetails/get-executors-by-subservice/${executorId}/?subservices=${subserviceIds}&is_active=true`
+  getExecutors(subserviceIds: string = '', executorId: number): Observable<ExecutorsResponse> {
+    let url = `userdetails/get-executors-by-subservice/${executorId}/?is_active=true`;
+    if (subserviceIds) {
+      url += `&subservices=${subserviceIds}`
     }
-    else{
-      url=`userdetails/get-executor-list/?is_active=true`
-    }
-    // http://api.masterium.ge/userdetails/get-executors-by-subservice/id/?is_active=true&subservices=1,2
-  //  let url =`userdetails/get-executors-by-subservice/${executorId}/?subservices=${subserviceIds}&is_active=true`
-
     return this.httpClient.get<ExecutorsResponse>(url);
   }
 

@@ -62,7 +62,6 @@ export class ExecutorBoardComponent implements OnInit, OnDestroy {
             .subscribe((data: ServerResponce<ExecutorBoard[]>) => {
                 this.total = data.count;
                 this.executeBoardSpareParts = data.results;
-                console.log(this.executeBoardSpareParts);
                 
             });
     }

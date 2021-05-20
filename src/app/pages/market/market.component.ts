@@ -87,7 +87,6 @@ export class MarketComponent implements OnInit, OnDestroy {
       });
   }
   public changeShowInMarket($event, data: MarketProductItem,ind:number) {
-    console.log($event);
 
     data.show_in_market = $event;
     const product = {

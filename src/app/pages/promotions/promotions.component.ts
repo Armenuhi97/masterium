@@ -165,7 +165,6 @@ export class PromotionsComponent implements OnInit, OnDestroy {
             discount.percent
           )
         );
-        console.log(this.items);
         
       } else {
         this.productItems = this.validateForm.get('productItems') as FormArray;
@@ -199,7 +198,6 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
 
   onSubmit(): void {
-    console.log(this.validateForm);
     
     if (this.validateForm.invalid) {
       return;
@@ -217,7 +215,6 @@ export class PromotionsComponent implements OnInit, OnDestroy {
 
 
     sendingData.discount = formValue.items.map((item) => {
-      console.log(item);
       
       return {
         subcategory: item.id,

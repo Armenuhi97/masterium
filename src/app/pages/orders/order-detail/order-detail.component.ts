@@ -133,35 +133,35 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     if (this.subgroups[index].groupItemList && this.subgroups[index].groupItemList.length) {
 
       for (let item of this.subgroups[index].groupItemList) {
-        let id=item.subserviceId && item.subserviceId.id?item.subserviceId.id:item.subserviceId
+        let id = item.subserviceId && item.subserviceId.id ? item.subserviceId.id : item.subserviceId
         if (item.type == 'service')
           ids.push(id)
       }
-    }    
+    }
     let idString = ids && ids.length ? ids.join(',') : ''
     this.ordersService
-      .getExecutors(idString,this.order.order.user.user)
+      .getExecutors(idString, this.order.order.user.user)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((executors: any) => {        
-        if (idString) {
-          executors = executors.map((ext: any) => ({
-            user: {
-              first_name: ext.user.first_name,
-              image: ext.user.image,
-              last_name: ext.user.last_name,
-              user: ext.user.user_id,
-              user_role: ext.user.user_role
-            }
-          }))          
-          this.executors = executors;
-          if (idString)
-            this.executors.sort((value: any) => {
-              return value.is_in_user_list ? 1 : -1
-            })
-        } 
-        else {
-          this.executors = executors.results;
-        }
+      .subscribe((executors: any) => {
+        // if (idString) {
+        executors = executors.map((ext: any) => ({
+          user: {
+            first_name: ext.user.first_name,
+            image: ext.user.image,
+            last_name: ext.user.last_name,
+            user: ext.user.user_id,
+            user_role: ext.user.user_role
+          }
+        }))
+        this.executors = executors;
+        // if (idString)
+        this.executors.sort((value: any) => {
+          return value.is_in_user_list ? 1 : -1
+        })
+        // } 
+        // else {
+        //   this.executors = executors.results;
+        // }
         this.initEditGroupForm(index);
         this.isEditGroupVisible = true;
         this.editingGroupIndex = index;
@@ -186,6 +186,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
               serviceId: subservice.service_id,
               subserviceId: subservice.subserv,
               discountPrice: subservice.real_price,
+              guaranteePeriod: subservice.subserv.guarantee_period
             }))
             ,
             id: 'group-1',
@@ -195,11 +196,12 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           {
             groupItemList: order.product.map((product: any) => ({
               type: DragItemTypes.Product,
-              name: product.name_ru,
+              name: product.product.name_ru,
+              guaranteePeriod: product.product.guarantee_period,
               id: product.product && product.product.id ? product.product.id : product.product,
               currentPrice: product.current_price,
               realPrice: product.real_price,
-              quantity: product.quantity,
+              quantity: product.quantity
             })),
             id: 'group-2',
             name: 'Продукт',
@@ -250,8 +252,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
 
           // sub.subservice.forEach((service: any) => {
-          //   console.log();
-
           //   this.subgroups[this.subgroups.length - 1].groupItemList.push({
           //     type: DragItemTypes.Extra,
           //     name: service.subservice.service.name_ru,
@@ -571,7 +571,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             .filter((item) => item.type === DragItemTypes.Service)
             .map((groupItemListItem) => {
               return {
-                subservice_id: groupItemListItem.subserviceId && groupItemListItem.subserviceId.id?groupItemListItem.subserviceId.id:groupItemListItem.subserviceId,
+                subservice_id: groupItemListItem.subserviceId && groupItemListItem.subserviceId.id ? groupItemListItem.subserviceId.id : groupItemListItem.subserviceId,
                 real_price: groupItemListItem.discountPrice,
                 current_price: groupItemListItem.currentPrice,
               };
@@ -593,7 +593,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             comment: suborder.suborderMain.comment,
             guarantee_period: suborder.suborderMain.guarantee_period,
             start_date: suborder.suborderMain?.start_date,
-            suborder_name: '',
+            suborder_name: suborder.name,
             suborder_id: suborder.suborderMain?.id || null,
             extra_service_price: this.checkPropertyValue(this.checkPropertyValue(suborder.groupItemList
               .filter((item) => item.type === DragItemTypes.Extra), 0, 0), 'currentPrice', 0),
@@ -661,7 +661,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   deleteGroup(index: number): void {
     const group = this.subgroups[index];
     group.groupItemList.forEach((data, ind) => {
-      this.deleteDragItemFromGroup(group, data, ind,false)
+      this.deleteDragItemFromGroup(group, data, ind, false)
     })
     if (group?.suborderMain?.id) {
       // this.removedSuborders.push(group.suborderMain.id);
