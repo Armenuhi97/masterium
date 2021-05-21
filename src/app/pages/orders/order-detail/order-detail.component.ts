@@ -593,7 +593,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             comment: suborder.suborderMain.comment,
             guarantee_period: suborder.suborderMain.guarantee_period,
             start_date: suborder.suborderMain?.start_date,
-            suborder_name: suborder.name,
+            suborder_name: suborder.name ? suborder.name.replace('Заказ N ', '') : '',
             suborder_id: suborder.suborderMain?.id || null,
             extra_service_price: this.checkPropertyValue(this.checkPropertyValue(suborder.groupItemList
               .filter((item) => item.type === DragItemTypes.Extra), 0, 0), 'currentPrice', 0),
