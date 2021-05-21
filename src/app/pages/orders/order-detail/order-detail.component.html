@@ -71,7 +71,7 @@
             class="drag-list fixed" (cdkDropListDropped)="drop($event, subgroups[0])">
             <div class="drag-box" *ngFor="let subgroupItem of subgroups[0].groupItemList; let i = index" cdkDrag>
               <div>
-                <p class="m-0">{{subgroupItem.name}}</p>
+                <p class="m-0 w-70">{{subgroupItem.name}}</p>
                 <small>{{subgroupItem.subservice}}</small>
                 <div class="used" *ngIf="checkISelect(subgroupItem)">Использовано</div>
               </div>
@@ -103,7 +103,7 @@
             class="drag-list fixed" (cdkDropListDropped)="drop($event, subgroups[1])">
             <div class="drag-box justif-content-start flex-wrap"
               *ngFor="let subgroupItem of subgroups[1].groupItemList; let i = index" cdkDrag>
-              <p class="m-0">{{subgroupItem.name}}</p>
+              <p class="m-0 w-70">{{subgroupItem.name}}</p>
               <!-- <nz-form-item class="ml-auto mr-1 price-control">
                 <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                   <input min="0" nz-input [(ngModel)]="subgroups[1].groupItemList[i].quantity" type="number"
@@ -203,7 +203,7 @@
                 <div class="d-flex align-items-center">
 
                   <nz-input-group class="no-border" *ngIf="subgroupItem.type === 'product'" [nzPrefix]="quantitySuffix">
-                    <nz-form-item style="margin: 0 15px 0 0" class="price-control mr-1 ml-auto">
+                    <nz-form-item style="margin: 0 15px 0 0" class=" mr-1 ml-auto">
                       <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                         <input min="0" nz-input [(ngModel)]="subgroupItem.quantity" type="number"
                           placeholder="Количество" />
@@ -211,7 +211,7 @@
                     </nz-form-item>
                   </nz-input-group>
                   <nz-input-group class="no-border" *ngIf="!subgroupItem.url" [nzPrefix]="countSuffix">
-                    <nz-form-item style="margin: 0 3px 0 0" class="price-control">
+                    <nz-form-item style="margin: 0 3px 0 0" >
                       <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                         <input min="0" nz-input [(ngModel)]="subgroupItem.currentPrice" type="number"
                           placeholder="Цена" />
