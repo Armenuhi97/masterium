@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ClientDetail, ClientList, ClientOrderHistoryResponse, ClientRequest, CompanyType } from '../../core/models/user';
 import { ServerResponce } from 'src/app/core/models/server-responce';
 import { CreateRoomResponse } from 'src/app/core/models/chat';
+import { EssenceItem } from 'src/app/core/models/utils';
 
 @Injectable()
 export class ClientsService {
@@ -12,7 +13,10 @@ export class ClientsService {
   addClient(user: ClientRequest): Observable<ClientList> {
     return this.httpClient.post<ClientList>(`userdetails/add-client/`, user);
   }
+  public getBankList(): Observable<EssenceItem[]>{
+    return this.httpClient.get<EssenceItem[]>(`utils/bank/`)
 
+  }
   editClient(id: number, user: ClientRequest): Observable<ClientList> {
     return this.httpClient.put<ClientList>(`userdetails/edit-client/${id}/`, user);
   }

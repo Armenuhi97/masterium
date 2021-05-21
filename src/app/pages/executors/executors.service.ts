@@ -85,7 +85,10 @@ export class ExecutorsService {
   public getExecuteBoards(page: number, id: number): Observable<ServerResponce<ExecutorBoard[]>> {
     return this.httpClient.get<ServerResponce<ExecutorBoard[]>>(`products/get-executor-board/${id}/?page=${page}`);
   }
+  public getBankList(): Observable<EssenceItem[]>{
+    return this.httpClient.get<EssenceItem[]>(`utils/bank/`)
 
+  }
   public changeExecuteBoardCount(id: number, quantity: number): Observable<any> {
     return this.httpClient.post(`products/change-board-item-count/${id}/`, { quantity });
   }

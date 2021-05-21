@@ -146,15 +146,14 @@ nz-date-picker {
 }
 
 .price-control {
-  width: 70px;
+  width: 170px;
   margin-bottom: 0;
 }
 
 .drag-filter {
   width: 120px;
 }
-
-.action-buttons {
+.m-top-60 {
   margin-top: 60px;
 }
 

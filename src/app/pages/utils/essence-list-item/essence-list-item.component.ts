@@ -61,25 +61,33 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.validateForm = this.formBuilder.group({
-      essenceTitleInRussian: ['', [Validators.required]],
-      essenceTitleInEnglish: ['', [Validators.required]],
-      essenceTitleInGeorgian: ['', [Validators.required]]
-    });
-    if (this.type === EssenceType.specialization) {
-      this.validateForm.addControl(
-        'icon',
-        new FormControl('', Validators.required)
-      );
-    }
-    if (this.type === EssenceType.help) {
-      this.validateForm.addControl('descriptionInRussian', new FormControl('', Validators.required));
-      this.validateForm.addControl('descriptionInEnglish', new FormControl('', Validators.required));
-      this.validateForm.addControl('descriptionInGeorgian', new FormControl('', Validators.required));
-    }
-    if (this.type === EssenceType.measurementType) {
-      this.validateForm.addControl('code', new FormControl('', [Validators.required, Validators.maxLength(5)]));
+    if (this.type !== EssenceType.bank) {
+      this.validateForm = this.formBuilder.group({
+        essenceTitleInRussian: ['', [Validators.required]],
+        essenceTitleInEnglish: ['', [Validators.required]],
+        essenceTitleInGeorgian: ['', [Validators.required]]
+      });
 
+      if (this.type === EssenceType.specialization) {
+        this.validateForm.addControl(
+          'icon',
+          new FormControl('', Validators.required)
+        );
+      }
+      if (this.type === EssenceType.help) {
+        this.validateForm.addControl('descriptionInRussian', new FormControl('', Validators.required));
+        this.validateForm.addControl('descriptionInEnglish', new FormControl('', Validators.required));
+        this.validateForm.addControl('descriptionInGeorgian', new FormControl('', Validators.required));
+      }
+      if (this.type === EssenceType.measurementType) {
+        this.validateForm.addControl('code', new FormControl('', [Validators.required, Validators.maxLength(5)]));
+
+      }
+    } else {
+      this.validateForm = this.formBuilder.group({
+        name: ['', [Validators.required]],
+        code: ['', [Validators.required]]
+      });
     }
   }
 
@@ -158,8 +166,13 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
         };
         sendingData = Object.assign(sendingData, titles)
 
+      }else if (this.type === EssenceType.bank) {
+        sendingData = {
+          name: this.validateForm.value.name,
+          code: this.validateForm.value.code
+        }
       }
-      if (this.type == EssenceType.measurementType && this.validateForm.value.code) {
+      if (this.type == EssenceType.measurementType && EssenceType.bank && this.validateForm.value.code) {
         let item = this.itemsList.filter((el) => { return el.code == this.validateForm.value.code });
         if (item && item.length) {
           this.message.error('Уже существует такой код')
@@ -205,24 +218,32 @@ export class EssenceListItemComponent implements OnInit, OnDestroy {
   editEssenceItem(index: number): void {
     this.isEditing = true;
     this.editingEssenceIndex = index;
-    this.validateForm.get('essenceTitleInRussian').setValue(this.itemsList[index].name_ru);
-    this.validateForm.get('essenceTitleInEnglish').setValue(this.itemsList[index].name_en);
-    this.validateForm.get('essenceTitleInGeorgian').setValue(this.itemsList[index].name_ge);
-    if (this.type === EssenceType.help) {
-      this.validateForm.get('descriptionInRussian').setValue(this.itemsList[index].description_ru);
-      this.validateForm.get('descriptionInEnglish').setValue(this.itemsList[index].description_en);
-      this.validateForm.get('descriptionInGeorgian').setValue(this.itemsList[index].description_ge);
-    }
-    if (this.type === EssenceType.measurementType) {
-      this.validateForm.get('code').setValue(this.itemsList[index].code);
+    if (this.type !== 'bank') {
+      this.validateForm.get('essenceTitleInRussian').setValue(this.itemsList[index].name_ru);
+      this.validateForm.get('essenceTitleInEnglish').setValue(this.itemsList[index].name_en);
+      this.validateForm.get('essenceTitleInGeorgian').setValue(this.itemsList[index].name_ge);
+      if (this.type === EssenceType.help) {
+        this.validateForm.get('descriptionInRussian').setValue(this.itemsList[index].description_ru);
+        this.validateForm.get('descriptionInEnglish').setValue(this.itemsList[index].description_en);
+        this.validateForm.get('descriptionInGeorgian').setValue(this.itemsList[index].description_ge);
+      }
+      if (this.type === EssenceType.measurementType) {
+        this.validateForm.get('code').setValue(this.itemsList[index].code);
 
-    }
-    if (this.type === EssenceType.specialization) {
-      this.validateForm.get('icon').setValue(this.itemsList[index].icon);
+      }
+      if (this.type === EssenceType.specialization) {
+        this.validateForm.get('icon').setValue(this.itemsList[index].icon);
+      }
+    } else {
+
+      this.validateForm.get('name').setValue(this.itemsList[index].name);
+      this.validateForm.get('code').setValue(this.itemsList[index].code);
     }
     this.showModal();
   }
-
+  public getLabel(item): string {
+    return this.type == 'bank' ? item.name : item.name_ru
+  }
   showModal(): void {
     this.isVisible = true;
   }

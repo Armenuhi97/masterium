@@ -32,8 +32,9 @@
                     <nz-form-item>
                         <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                             <nz-input-group [nzPrefix]="phoneNumberTemplate">
-                                    <input maxlength="9" nz-input formControlName="phoneNumber" placeholder="Введите телефон" />
-                                </nz-input-group> 
+                                <input maxlength="9" nz-input formControlName="phoneNumber"
+                                    placeholder="Введите телефон" />
+                            </nz-input-group>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
@@ -45,12 +46,34 @@
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-                <div nz-col [nzSpan]="8">
+                <!-- <div nz-col [nzSpan]="8">
                     <nz-form-label class="inline-labels">Кредитная карта</nz-form-label>
                     <nz-form-item>
                         <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
-                                <input nz-input formControlName="creditCardNumber" maxlength="16" placeholder="Введите номер карты" />
+                                <input nz-input formControlName="creditCardNumber" maxlength="12" placeholder="Введите номер карты" />
                         </nz-form-control>
+                    </nz-form-item>
+                </div> -->
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Банк</nz-form-label>
+                    <nz-form-item>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+                            <nz-select formControlName="bankCodePrefix" class="phone-select">
+                                <nz-option *ngFor="let bank of banks" [nzLabel]="bank.name" [nzValue]="bank.id">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Кредитная карта</nz-form-label>
+                    <nz-form-item>
+                        <nz-input-group [nzAddOnBefore]="cardCodeTemplate">
+                            <input nz-input formControlName="creditCardNumber" maxlength="12"
+                                placeholder="Введите номер карты" />
+                        </nz-input-group>
                     </nz-form-item>
                 </div>
             </div>
@@ -166,3 +189,4 @@
 <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
 <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
 <ng-template #phoneNumberTemplate>+995</ng-template>
+<ng-template #cardCodeTemplate>{{setCode?.code}}</ng-template>

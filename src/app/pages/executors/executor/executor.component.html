@@ -50,16 +50,31 @@
                         </nz-form-control>
                     </nz-form-item>
                 </div>
+
+            </div>
+            <div nz-row [nzGutter]="24">
                 <div nz-col [nzSpan]="8">
-                    <nz-form-label class="inline-labels" nzRequired>Кредитная карта</nz-form-label>
+                    <nz-form-label class="inline-labels" nzRequired>Банк</nz-form-label>
                     <nz-form-item>
                         <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
-                            <input nz-input formControlName="creditCardNumber" maxlength="16"
-                                placeholder="Введите номер карты" />
+                            <nz-select formControlName="bankCodePrefix" class="phone-select">
+                                <nz-option *ngFor="let bank of banks" [nzLabel]="bank.name" [nzValue]="bank.id">
+                                </nz-option>
+                            </nz-select>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
+                <div nz-col [nzSpan]="8">
+                    <nz-form-label class="inline-labels" nzRequired>Кредитная карта</nz-form-label>
+                    <nz-form-item>
+                        <nz-input-group [nzAddOnBefore]="cardCodeTemplate">
+                            <input nz-input formControlName="creditCardNumber" maxlength="12"
+                                placeholder="Введите номер карты" />
+                        </nz-input-group>
+                    </nz-form-item>
+                </div>
             </div>
+
             <div nz-row [nzGutter]="24">
                 <div nz-col [nzSpan]="8">
                     <nz-form-label class="inline-labels">О исполнителе</nz-form-label>
@@ -154,8 +169,8 @@
                             nzPlaceHolder="Работа с инструментами" [(ngModel)]="selectedSpecializations"
                             (ngModelChange)="addOrDeleteItem($event, specializationsFormArray, specializations, 'specializationsFormArray')"
                             [ngModelOptions]="{standalone: true}" class="">
-                            <nz-option *ngFor="let specialization of specializations"
-                                [nzLabel]="specialization.name_ru" [nzValue]="specialization.id">
+                            <nz-option *ngFor="let specialization of specializations" [nzLabel]="specialization.name_ru"
+                                [nzValue]="specialization.id">
                             </nz-option>
                         </nz-select>
                         <ng-container formArrayName="specializationsFormArray"
@@ -181,8 +196,7 @@
                             (ngModelChange)="addOrDeleteItem($event, documents, userAttachmentTypes, 'documents')"
                             [ngModelOptions]="{standalone: true}" class="">
                             <nz-option *ngFor="let userAttachmentType of userAttachmentTypes"
-                                [nzLabel]="userAttachmentType.name_ru"
-                                [nzValue]="userAttachmentType.id"></nz-option>
+                                [nzLabel]="userAttachmentType.name_ru" [nzValue]="userAttachmentType.id"></nz-option>
                         </nz-select>
                     </nz-form-item>
                     <ng-container formArrayName="documents"
@@ -221,7 +235,7 @@
             </div>
             <img *ngIf="validateForm.get('showingImage').value" class="img-fluid preview-image"
                 [src]="validateForm.get('showingImage').value" />
-            <div class="d-flex align-items-cener justify-content-end action-buttons">
+            <div class="d-flex align-items-cener justify-content-end m-top-60 action-buttons">
                 <button (click)="onExecutorSave()" class="mr-3" nz-button nzType="primary"><i nz-icon
                         nzType="save"></i>{{isEditing ? 'Сохранить' : 'Добавить'}}</button>
             </div>
@@ -305,3 +319,4 @@
 <ng-template #checkedTemplateText>В приоритете</ng-template>
 <ng-template #unCheckedTemplateText>Не в приоритете</ng-template>
 <ng-template #phoneNumberTemplate>+995</ng-template>
+<ng-template #cardCodeTemplate>{{setCode?.code}}</ng-template>

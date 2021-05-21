@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { Messages } from 'src/app/core/models/messages';
 import { ServerResponce } from 'src/app/core/models/server-responce';
 import { ClientDetail, ClientOrderHistoryResponse, ClientRequest, CompanyType } from 'src/app/core/models/user';
+import { EssenceItem } from 'src/app/core/models/utils';
 import { MainService } from 'src/app/core/services/main.service';
 import { getBase64 } from 'src/app/core/utilities/base64';
 import { ClientsService } from '../clients.service';
@@ -18,6 +19,7 @@ import { ClientsService } from '../clients.service';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
+  public banks: EssenceItem[] = []
   private _unsubscribe$ = new Subject();
   private _id: number;
   public isEditing = false;
@@ -48,10 +50,11 @@ export class ClientComponent implements OnInit {
 
   ngOnInit(): void {
     this._initForm();
-    this._getCompanyTypes();
-    if (this.isEditing) {
-      this._getClient();
-    }
+    this._combineObservable()
+    // this._getCompanyTypes();
+    // if (this.isEditing) {
+    //   this._getClient();
+    // }
   }
 
   private _initForm(): void {
@@ -62,11 +65,12 @@ export class ClientComponent implements OnInit {
       companyId: '',
       companyName: '',
       companyType: '',
-      creditCardNumber: ['', [Validators.maxLength(16), Validators.minLength(16)]],
+      creditCardNumber: ['', [Validators.maxLength(12), Validators.minLength(12)]],
       isCooperativeUser: [false, [Validators.required]],
       email: ['', [Validators.email]],
       image: null,
       showingImage: null,
+      bankCodePrefix: [null, Validators.required]
     });
 
     this.validateForm.get('isCooperativeUser').valueChanges.subscribe(data => {
@@ -84,13 +88,31 @@ export class ClientComponent implements OnInit {
       }
     });
   }
+  private _combineObservable() {
+    const combine = forkJoin(
+      this.getBanks(),
+      this._getCompanyTypes()
 
-  private _getCompanyTypes(): void {
-    this._clientsService.getCompanyTypes()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((res) => {
+    )
+    combine.pipe(takeUntil(this._unsubscribe$)).subscribe(() => {
+      if (this.isEditing) {
+        this._getClient();
+      }
+    })
+  }
+  public getBanks() {
+    return this._clientsService.getBankList().pipe(
+      map((data: EssenceItem[]) => {
+        this.banks = data;
+
+      })
+    )
+  }
+  private _getCompanyTypes() {
+    return this._clientsService.getCompanyTypes()
+      .pipe(map((res) => {
         this.companyTypes = res;
-      });
+      }));
   }
 
   public getClientOrders(): void {
@@ -109,7 +131,7 @@ export class ClientComponent implements OnInit {
       this.disputPageIndex
     )
       .pipe(takeUntil(this._unsubscribe$)).subscribe((data: ServerResponce<any[]>) => {
-        this.disputTotal = data.count;        
+        this.disputTotal = data.count;
         this.clientDisputHistory = data.results;
       });
   }
@@ -125,7 +147,8 @@ export class ClientComponent implements OnInit {
     }
     const formValue = this.validateForm.value;
     const sendingData: ClientRequest = {
-      credit_card_number: formValue.creditCardNumber,
+      credit_card_number: this.setCode ? this.setCode.code + formValue.creditCardNumber : '',
+      bank: formValue.bankCodePrefix,
       email: formValue.email,
       first_name: formValue.firstName,
       last_name: formValue.lastName,
@@ -210,6 +233,8 @@ export class ClientComponent implements OnInit {
       companyName: editingExecutor.company_name || '',
       companyType: editingExecutor.company_type || '',
       isCooperativeUser: editingExecutor.is_cooperative_user,
+      bankCodePrefix: editingExecutor.bank ? editingExecutor.bank.id : null,
+
     });
   }
 
@@ -242,5 +267,16 @@ export class ClientComponent implements OnInit {
       }
     } else if (event.index === 3) {
     }
+  }
+  get setCode() {
+    let bankCode;
+    let bank = this.validateForm.get('bankCodePrefix').value;
+    if (bank) {
+      bankCode = this.banks.filter((el) => {
+        return el.id == bank
+      })
+    }
+
+    return bankCode && bankCode[0] ? bankCode[0] : null
   }
 }

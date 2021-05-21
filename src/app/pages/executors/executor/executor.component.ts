@@ -5,7 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { Messages } from 'src/app/core/models/messages';
 import { Subcategory } from 'src/app/core/models/services';
 import { ExecutorOrderHistoryResponse, ExecutorRequest, UserDetail } from 'src/app/core/models/user';
@@ -21,6 +21,7 @@ import { ExecutorsService } from '../executors.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ExecutorComponent implements OnInit {
+  public banks: EssenceItem[] = []
   private _unsubscribe$ = new Subject();
   public id: number;
   public validateForm: FormGroup;
@@ -56,12 +57,7 @@ export class ExecutorComponent implements OnInit {
 
   ngOnInit(): void {
     this._initForm();
-    if (this.isEditing) {
-      this._getExecutor();
-    }
-    this._getSubcategories();
-    this._getUserAttachmentTypes();
-    this._getSpecializations();
+    this._combineObservable()
   }
 
   private _initForm(): void {
@@ -71,7 +67,7 @@ export class ExecutorComponent implements OnInit {
         lastName: ['', Validators.required],
         phone: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
         email: ['', Validators.required],
-        creditCardNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
+        creditCardNumber: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12)]],
         experience: '',
         study: '',
         about: '',
@@ -85,11 +81,11 @@ export class ExecutorComponent implements OnInit {
         subcategoriesFormArray: this._formBuilder.array([]),
         image: [null, Validators.required],
         showingImage: null,
+        bankCodePrefix: [null, Validators.required]
       },
       { validator: dateLessThan('workScheduleStart', 'workScheduleEnd') }
     );
     this.validateForm.valueChanges.subscribe(() => {
-      console.log(this.validateForm);
 
     })
     this.validateForm.valueChanges.subscribe((res) => {
@@ -99,31 +95,50 @@ export class ExecutorComponent implements OnInit {
     });
   }
 
-  private _getSubcategories(): void {
-    this._executorsService
+  private _getSubcategories() {
+    return this._executorsService
       .getAllSubcategories()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((subcategories) => {
+      .pipe(takeUntil(this._unsubscribe$), map((subcategories) => {
         this.subcategories = subcategories;
-      });
+      }));
   }
 
-  private _getUserAttachmentTypes(): void {
-    this._executorsService
+  private _getUserAttachmentTypes() {
+    return this._executorsService
       .getUserAttachmentTypes()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response) => {
+      .pipe(map((response) => {
         this.userAttachmentTypes = response;
-      });
+      }));
   }
 
-  private _getSpecializations(): void {
-    this._executorsService
+  private _getSpecializations() {
+    return this._executorsService
       .getSpecializations()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response) => {
+      .pipe(map((response) => {
         this.specializations = response;
-      });
+      }));
+  }
+  public getBanks() {
+    return this._executorsService.getBankList().pipe(
+      map((data: EssenceItem[]) => {
+        this.banks = data;
+
+      })
+    )
+  }
+  private _combineObservable() {
+    const combine = forkJoin(
+      this.getBanks(),
+      this._getSpecializations(),
+      this._getUserAttachmentTypes(),
+      this._getSubcategories()
+
+    )
+    combine.pipe(takeUntil(this._unsubscribe$)).subscribe(() => {
+      if (this.isEditing) {
+        this._getExecutor();
+      }
+    })
   }
 
   private _getExecutor(): void {
@@ -166,10 +181,11 @@ export class ExecutorComponent implements OnInit {
       return;
     }
     const formValue = this.validateForm.value;
+
     const sendingData: ExecutorRequest = {
       user_details: {
         about: formValue.about,
-        credit_card_number: formValue.creditCardNumber,
+        credit_card_number: this.setCode ? this.setCode.code + formValue.creditCardNumber : '',
         email: formValue.email,
         experience: formValue.experience,
         first_name: formValue.firstName,
@@ -179,6 +195,7 @@ export class ExecutorComponent implements OnInit {
         image: formValue.image,
         is_registered_executor: formValue.executorType,
         city: formValue.workArea,
+        bank: formValue.bankCodePrefix
       },
       user_specializations: formValue.specializationsFormArray.map(
         (specializationsFormArrayItem) => {
@@ -323,7 +340,6 @@ export class ExecutorComponent implements OnInit {
     );
     this.workScheduleStart = new Date(workScheduleStart);
     this.workScheduleEnd = new Date(workScheduleEnd);
-
     this.validateForm.patchValue({
       image: editingExecutor.user_details.image || '',
       showingImage: editingExecutor.user_details.image || '',
@@ -331,7 +347,8 @@ export class ExecutorComponent implements OnInit {
       lastName: editingExecutor.user_details.last_name || '',
       phone: editingExecutor.user_details.phone_number ? (editingExecutor.user_details.phone_number).slice(4) : '' || '',
       email: editingExecutor.user_details.email || '',
-      creditCardNumber: editingExecutor.user_details.credit_card_number?.slice(3) || '',
+      creditCardNumber: editingExecutor.user_details.credit_card_number?.slice(4) || '',
+      bankCodePrefix: editingExecutor.user_details.bank ? editingExecutor.user_details.bank.id : null,
       experience: editingExecutor.user_details.experience || '',
       study: editingExecutor.user_details.study_history || '',
       about: editingExecutor.user_details.about || '',
@@ -376,6 +393,7 @@ export class ExecutorComponent implements OnInit {
           );
         }
       ),
+
       subcategoriesFormArray: editingExecutor.user_subcategory.map((sub) => {
 
         const items = this.validateForm.get(
@@ -473,5 +491,16 @@ export class ExecutorComponent implements OnInit {
     control: AbstractControl
   ): void {
     control.setValue(file.file.originFileObj);
+  }
+  get setCode() {
+    let bankCode;
+    let bank = this.validateForm.get('bankCodePrefix').value;
+    if (bank) {
+      bankCode = this.banks.filter((el) => {
+        return el.id == bank
+      })
+    }
+
+    return bankCode && bankCode[0] ? bankCode[0] : null
   }
 }

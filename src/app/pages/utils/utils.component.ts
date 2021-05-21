@@ -13,7 +13,7 @@ import { EssenceItem } from '../../core/models/utils';
   styleUrls: ['./utils.component.scss']
 })
 export class UtilsComponent implements OnInit, OnDestroy {
-
+  banks: EssenceItem[] = [];
   helps: EssenceItem[] = [];
   measurementTypes: EssenceItem[] = [];
   specializations: EssenceItem[] = [];
@@ -68,6 +68,13 @@ export class UtilsComponent implements OnInit, OnDestroy {
         itemsList: this.userAttachmentTypes,
         type: EssenceType.userAttachmentType
       },
+      {
+        buttonLabel: 'Добавить банк',
+        essenceLabel: 'Банк',
+        inputLabel: '',
+        itemsList: this.banks,
+        type: EssenceType.bank
+      },
     ];
 
   }
@@ -98,9 +105,9 @@ export class UtilsComponent implements OnInit, OnDestroy {
         let item = this.essenceList.filter((data) => { return data.type == event.type });
         if (item && item.length) {
           let value = item[0].itemsList.filter((data) => { return data.id == event.id });
-          if (value && value[0]){
+          if (value && value[0]) {
             let index = item[0].itemsList.indexOf(value[0]);
-            item[0].itemsList.splice(index,1)
+            item[0].itemsList.splice(index, 1)
           }
         }
       }, () => {
@@ -116,12 +123,12 @@ export class UtilsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe((data) => {
-        let item = this.essenceList.filter((el) => { return el.type == event.essenceType});
+        let item = this.essenceList.filter((el) => { return el.type == event.essenceType });
         if (item && item.length) {
           let value = item[0].itemsList.filter((el) => { return el.id == event.id });
-          if (value && value[0]){
+          if (value && value[0]) {
             let index = item[0].itemsList.indexOf(value[0])
-            item[0].itemsList[index]=data
+            item[0].itemsList[index] = data
           }
         }
         // this.showSuccesMessageAndUpdateData();
@@ -146,12 +153,16 @@ export class UtilsComponent implements OnInit, OnDestroy {
       this.getSpecializations(),
       this.getSubservices(),
       this.getUserAttachmentTypes(),
+      this.getBanks()
     ]).pipe(takeUntil(this.unsubscribe$)).subscribe(results => {
       this.helps = results[0];
       this.measurementTypes = results[1];
       this.specializations = results[2];
       this.subserviceTypes = results[3];
       this.userAttachmentTypes = results[4];
+      this.banks = results[5];
+      console.log(this.banks);
+      
       this.initEssenceList();
     });
   }
@@ -175,7 +186,9 @@ export class UtilsComponent implements OnInit, OnDestroy {
   getUserAttachmentTypes(): Observable<EssenceItem[]> {
     return this.utilsService.getEssence(EssenceType.userAttachmentType);
   }
-
+  getBanks(): Observable<EssenceItem[]> {
+    return this.utilsService.getEssence(EssenceType.bank);
+  }
   // tslint:disable-next-line:typedef
   ngOnDestroy() {
     this.unsubscribe$.next();

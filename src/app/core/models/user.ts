@@ -61,6 +61,7 @@ export interface ExecutorRequest {
     email: string;
     image: string;
     city: string;
+    bank: string
   };
   user_schedule: {
     tarif: number;
@@ -74,6 +75,11 @@ export interface ExecutorRequest {
 
 export interface UserDetail {
   user_details: {
+    bank: {
+      code: string
+      id: number
+      name: string
+    }
     user: number;
     user_role: {
       id: number;
@@ -106,29 +112,34 @@ export interface UserDetail {
 
 export interface ClientDetail {
   // user_details: {
-    user: number;
-    user_role: {
-      id: number;
-      title: string;
-      code: string;
-    };
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-    email: string;
-    image: string;
-    company_name: string;
-    company_type: any;
-    company_id: number;
-    city: any;
-    about: string;
-    experience: string;
-    study_history: string;
-    credit_card_number: string;
-    is_cooperative_user: boolean;
-    is_blocked: boolean;
-    is_active: boolean;
-    is_registered_executor: true;
+  user: number;
+  user_role: {
+    id: number;
+    title: string;
+    code: string;
+  };
+  bank: {
+    name: string,
+    id: number,
+    code: string
+  }
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  email: string;
+  image: string;
+  company_name: string;
+  company_type: any;
+  company_id: number;
+  city: any;
+  about: string;
+  experience: string;
+  study_history: string;
+  credit_card_number: string;
+  is_cooperative_user: boolean;
+  is_blocked: boolean;
+  is_active: boolean;
+  is_registered_executor: true;
   // };
 }
 
@@ -146,6 +157,7 @@ export interface ClientRequest {
   is_cooperative_user: number;
   email: string;
   image: string;
+  bank:number
 }
 
 export interface ClientList {
@@ -222,9 +234,9 @@ export interface ExecutorBoard {
   id: number;
   product: {
     id: number,
-    name_ru:string;
-    name_en:string;
-    name_ge:string
+    name_ru: string;
+    name_en: string;
+    name_ge: string
     // name: Array<{ value: string }>
     price: number
     product_images: Array<{

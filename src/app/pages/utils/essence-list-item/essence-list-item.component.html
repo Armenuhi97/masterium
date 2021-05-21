@@ -2,8 +2,7 @@
   <div class="card-content">
     <ng-container *ngFor="let item of itemsList; let i = index">
       <app-essence-list-item-label [index]="i + 1" (onEdit)="editEssenceItem(i)" (onDelete)="handleDelete($event)"
-        [id]="item.id"
-        [label]="item?.name_ru"></app-essence-list-item-label>
+        [id]="item.id" [label]="getLabel(item)"></app-essence-list-item-label>
     </ng-container>
   </div>
 </nz-card>
@@ -17,7 +16,7 @@
   nzWidth="800px">
   <form nz-form [formGroup]="validateForm" [nzLayout]="'vertical'">
 
-    <div nz-row [nzGutter]="24">
+    <div *ngIf="type !== 'bank'" nz-row [nzGutter]="24">
       <div nz-col [nzSpan]="8">
         <nz-form-label class="inline-labels" nzRequired>Название на русском</nz-form-label>
         <nz-form-item>
@@ -49,7 +48,7 @@
           <nz-form-label class="inline-labels" nzRequired>Код</nz-form-label>
           <nz-form-item>
             <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
-            <input nz-input formControlName="code" type="text" placeholder="" maxlength="5"/>
+              <input nz-input formControlName="code" type="text" placeholder="" maxlength="5" />
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -84,6 +83,28 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="type == 'bank'">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="12">
+          <nz-form-label class="inline-labels" nzRequired>Название</nz-form-label>
+          <nz-form-item>
+            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+              <input formControlName="name" nz-input rows="3" placeholder="">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-label class="inline-labels" nzRequired>Код</nz-form-label>
+          <nz-form-item>
+            <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+              <input formControlName="code" nz-input  placeholder="" maxLength="4">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+      </div>
+    </ng-container>
+
   </form>
   <nz-upload *ngIf="type == 'specialization'" [nzShowUploadList]="false" (nzChange)="handleChange($event)"
     [nzHeaders]="{ authorization: 'authorization-text' }">
@@ -91,8 +112,7 @@
       <button nz-button><i nz-icon nzType="upload"></i>Выберите файл</button>
       <i *ngIf="validateForm.get('icon').value" class="success-icon" nz-icon nzType="check-circle"></i>
     </div>
-    <img *ngIf="isEditing" class="img-fluid preview-image"
-      [src]="itemsList[editingEssenceIndex]?.icon" />
+    <img *ngIf="isEditing" class="img-fluid preview-image" [src]="itemsList[editingEssenceIndex]?.icon" />
   </nz-upload>
 </nz-modal>
 

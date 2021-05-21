@@ -38,12 +38,17 @@ export interface EssenceItem {
   code?: string;
   translation_key?: string
   icon?: string;
-
+  name?:string
   help?: {
     id?: number;
     translation_key_title: string;
     translation_key_description: string;
   };
+  bank?: {
+    code?: string
+    id?: number
+    name?: string
+  }
   measurement_type?: {
     id?: number;
     code?: string;
@@ -79,5 +84,5 @@ export interface AutocompleteItem {
   real_price: number;
   current_price: number;
   quantity: number;
-  realQuantity?:number
+  realQuantity?: number
 }
