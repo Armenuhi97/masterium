@@ -1,6 +1,6 @@
 <nz-modal [nzVisible]="true" [nzTitle]="'Закрытые часы'" (nzOnCancel)="closeModal()">
   <form [formGroup]="validateForm" action="">
-    <nz-range-picker [nzDisabledSeconds]="true" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm" formControlName="date">
+    <nz-range-picker  [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm" formControlName="date">
     </nz-range-picker>
     <!-- <nz-range-picker [nzFormat]="'yyyy-MM-dd HH:mm'" formControlName="date"></nz-range-picker> -->
     <button class="add-btn" nz-button (click)="addClosedHours()" nzType="primary">Добавить</button>

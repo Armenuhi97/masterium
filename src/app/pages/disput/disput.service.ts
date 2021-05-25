@@ -18,7 +18,7 @@ export class DisputService {
     }
 
     public closeDisput(id: number): Observable<{}> {
-        return this.httpClient.post<{}>(`orders/complete-disput-by-admin/${id}/`, {});
+        return this.httpClient.get<{}>(`orders/complete-disput-by-admin/${id}/`);
     }
 
     public getDisputStatuses(): Observable<DisputStatus[]> {
