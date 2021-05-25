@@ -10,10 +10,10 @@
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="setPendingOrder()">
               <button nz-button nzType="primary" nzPrimary>Принять в обработку</button>
             </a>
-            <!-- <a *ngIf="order.order.status.code !== 'ACC'" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
+            <a *ngIf="(order?.order?.status?.code == 'ACC') || ((order?.order?.status?.code == 'PRC') && isDoneSuborders())" nz-popconfirm nzPopconfirmTitle="Вы уверены?"
               nzPopconfirmPlacement="bottom" (nzOnConfirm)="cancelOrder()">
               <button nz-button nzType="danger" nzPrimary>Отменить заказ</button>
-            </a> -->
+            </a>
           </div>
           <nz-divider></nz-divider>
           <nz-descriptions class="order-details" nzTitle="" [nzColumn]="2">
@@ -56,7 +56,12 @@
   <div class="container">
     <div class="order-ordering d-flex justify-content-between flex-wrap">
       <nz-tabset class="m-top-10">
-        <nz-tab nzTitle="Сервисы">
+        <nz-tab [nzTitle]="service">
+          <ng-template #service>           
+            <nz-badge [nzCount]="subgroups[0]?.groupItemList?.length">
+              <a class="head-example">Сервисы</a>
+            </nz-badge>
+          </ng-template>
           <app-category-autocomplete placeholder="Добавить сервис" (search)="searchForServices($event)"
             (selected)="addServiceItem($event)" [searchResult]="serviceSearchResult" [loading]="isSearching">
           </app-category-autocomplete>
@@ -94,7 +99,12 @@
             </div>
           </div>
         </nz-tab>
-        <nz-tab nzTitle="Продукты">
+        <nz-tab [nzTitle]="product">
+          <ng-template #product>           
+            <nz-badge [nzCount]="subgroups[1]?.groupItemList?.length">
+              <a class="head-example">Продукты</a>
+            </nz-badge>
+          </ng-template>
           <app-app-nz-autocomplete (search)="searchForProducts($event)" (selected)="addProductItem($event)"
             [loading]="isSearching" placeholder="Поиск по продуктам" [searchResult]="productSearchResult">
           </app-app-nz-autocomplete>
@@ -137,7 +147,13 @@
             </div>
           </div>
         </nz-tab>
-        <nz-tab nzTitle="Картинки">
+        <nz-tab [nzTitle]="picture">
+         
+          <ng-template #picture>           
+            <nz-badge [nzCount]="subgroups[2]?.groupItemList?.length">
+              <a class="head-example">Картинки</a>
+            </nz-badge>
+          </ng-template>
           <div cdkDropList id="{{subgroups[2].id}}" [cdkDropListData]="subgroups[2].groupItemList"
             [cdkDropListEnterPredicate]="noReturnPredicate" [cdkDropListConnectedTo]="connectedTo"
             class="drag-list fixed images-container d-flex" (cdkDropListDropped)="drop($event, subgroups[2])">
@@ -147,6 +163,7 @@
           </div>
         </nz-tab>
       </nz-tabset>
+     
       <!-- && order.order.status.code !== 'ACC' -->
       <div class="m-top-10">
         <button nz-button class="ml-auto mb-2 d-flex" nzType="primary"
@@ -234,7 +251,7 @@
     </div>
 
     <div class="mt-5">
-      <app-suborders-list (editSuborder)="handleEditSuborder($event)" [suborders]="subgroups"></app-suborders-list>
+      <app-suborders-list (delete)="deleteSuborder($event)" (editSuborder)="handleEditSuborder($event)" [suborders]="subgroups"></app-suborders-list>
     </div>
   </div>
   <ng-conteiner *ngIf="isShowExtraOrderModal">

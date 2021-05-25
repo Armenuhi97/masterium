@@ -146,7 +146,7 @@ nz-date-picker {
 }
 
 .price-control {
-  width: 170px;
+  width: 120px;
   margin-bottom: 0;
 }
 
@@ -161,7 +161,8 @@ nz-date-picker {
   border: 0;
 }
 .w-70{
-  width: 70px;
+  max-width: 170px;
+  /* width: 70px; */
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

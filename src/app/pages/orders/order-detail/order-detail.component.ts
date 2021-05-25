@@ -77,6 +77,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       index: [null]
     })
   }
+  deleteSuborder(id: number) {
+    let findIndex = this.subgroups.findIndex((res) => {
+      if (res.suborderMain)
+        return +res.suborderMain.id == +id
+    });
+    this.subgroups.splice(findIndex, 1)
+  }
   handleCloseExtraOrder() {
     this.extraOrderForm.reset();
     this.isShowExtraOrderModal = false
@@ -223,8 +230,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           sub.products.forEach((product: any) => {
             this.subgroups[this.subgroups.length - 1].groupItemList.push({
               type: DragItemTypes.Product,
-              name: product.name_ru,
-              id: product.product,
+              name: product.product.name_ru,
+              id: product.product.id,
               currentPrice: product.current_price,
               realPrice: product.real_price,
               quantity: product.quantity,
@@ -281,10 +288,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   checkISelect(subgroupItem) {
     let count = 0;
     let group = this.subgroups.slice(3);
+    let id = subgroupItem.subserviceId && subgroupItem.subserviceId.id ? subgroupItem.subserviceId.id : subgroupItem.subserviceId
     for (let subgroup of group) {
-      if (subgroup.isEditing) {
-        for (let item of subgroup.groupItemList) {
-          if (item.subserviceId == subgroupItem.subserviceId) {
+      for (let item of subgroup.groupItemList) {
+        if (item.type == "service") {
+          if (+item.subserviceId == +id) {
             count++;
             break
           }
@@ -292,20 +300,19 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       }
     }
     return count > 0 ? true : false
-
   }
   checkISelectProduct(subgroupItem) {
     let count = 0;
     let group = this.subgroups.slice(3);
     for (let subgroup of group) {
-      if (subgroup.isEditing) {
-        for (let item of subgroup.groupItemList) {
-
-          if (item.subserviceId == subgroupItem.subserviceId) {
+      for (let item of subgroup.groupItemList) {
+        if (item.type == "product") {
+          if (+item.id == +subgroupItem.id) {
             count += item.quantity;
           }
         }
       }
+
     }
     return count
 
@@ -687,8 +694,19 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.getOrderById(this.id);
       });
   }
-
+  isDoneSuborders() {
+    if (this.order.suborder && this.order.suborder) {
+      let doneSuborder = this.order.suborder.filter((data) => { return data.suborder.status.code == 'DN' });
+      if (doneSuborder && doneSuborder.length) {
+        return false
+      } else {
+        return true
+      }
+    }
+    return false
+  }
   getGroupPrice(item: OrderSubgroupDragItem): number {
+
     let price = 0;
     item.groupItemList.forEach((groupItem) => {
       if (groupItem.currentPrice) {
@@ -705,7 +723,6 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     if (index > -1) {
       this.subgroups.map(order => order.isEditing = false);
       this.subgroups = this.subgroups.filter(order => order.suborderMain !== null);
-
     }
     this.subgroups[index].isEditing = true;
   }

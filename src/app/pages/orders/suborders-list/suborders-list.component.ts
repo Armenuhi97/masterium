@@ -13,8 +13,7 @@ export class SubordersListComponent implements OnInit, OnDestroy {
   @Output() editSuborder: EventEmitter<OrderSubgroupDragItem> = new EventEmitter<OrderSubgroupDragItem>();
   @Output() delete: EventEmitter<number> = new EventEmitter<number>();
   @Input() set suborders(subs: OrderSubgroupDragItem[]) {    
-    this.showSuborders = subs.filter(order => order.suborderMain?.id);    
-        
+    this.showSuborders = subs.filter(order => order.suborderMain?.id);  
   }
   private _unsubscribe = new Subject<void>()
   public isPaymentControlPanelVisible: boolean;
@@ -82,6 +81,7 @@ export class SubordersListComponent implements OnInit, OnDestroy {
     this._ordersService.deleteSuborder(id)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe(() => {
+        this.delete.emit(id)
         this.showSuborders = [...this.showSuborders.slice(0, fIndex), ...this.showSuborders.slice(fIndex + 1)];
       })
   }

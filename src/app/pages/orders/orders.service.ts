@@ -61,7 +61,7 @@ export class OrdersService {
   }
 
   cancelOrder(orderId: number): Observable<{}> {
-    return this.httpClient.post<any>(`orders/set-suborder-status-canceled/${orderId}/`, {});
+    return this.httpClient.get<any>(`orders/set-order-status-canceled/${orderId}/`);
   }
 
   changeDebetStatus(data): Observable<void> {

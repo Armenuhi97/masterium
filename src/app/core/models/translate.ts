@@ -13,4 +13,5 @@ export interface TranslationItem {
   key?: string;
   value?: string;
   language?: number;
+  code?:string
 }
