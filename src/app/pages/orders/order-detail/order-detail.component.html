@@ -179,7 +179,7 @@
                 </nz-descriptions>
               </div>
               <div class="d-flex align-items-start">
-                <div class="d-flex align-items-center">
+                <div *ngIf="subgroup.status !== 'Выполнено'" class="d-flex align-items-center">
                   <button *ngIf="isShowExtraAddBtb(subgroup)" (click)="addExtra(i+3)" nz-button nzType="default"
                     nzShape="circle">
                     <i nz-icon nzType="plus"></i>
@@ -235,7 +235,7 @@
                       </nz-form-control>
                     </nz-form-item>
                   </nz-input-group>
-                  <i class="delete-drag" nz-icon nzType="minus-circle" nzTheme="outline"
+                  <i *ngIf="subgroup.status !== 'Выполнено'" class="delete-drag" nz-icon nzType="minus-circle" nzTheme="outline"
                     (click)="deleteDragItemFromGroup(subgroup, subgroupItem, ind)"></i>
                 </div>
               </div>
@@ -322,7 +322,7 @@
               <nz-form-label nzRequired>Дата начала заказа </nz-form-label>
               <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
                 <nz-date-picker [nzDisabledSeconds]="true" [nzShowTime]="timePickerProps" nzFormat="yyyy-MM-dd HH:mm"
-                  [nzDisabledDate]="disabledStartDate" formControlName="date"
+                  [nzDisabledDate]="disabledStartDate"  [nzDisabledTime]="disabledDateTime" formControlName="date"
                   nzPlaceHolder="Выберите дату начала заказа">
                 </nz-date-picker>
               </nz-form-control>

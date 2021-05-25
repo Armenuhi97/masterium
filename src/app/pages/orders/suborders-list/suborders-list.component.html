@@ -8,13 +8,17 @@
       <th>Гарантия</th>
       <th>Статус</th>
       <th>Исполнитель</th>
-      <th></th>
+
       <th>Статус оплаты</th>
+      <th>Способ оплаты</th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
+    <!-- payed: false
+payed_by_cache: true  achq-->
     <tr *ngFor="let data of userTable.data; let ind = index">
       <td style="width:10px">{{ ind + 1 }}</td>
       <td>{{data.name}}</td>
@@ -25,21 +29,30 @@
       <td>
         {{checkExecutor(data.executors)}}
       </td>
+
+      <td style="width: 20px">
+        <nz-switch [nzDisabled]="data?.suborderMain.payed" *ngIf="data?.status == 'Выполнено'"
+          [(ngModel)]="data?.suborderMain.payed" (ngModelChange)="changeStatus(data)"></nz-switch>
+      </td>
+      <td>
+        <div
+          *ngIf="(data?.suborderMain?.payed && !data?.suborderMain?.payed_by_cache) || (!data?.suborderMain?.payed && data?.suborderMain?.payed_by_cache) || (data?.suborderMain?.payed && data?.suborderMain?.payed_by_cache)">
+          <div>{{data.suborderMain.payed_by_cache ? 'Наличными' :'Картой'}}</div>
+        </div>
+      </td>
+      <td class="action-button edit" style="width: 100px">
+        <i (click)="openPaymentControlModal(data)" *ngIf="!data.suborderMain.payed && data.suborderMain.payed_by_cache"
+          nz-icon nzType="eye"></i>
+      </td>
       <td (click)="onEditSuborder(data)" class="action-button edit" style="width: 10px">
         <i nz-icon nzType="edit"></i>
       </td>
-      <td style="width: 20px">
-        <nz-switch [(ngModel)]="data?.suborderMain.payed" (ngModelChange)="changeStatus(data)"></nz-switch>
-      </td>
-      <td class="action-button edit" style="width: 100px">
-        <i  (click)="openPaymentControlModal(data)" *ngIf="data.suborderMain.debet" nz-icon nzType="eye"></i>
-      </td>
-      <th class="action-button delete" style="width: 10px">
+      <td class="action-button delete" style="width: 10px">
         <a nz-popconfirm nzPopconfirmTitle="Вы уверены?" nzPopconfirmPlacement="bottom"
           (nzOnConfirm)="deleteSuborder(data.suborderMain.id)">
           <i *ngIf="!data.suborderMain.payed && data.disput?.length === 0" nz-icon nzType="delete"></i>
         </a>
-      </th>
+      </td>
     </tr>
   </tbody>
 </nz-table>

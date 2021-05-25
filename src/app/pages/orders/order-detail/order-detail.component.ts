@@ -27,6 +27,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AutocompleteItem } from '../../../core/models/utils';
 import { User } from '../../../core/models/user';
+import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
 @Component({
   selector: 'app-order-detail',
   templateUrl: './order-detail.component.html',
@@ -657,7 +658,42 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   disabledStartDate = (startValue: Date): boolean => {
     return startValue.getTime() < Date.now() - 86400000;
   }
+  // disabledRangeTime: DisabledTimeFn = (_value:Date, type?: DisabledTimePartial) => {
+  //   console.log(_value);
+  //   let currenDate=new Date()
+  //   if(_value.getDay() == )
 
+  //   return {
+  //     nzDisabledHours: () => this.range(0, 60).splice(20, 4),
+  //     nzDisabledMinutes: () => this.range(0, 31),
+  //     nzDisabledSeconds: () => [55, 56]
+  //   };
+  // };
+  disabledDateTime: DisabledTimeFn = (_value: Date) => {
+    const currenDate = new Date();
+    let isToday: boolean = false;
+    let disableHours=[];
+    let disableMinutes=[]
+    if (currenDate.getDay() == _value.getDay() && currenDate.getMonth() == _value.getMonth() && currenDate.getFullYear() == _value.getFullYear()) {
+      isToday = true;
+      disableHours=this.range(0, currenDate.getHours());
+      disableMinutes=this.range(0, currenDate.getMinutes())
+    }    
+    return {
+      nzDisabledHours: () => disableHours ,
+      // isToday ?  : [],
+      nzDisabledMinutes: () => disableMinutes,
+      // isToday ? this.range(0, currenDate.getMinutes()) : [],
+      nzDisabledSeconds: () => []
+    };
+  };
+  range(start: number, end: number): number[] {
+    const result: number[] = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
+  }
   getExecutorNameById(id: number): string {
     const executor = this.executors.filter(
       ex => ex.user.user === id

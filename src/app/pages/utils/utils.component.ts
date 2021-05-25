@@ -160,9 +160,7 @@ export class UtilsComponent implements OnInit, OnDestroy {
       this.specializations = results[2];
       this.subserviceTypes = results[3];
       this.userAttachmentTypes = results[4];
-      this.banks = results[5];
-      console.log(this.banks);
-      
+      this.banks = results[5];      
       this.initEssenceList();
     });
   }
