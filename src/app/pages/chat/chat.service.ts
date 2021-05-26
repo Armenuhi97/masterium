@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { io } from 'socket.io-client/build/index';
 import { Message, MessageRequest, RoomList } from 'src/app/core/models/chat';
@@ -9,7 +10,7 @@ import { environment } from 'src/environments/environment';
 export class ChatService {
     private _socket;
 
-    constructor(private _httpClient:HttpClient) { }
+    constructor(private _httpClient:HttpClient,private _cookieService:CookieService) { }
 
     public connect(token: string): void {
         this._socket = io(environment.SOCKET_ENDPOINT, {
@@ -31,7 +32,7 @@ export class ChatService {
     public getRoomMessages(id: number,index): void {
         this._socket.emit('get_room_messages', {
             room_id: id,
-            // user_id:userId,
+            user_id:this._cookieService.get('userId'),
             start_index: index
         });
     }

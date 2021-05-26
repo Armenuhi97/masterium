@@ -7,8 +7,12 @@ export class AuthService {
 
     constructor(private _httpClient: HttpClient) { }
 
-    public login(): void {
-
+    public login(username: string, password: string) {
+        return this._httpClient.post('login/admin-login/',
+            {
+                username: username,
+                password: password
+            })
     }
 
 

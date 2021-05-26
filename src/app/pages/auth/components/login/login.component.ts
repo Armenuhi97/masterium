@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { LoginResponce } from 'src/app/core/models/login';
 import { AuthService } from '../../auth.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
         private _fb: FormBuilder,
         private _router: Router,
         private _authService: AuthService,
-        private _cookieService:CookieService
+        private _cookieService: CookieService
     ) { }
 
     ngOnInit(): void {
@@ -29,8 +30,8 @@ export class LoginComponent implements OnInit {
 
     formBuilder(): void {
         this.signInForm = this._fb.group({
-            userName: ['admin@admin.com', [Validators.required]],
-            password: ['123456', [Validators.required]],
+            userName: ['admin', [Validators.required]],
+            password: ['Gyumri22+', [Validators.required]],
             remember: [true]
         });
     }
@@ -40,26 +41,24 @@ export class LoginComponent implements OnInit {
     }
 
     submitForm(): void {
-        this._cookieService.set('access','ee14e3ede6edcbad00075063b1870231dd688cb0')
-        this._router.navigate(['/dashboard/services']);
+        this._authService.login(
+            this.signInForm.value.userName,
+            this.signInForm.value.password,
+        ).subscribe((data: LoginResponce) => {
+            this._cookieService.set('userId', (data.user.user).toString());
+            this._cookieService.set('access', data.token);
+            this._router.navigate(['/dashboard/services'])
+            // if (data.data.hasOwnProperty('roleId') && data.data.roleId == 3) {
+            //     this._router.navigate(['/articles']);
+            // } else {
+            //     this._router.navigate(['/users']);
+            // }
+        },
+            err => {
+                console.log(err);
 
-        // this._authService.login({
-        //     email: this.signInForm.value.email,
-        //     password: this.signInForm.value.password,
-        // }).subscribe((data) => {
-        //     this._cookieService.set('refreshToken', data.data.refreshToken);
-        //     this._cookieService.set('accessToken', data.data.accessToken);
-        //     if (data.data.hasOwnProperty('roleId') && data.data.roleId == 3) {
-        //         this._router.navigate(['/articles']);
-        //     } else {
-        //         this._router.navigate(['/users']);
-        //     }
-        // },
-        //     err => {
-        //         console.log(err);
-
-        //     }
-        // )
+            }
+        )
 
     }
 }
