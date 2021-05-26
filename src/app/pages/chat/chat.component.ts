@@ -49,7 +49,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._subscribeToActiveRoomMessages();
     this._getNewMessages();
   }
-
+  // public getMe(){
+  //   this._chatService.getMe().pipe(takeUntil(this._unsubscribe$)).subscribe((data)=>{
+  //     console.log(data);
+      
+  //   })
+  // }
   public userTypeChange(event: string): void { }
 
   scrollToBottom(): void {

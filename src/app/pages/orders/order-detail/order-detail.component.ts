@@ -125,7 +125,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
         this.subgroups[index]?.suborderMain?.start_date ? this.subgroups[index]?.suborderMain?.start_date : this.order.order.start_date,
         [Validators.required],
       ],
-      mainExecutor: [mainExecutor],
+      mainExecutor: [mainExecutor, Validators.required],
       index,
     });
   }
@@ -546,6 +546,14 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       this.nzMessagesService.error('Пожалуйста назначьте дату начала заказа');
       return;
     }
+
+    if (!this.subgroups
+      .slice(3)
+      .every((element) => {       
+       return ( (element.executors && element.executors.length))})) {
+      this.nzMessagesService.error('Пожалуйста назначьте исполнителя');
+      return;
+    }
     let extraOrder = [];
     this.subgroups.slice(3).forEach((suborder) => {
 
@@ -672,15 +680,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   disabledDateTime: DisabledTimeFn = (_value: Date) => {
     const currenDate = new Date();
     let isToday: boolean = false;
-    let disableHours=[];
-    let disableMinutes=[]
+    let disableHours = [];
+    let disableMinutes = []
     if (currenDate.getDay() == _value.getDay() && currenDate.getMonth() == _value.getMonth() && currenDate.getFullYear() == _value.getFullYear()) {
       isToday = true;
-      disableHours=this.range(0, currenDate.getHours());
-      disableMinutes=this.range(0, currenDate.getMinutes())
-    }    
+      disableHours = this.range(0, currenDate.getHours());
+      disableMinutes = this.range(0, currenDate.getMinutes())
+    }
     return {
-      nzDisabledHours: () => disableHours ,
+      nzDisabledHours: () => disableHours,
       // isToday ?  : [],
       nzDisabledMinutes: () => disableMinutes,
       // isToday ? this.range(0, currenDate.getMinutes()) : [],

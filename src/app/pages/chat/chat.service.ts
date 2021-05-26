@@ -1,15 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { io } from 'socket.io-client/build/index';
 import { Message, MessageRequest, RoomList } from 'src/app/core/models/chat';
-import { Messages } from 'src/app/core/models/messages';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ChatService {
     private _socket;
 
-    constructor() { }
+    constructor(private _httpClient:HttpClient) { }
 
     public connect(token: string): void {
         this._socket = io(environment.SOCKET_ENDPOINT, {
@@ -31,6 +31,7 @@ export class ChatService {
     public getRoomMessages(id: number,index): void {
         this._socket.emit('get_room_messages', {
             room_id: id,
+            // user_id:userId,
             start_index: index
         });
     }
@@ -66,5 +67,8 @@ export class ChatService {
                 observer.next(res);
             });
         });
+    }
+    public getMe(){
+        return this._httpClient.get('userdetails/get-me')
     }
 }

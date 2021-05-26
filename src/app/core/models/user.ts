@@ -50,6 +50,7 @@ export interface User {
 
 export interface ExecutorRequest {
   user_details: {
+    working_area?:string
     first_name: string;
     last_name: string;
     phone_number: string;
@@ -60,7 +61,7 @@ export interface ExecutorRequest {
     is_registered_executor: number;
     email: string;
     image: string;
-    city: string;
+    city?: string;
     bank: string
   };
   user_schedule: {
@@ -86,6 +87,7 @@ export interface UserDetail {
       title: string;
       code: string;
     };
+    working_area:string
     first_name: string;
     last_name: string;
     phone_number: string;

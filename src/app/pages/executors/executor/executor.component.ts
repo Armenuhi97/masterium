@@ -194,7 +194,7 @@ export class ExecutorComponent implements OnInit {
         study_history: formValue.study,
         image: formValue.image,
         is_registered_executor: formValue.executorType,
-        city: formValue.workArea,
+        working_area: formValue.workArea,
         bank: formValue.bankCodePrefix
       },
       user_specializations: formValue.specializationsFormArray.map(
@@ -355,7 +355,7 @@ export class ExecutorComponent implements OnInit {
       executorType: editingExecutor.user_details.is_registered_executor,
       workScheduleStart: this.workScheduleStart,
       workScheduleEnd: this.workScheduleEnd,
-      workArea: editingExecutor.user_schedule.city || '',
+      workArea: editingExecutor.user_details.working_area || '',
       bet: editingExecutor.user_schedule.tarif || '',
       documents: editingExecutor.user_attachments.map((attachment) => {
         if (attachment && attachment.attachment_type) {

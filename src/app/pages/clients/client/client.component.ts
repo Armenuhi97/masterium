@@ -19,7 +19,6 @@ import { ClientsService } from '../clients.service';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  public banks: EssenceItem[] = []
   private _unsubscribe$ = new Subject();
   private _id: number;
   public isEditing = false;
@@ -70,7 +69,6 @@ export class ClientComponent implements OnInit {
       email: ['', [Validators.email]],
       image: null,
       showingImage: null,
-      bankCodePrefix: [null, Validators.required]
     });
 
     this.validateForm.get('isCooperativeUser').valueChanges.subscribe(data => {
@@ -90,7 +88,6 @@ export class ClientComponent implements OnInit {
   }
   private _combineObservable() {
     const combine = forkJoin(
-      this.getBanks(),
       this._getCompanyTypes()
 
     )
@@ -100,17 +97,12 @@ export class ClientComponent implements OnInit {
       }
     })
   }
-  public getBanks() {
-    return this._clientsService.getBankList().pipe(
-      map((data: EssenceItem[]) => {
-        this.banks = data;
-
-      })
-    )
-  }
+ 
   private _getCompanyTypes() {
     return this._clientsService.getCompanyTypes()
       .pipe(map((res) => {
+        console.log(res);
+        
         this.companyTypes = res;
       }));
   }
@@ -147,8 +139,8 @@ export class ClientComponent implements OnInit {
     }
     const formValue = this.validateForm.value;
     const sendingData: ClientRequest = {
-      credit_card_number: this.setCode ? this.setCode.code + formValue.creditCardNumber : '',
-      bank: formValue.bankCodePrefix,
+      credit_card_number:null,
+      bank: null,
       email: formValue.email,
       first_name: formValue.firstName,
       last_name: formValue.lastName,
@@ -233,7 +225,6 @@ export class ClientComponent implements OnInit {
       companyName: editingExecutor.company_name || '',
       companyType: editingExecutor.company_type || '',
       isCooperativeUser: editingExecutor.is_cooperative_user,
-      bankCodePrefix: editingExecutor.bank ? editingExecutor.bank.id : null,
 
     });
   }
@@ -268,15 +259,5 @@ export class ClientComponent implements OnInit {
     } else if (event.index === 3) {
     }
   }
-  get setCode() {
-    let bankCode;
-    let bank = this.validateForm.get('bankCodePrefix').value;
-    if (bank) {
-      bankCode = this.banks.filter((el) => {
-        return el.id == bank
-      })
-    }
 
-    return bankCode && bankCode[0] ? bankCode[0] : null
-  }
 }
