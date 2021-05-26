@@ -60,7 +60,8 @@
             <td>{{ data.minimum_count_for_order }}</td>
             <td>{{ data.quantity?data.quantity:0 }} </td>
             <td>
-              <nz-switch (ngModelChange)="changeShowInMarket($event,data,ind)" [(ngModel)]="data.show_in_market"></nz-switch>
+              <nz-switch (ngModelChange)="changeShowInMarket($event,data,ind)" [(ngModel)]="data.show_in_market">
+              </nz-switch>
               <!-- <nz-switch (ngModelChange)="changeShowInMarket($event,data)" [(ngModel)]="data.show_in_market"></nz-switch> -->
             </td>
             <td (click)="onChangeProductCount(ind)" class="action-button plus" style="width: 10px">
@@ -142,7 +143,8 @@
                           [routerLink]="'/dashboard/orders/' + transaction?.suborder?.order?.id + '/'">{{transaction?.suborder?.order?.order_number}}</a></span>
                       <span class="quantity-count">{{
                         transaction?.quantity
-                        }}</span>
+                        }} </span>
+                      <span class="m-left-10"> {{transaction?.user?.first_name}} {{transaction?.user?.last_name}}</span>
                     </a>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>

@@ -8,7 +8,7 @@
                     <nz-form-control nzHasFeedback>
                         <nz-select formControlName="executor">
                             <nz-option *ngFor="let executor of executors" [nzLabel]="serExecutorName(executor)"
-                                [nzValue]="executor.id">
+                                [nzValue]="executor?.user?.user">
                             </nz-option>
                         </nz-select>
                     </nz-form-control>

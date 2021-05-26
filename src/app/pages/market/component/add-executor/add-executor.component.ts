@@ -21,7 +21,7 @@ export class AddExecutorComponent {
     }
     executors: User[] = [];
     @Input('executors')
-    set setExecutor($event:User[]) {
+    set setExecutor($event:User[]) {        
         this.executors = $event
     }
 
