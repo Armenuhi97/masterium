@@ -244,8 +244,12 @@ export class ExecutorComponent implements OnInit {
         () => {
           this._router.navigate(['dashboard/executors']);
         },
-        () => {
-          this._nzMessages.error(Messages.fail);
+        (err) => {
+          if (err.error && err.error[0] && err.error[0].includes("this phone number")) {
+            this._nzMessages.error('Этот номер телефона уже зарегистрирован');
+          } else {
+            this._nzMessages.error(Messages.fail);
+          }
         }
       );
   }
@@ -287,8 +291,12 @@ export class ExecutorComponent implements OnInit {
         () => {
           this._router.navigate(['dashboard/executors']);
         },
-        () => {
-          this._nzMessages.error(Messages.fail);
+        (err) => {
+          if (err.error && err.error[0] && err.error[0].includes("this phone number")) {
+            this._nzMessages.error('Этот номер телефона уже зарегистрирован');
+          } else {
+            this._nzMessages.error(Messages.fail);
+          }
         }
       );
   }

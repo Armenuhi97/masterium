@@ -7,4 +7,5 @@ export enum Messages {
     photoAttachedSuccessfully = 'Изображение успешно прикреплен',
     wrongTimeRange = 'Неправильной интервал',
     validationError='Заполните все обязательные поля'
+    
 }

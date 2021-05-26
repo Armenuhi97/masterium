@@ -97,12 +97,12 @@ export class ClientComponent implements OnInit {
       }
     })
   }
- 
+
   private _getCompanyTypes() {
     return this._clientsService.getCompanyTypes()
       .pipe(map((res) => {
         console.log(res);
-        
+
         this.companyTypes = res;
       }));
   }
@@ -139,7 +139,7 @@ export class ClientComponent implements OnInit {
     }
     const formValue = this.validateForm.value;
     const sendingData: ClientRequest = {
-      credit_card_number:null,
+      credit_card_number: null,
       bank: null,
       email: formValue.email,
       first_name: formValue.firstName,
@@ -174,8 +174,12 @@ export class ClientComponent implements OnInit {
         () => {
           this._router.navigate(['dashboard/clients']);
         },
-        () => {
-          this._nzMessages.error(Messages.fail);
+        (err) => {
+          if (err.error && err.error[0] && err.error[0].includes("this phone number")) {
+            this._nzMessages.error('Этот номер телефона уже зарегистрирован');
+          } else {
+            this._nzMessages.error(Messages.fail);
+          }
         }
       );
   }
@@ -188,8 +192,12 @@ export class ClientComponent implements OnInit {
         () => {
           this._router.navigate(['dashboard/clients']);
         },
-        () => {
-          this._nzMessages.error(Messages.fail);
+        (err) => {
+          if (err.error && err.error[0] && err.error[0].includes("this phone number")) {
+            this._nzMessages.error('Этот номер телефона уже зарегистрирован');
+          } else {
+            this._nzMessages.error(Messages.fail);
+          }
         }
       );
   }

@@ -20,7 +20,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private _isScrollToUp: boolean = false
-  windowHeight:number;
+  windowHeight: number;
   private _unsubscribe$: Subject<void> = new Subject<void>();
   public roomsList: RoomList[];
   public activeRoom: RoomList;
@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _cookieService: CookieService,
     private _loaderService: LoaderService
   ) {
-    this.windowHeight=window.innerHeight-112-130;
+    this.windowHeight = window.innerHeight - 112 - 130;
     this._subscribeToQueryChanges();
   }
 
@@ -52,7 +52,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   // public getMe(){
   //   this._chatService.getMe().pipe(takeUntil(this._unsubscribe$)).subscribe((data)=>{
   //     console.log(data);
-      
+
   //   })
   // }
   public userTypeChange(event: string): void { }
@@ -87,9 +87,12 @@ export class ChatComponent implements OnInit, OnDestroy {
           message.file_url = res.url;
           message.file_type = this.type;
           this._chatService.sendMessage(message);
-        });
+         this._getNewMessages(false)
+        })
     } else {
       this._chatService.sendMessage(message);
+      this._getNewMessages(false)
+
     }
   }
 
@@ -105,9 +108,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.onRoomsList()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
-        this._loaderService.setHttpProgressStatus(false)
-        res.sort((a: any, b: any) =>
-          new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
+        this._loaderService.setHttpProgressStatus(false);
+        res.sort((a: any, b: any) => {
+          return new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
+        }
         );
         this.roomsList = res;
         if (this._activeRoomId)
@@ -115,17 +119,17 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _getNewMessages(): void {
+  private _getNewMessages(ispush: boolean = true): void {
     this._chatService.subscribeToNewMessages()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(res => {
         if (this.activeRoom && res.message.room === this.activeRoom.room.id) {
-
-          this.messages.push(res.message);
-          this.messages.sort((a: any, b: any) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-          );
-
+          if (ispush) {
+            this.messages.push(res.message);
+            this.messages.sort((a: any, b: any) =>
+              new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            );
+          }
           // created_at
           this.activeRoom.room.last_message = res.message.text;
           this.activeRoom.room.last_message_date = res.message.created_at;
@@ -150,13 +154,13 @@ export class ChatComponent implements OnInit, OnDestroy {
       new Date(b.room.last_message_date).getTime() - new Date(a.room.last_message_date).getTime()
     );
   }
-  public deleteFile(){
+  public deleteFile() {
     this.fileControl.reset()
   }
   public handleChange(info: NzUploadChangeParam) {
     // if (type === 'file') {
     this.type = info.file.type;
-    this.fileControl.setValue(info.file.originFileObj);    
+    this.fileControl.setValue(info.file.originFileObj);
     // } else if (type === 'image') {
     // this.validateForm.get('image').setValue(info.file.originFileObj);
     // }
