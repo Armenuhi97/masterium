@@ -69,7 +69,5 @@ export class ChatService {
             });
         });
     }
-    public getMe(){
-        return this._httpClient.get('userdetails/get-me')
-    }
+ 
 }

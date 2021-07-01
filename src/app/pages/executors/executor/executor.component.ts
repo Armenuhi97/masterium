@@ -195,6 +195,7 @@ export class ExecutorComponent implements OnInit {
         image: formValue.image,
         is_registered_executor: formValue.executorType,
         working_area: formValue.workArea,
+        city: formValue.workArea,
         bank: formValue.bankCodePrefix
       },
       user_specializations: formValue.specializationsFormArray.map(

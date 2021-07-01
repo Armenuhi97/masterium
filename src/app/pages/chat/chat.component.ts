@@ -49,22 +49,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._subscribeToActiveRoomMessages();
     this._getNewMessages();
   }
-  // public getMe(){
-  //   this._chatService.getMe().pipe(takeUntil(this._unsubscribe$)).subscribe((data)=>{
-  //     console.log(data);
 
-  //   })
-  // }
   public userTypeChange(event: string): void { }
 
-  scrollToBottom(): void {
-    try {
-      this.myScrollContainer.nativeElement.scrollTop = 480
-      // this.myScrollContainer.nativeElement.scrollHeight;
-
-
-    } catch (err) { }
-  }
   scrollToTop(top) {
     if (!this._isScrollToUp)
       return top
@@ -87,7 +74,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           message.file_url = res.url;
           message.file_type = this.type;
           this._chatService.sendMessage(message);
-         this._getNewMessages(false)
+          this._getNewMessages(false)
         })
     } else {
       this._chatService.sendMessage(message);
@@ -158,12 +145,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.fileControl.reset()
   }
   public handleChange(info: NzUploadChangeParam) {
-    // if (type === 'file') {
     this.type = info.file.type;
     this.fileControl.setValue(info.file.originFileObj);
-    // } else if (type === 'image') {
-    // this.validateForm.get('image').setValue(info.file.originFileObj);
-    // }
+
   }
   // ROOM MESSAGES
   private _getActiveRoomMessages(): void {

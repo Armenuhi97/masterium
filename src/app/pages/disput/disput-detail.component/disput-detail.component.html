@@ -12,19 +12,26 @@
                     <div class="d-flex flex-wrap">
                         <nz-descriptions class="order-details" nzTitle="" [nzColumn]="1">
                             <nz-descriptions-item nzTitle="Заказчик"><a
-                                    [routerLink]="['/dashboard/clients/' + disput?.customer?.user]">{{disput?.customer?.first_name}} {{disput?.customer?.last_name}} </a>
+                                    [routerLink]="['/dashboard/clients/' + disput?.customer?.user]">{{disput?.customer?.first_name}}
+                                    {{disput?.customer?.last_name}} </a>
                             </nz-descriptions-item>
-                            <nz-descriptions-item nzTitle="Адрес"><span>{{disput?.address?.address}}</span> </nz-descriptions-item>
-                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.customer?.city}}</span> </nz-descriptions-item>
-                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.customer?.phone_number}}</span> </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Адрес"><span>{{disput?.address?.address}}</span>
+                            </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.customer?.city}}</span>
+                            </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.customer?.phone_number}}</span>
+                            </nz-descriptions-item>
 
                         </nz-descriptions>
                         <nz-descriptions class="order-details m-left-5" nzTitle="" [nzColumn]="1">
                             <nz-descriptions-item nzTitle="Исполнитель"><a
-                                    [routerLink]="['/dashboard/executors/' + disput?.executor?.user]">{{disput?.executor?.first_name}} {{disput?.executor?.last_name}}</a>
+                                    [routerLink]="['/dashboard/executors/' + disput?.executor?.user]">{{disput?.executor?.first_name}}
+                                    {{disput?.executor?.last_name}}</a>
                             </nz-descriptions-item>
-                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.executor?.city}}</span> </nz-descriptions-item>
-                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.executor?.phone_number}}</span> </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Город"><span>{{disput?.executor?.city}}</span>
+                            </nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Телефон"><span>{{disput?.executor?.phone_number}}</span>
+                            </nz-descriptions-item>
                         </nz-descriptions>
                     </div>
                     <nz-descriptions class="description-details" nzTitle="Описание">
@@ -43,10 +50,23 @@
     <div class="container">
         <div class="d-flex align-items-cener m-top-60 action-buttons">
             <a nz-popconfirm nzPopconfirmTitle="Вы уверены ?" nzPopconfirmPlacement="bottom"
-                (nzOnConfirm)="closeDisput()">
+                (nzOnConfirm)="openModal()">
                 <button class="mr-3" nz-button nzType="primary" [disabled]="disput.status.name_en === 'Completed'"
                     [nzLoading]="loading">Закрыть диспут </button>
             </a>
         </div>
     </div>
 </ng-container>
+<nz-modal nzWidth="400px" [(nzVisible)]="isVisible" nzTitle="" (nzOnCancel)="closeModal()" (nzOnOk)="saveComment()">
+    <nz-form-label class="inline-labels" nzRequired>Коментария</nz-form-label>
+    <nz-form-item>
+        <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input [formControl]="commentControl" type="text" placeholder="" />
+        </nz-form-control>
+    </nz-form-item>
+</nz-modal>
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        Это обязательное поле
+    </ng-container>
+</ng-template>
